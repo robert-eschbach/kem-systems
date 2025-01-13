@@ -1,0 +1,104 @@
+option
+undo
+noundo
+add
+
+      [succ : NAT -> NAT ]
+      [+ : NAT, NAT -> NAT ]
+      [* : NAT, NAT -> NAT ]
+      [0 : -> NAT ]
+
+
+(x + 0) == x
+(x + succ(y)) == succ((x + y))
+(x * 0) == 0
+(x * succ(y)) == (x + (x * y))
+]
+operator
+constructor
+0 
+operator
+constructor
+succ 
+yes
+operator
+order
+l
+makerule
+1 
+suffice
+
+; Note: the system may be not canonical.
+
+; Specification of '+' is completely defined.
+
+; Specification of '*' is completely defined.
+option
+prove
+e
+cover
+add
+
+      [succ : NAT -> NAT ]
+      [+ : NAT, NAT -> NAT ]
+      [* : NAT, NAT -> NAT ]
+      [0 : -> NAT ]
+
+
+]
+makerule
+prove
+(x + y) == (y + x)
+
+; All subgoals are proved so 
+ ; (0 + x) == x
+
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+ ; (succ(y) + x) == succ((y + x))
+
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+ ; (x + y) == (y + x)
+
+;  is an inductive theorem.
+; Following equation
+;    (x + y) == (y + x)  [user, 5]
+;    is an inductive theorem in the current system.
+prove
+(x + (y + z)) == ((x + y) + z)
+
+; All subgoals are proved so 
+ ; (x + (y + z)) == (z + (x + y))
+
+;  is an inductive theorem.
+; Following equation
+;    (x + (y + z)) == (z + (x + y))  [user, 6]
+;    is an inductive theorem in the current system.
+prove
+(x * (y * z)) == ((x * y) * z)
+
+; All subgoals are proved so 
+ ; (x * (y + z)) == ((x * y) + (x * z))
+
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+ ; (x * (y * z)) == ((x * y) * z)
+
+;  is an inductive theorem.
+; Following equation
+;    (x * (y * z)) == ((x * y) * z)  [user, 7]
+;    is an inductive theorem in the current system.
+status
+*
+lr
+prove
+(x * (y + z)) == ((x * y) + (x * z))
+Yes, it is equational theorem.
+write
+spec-write
+/usr/users/eschbach/art/specs/docu/naturals/naturals.spec
+y

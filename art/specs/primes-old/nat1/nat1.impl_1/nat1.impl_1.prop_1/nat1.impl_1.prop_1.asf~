@@ -1,0 +1,55 @@
+specification nat1
+begin
+
+  variables
+    z1 : -> NAT
+
+  equations
+    The == true ;
+    The == true ;
+
+  properties
+  begin
+    ac-operators + 
+    theorems
+      ((u * y) < succ(y)) == false when equ((0 = u), false) == true , equ((succ(0) = u), false) == true , equ((0 = y), false) == true [ o ] ;
+      ((u + z) < succ(succ(y))) == false when equ((0 = u), false) == true , equ((succ(0) = u), false) == true , equ((z < succ(y)), false) == true [ o ] ;
+      ((u + x) < succ(y)) == false when equ(((u + x) < succ(succ(y))), false) == true , equ((x < y), false) == true , equ((succ(0) = u), false) == true , equ((0 = u), false) == true [ o ] ;
+      ((u + x) < succ(y)) == false when (x < succ(y)) == true , equ((x < y), false) == true , equ((succ(0) = u), false) == true , equ((0 = u), false) == true [ o ] ;
+      (u < succ(succ(0))) == false when equ((succ(0) = u), false) == true , equ((0 = u), false) == true [ o ] ;
+      (u >= z) == xor(true, (u < z)) [ o ] ;
+      (succ(x) < z) == (x < z) when equ((succ(x) = z), false) == true [ o ] ;
+      xor(true, (u < u)) == true [ o ] ;
+      (0 < x) == true when equ((0 = x), false) == true [ o ] ;
+      (0 >= u) == (0 = u) [ o ] ;
+      ((x * y) = succ(0)) == false when equ((succ(0) = x), false) == true [ o ] ;
+      ((x + z) = succ(0)) == false when equ((succ(0) = x), false) == true , equ((succ(0) = z), false) == true [ o ] ;
+      ((x * y) = x) == xor(xor((0 = x), (succ(0) = y)), and((0 = x), (succ(0) = y))) [ o ] ;
+      ((x * y) = x) == (succ(0) = y) when equ((0 = x), false) == true [ o ] ;
+      ((x * y) = 0) == xor(xor((0 = x), (0 = y)), and((0 = x), (0 = y))) [ o ] ;
+      ((y + z) = (x + z)) == (y = x) [ o ] ;
+      ((x + y) = y) == (0 = x) [ o ] ;
+      ((x + y) = 0) == false when equ((0 = x), false) == true [ o ] ;
+      (x < succ(0)) == (0 = x) [ o ] ;
+      (x + (z + z1)) == (z + (x + z1)) [ o ] ;
+      (succ(y) + x) == succ((y + x)) [ o ] ;
+      (0 + x) == x [ o ] ;
+      ((u * y) < succ(y)) == false when and(not((u = 0)), and(not((u = succ(0))), not((y = 0)))) == true [ o, e ] ;
+      (u >= z) == not((u < z)) [ o, e ] ;
+      (succ(x) < y) == true when and((x < y), not((succ(x) = y))) == true [ o, e ] ;
+      (succ(x) < y) == true when equ((succ(x) = y), false) == true , (x < y) == true [ o, e ] ;
+      (0 >= u) == (u = 0) [ o, e ] ;
+      (y < succ(y)) == true [ o, e ] ;
+      ((x * y) = succ(0)) == and((x = succ(0)), (y = succ(0))) [ o, e ] ;
+      ((x * y) = x) == or((y = succ(0)), (x = 0)) [ o, e ] ;
+      ((x * y) = x) == (y = succ(0)) when not((x = 0)) == true [ o, e ] ;
+      ((x * y) = 0) == or((x = 0), (y = 0)) [ o, e ] ;
+      ((x + z) = (y + z)) == (x = y) [ o, e ] ;
+      ((x + y) = y) == (x = 0) [ o, e ] ;
+      ((x + y) = 0) == and((x = 0), (y = 0)) [ o, e ] ;
+      (x < succ(0)) == (x = 0) [ o, e ] ;
+      (x * (y + z)) == ((x * y) + (x * z)) [ o, e ] ;
+      (x + y) == (y + x) [ o, e ] ;
+
+  end
+end

@@ -1,0 +1,38 @@
+specification natlist1
+begin
+  exports
+    begin 
+      functions
+        append  : NATLIST # NATLIST        -> NATLIST
+	delete  : NAT     # NATLIST        -> NATLIST
+	member  : NAT     # NATLIST        -> bool 
+	perm    : NATLIST # NATLIST        -> bool   
+    end
+
+  imports
+    natlist^^
+
+  variables
+    x,y : -> NAT
+    nl1,nl2 : -> NATLIST
+
+  equations
+    [NL1a]  append(null,nl1)        == nl1 ;
+    [NL1b]  append(cons(x,nl1),nl2) == cons(x,append(nl1,nl2)) ;
+
+    [NL2a] delete(x, null) == null;
+    [NL2b] delete(x, cons(x, nl1)) == nl1 ;
+    [NL2c] delete(x, cons(y, nl1)) ==  cons(y, delete(x, nl1)) 
+	     when (y = x) == false ;
+
+    [NL3a] member(x, null) == false ;
+    [NL3b] member(x, cons(x, nl1)) == true ;
+    [NL3c] member(x, cons(y, nl1)) == member(x, nl1) 
+	   when (x = y) == false ;
+
+    [NL4a] perm(null, null) == true ;
+    [NL4b] perm(null, cons(x, nl1)) == false ;
+    [NL4c] perm(cons(x, nl1), null) == false ;
+    [NL4d] perm(cons(x, nl1), nl2) == 
+	   and(member(x, nl2), perm(nl1 , delete(x, nl2))) ;
+end

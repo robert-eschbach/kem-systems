@@ -1,0 +1,78 @@
+
+option
+art
+on
+
+init
+
+log
+/tools/progress/art/specs/test/naturals/naturals
+
+option
+history
+no-history
+
+
+
+ADD
+[0 : NAT]
+[succ : NAT -> NAT]
+[and.n : NAT -> NAT]
+[+ : NAT, NAT -> NAT]
+[* : NAT, NAT -> NAT]
+[- : NAT, NAT -> NAT]
+[< : NAT, NAT -> bool]
+[>= : NAT, NAT -> bool]
+(x + 0) == x
+(x + succ(y)) == succ((x + y))
+(0 - x) == 0
+(x - 0) == x
+(succ(x) - succ(y)) == (x - y)
+(x * 0) == 0
+(x * succ(y)) == (x + (x * y))
+(x < 0) == false
+(0 < succ(x)) == true
+(succ(x) < succ(y)) == (x < y)
+(x >= x) == true
+(0 >= succ(y)) == false
+(succ(x) >= y) == (x >= y) if not ((succ(x) = y))
+]
+
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+option
+order
+l
+
+
+
+kb
+
+suff
+option
+prove
+s
+
+
+
+
+write
+spec-write
+/tools/progress/art/specs/test/naturals/naturals
+
+unlog
+
+option
+art
+off

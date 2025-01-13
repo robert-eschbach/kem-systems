@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/home/lisp/bin/cmucl -load /home/systeme/art/source/lisp-init.lisp -eval '(load-art)

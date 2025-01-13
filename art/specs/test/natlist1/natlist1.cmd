@@ -1,0 +1,75 @@
+option
+undo
+noundo
+add
+
+The arities of the operators are:
+      [succ : NAT -> NAT ]
+      [null : -> NATLIST ]
+      [cons : NAT, NATLIST -> NATLIST ]
+      [append : NATLIST, NATLIST -> NATLIST ]
+      [delete : NAT, NATLIST -> NATLIST ]
+      [member : NAT, NATLIST -> bool ]
+      [perm : NATLIST, NATLIST -> bool ]
+
+
+append(null, xnl1) == xnl1
+append(cons(x, xnl1), xnl2) == cons(x, append(xnl1, xnl2))
+delete(x, null) == null
+delete(x, cons(x, xnl1)) == xnl1
+delete(x, cons(y, xnl1)) == cons(y, delete(x, xnl1)) if not((y = x))
+member(x, null) == false
+member(x, cons(x, xnl1))
+member(x, cons(y, xnl1)) == member(x, xnl1) if not((x = y))
+perm(null, null)
+perm(null, cons(x, xnl1)) == false
+perm(cons(x, xnl1), null) == false
+perm(cons(x, xnl1), xnl2) == (member(x, xnl1) and perm(xnl1, delete(x, xnl2)))
+]
+operator
+constructor
+0 
+0
+operator
+constructor
+succ 
+yes
+operator
+constructor
+null 
+operator
+constructor
+cons 
+yes
+operator
+order
+l
+makerule
+status
+perm
+lr
+2 
+1 
+option
+prove
+e
+cover
+add
+
+The arities of the operators are:
+      [0 : -> NAT ]
+      [succ : NAT -> NAT ]
+      [null : -> NATLIST ]
+      [cons : NAT, NATLIST -> NATLIST ]
+      [append : NATLIST, NATLIST -> NATLIST ]
+      [delete : NAT, NATLIST -> NATLIST ]
+      [member : NAT, NATLIST -> bool ]
+      [perm : NATLIST, NATLIST -> bool ]
+
+
+]
+makerule
+write
+spec-write
+/usr/users/eschbach/specs/natlist1/natlist1.spec
+yes

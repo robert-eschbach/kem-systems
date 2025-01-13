@@ -1,0 +1,31 @@
+specification nat1
+begin
+
+  sorts nat
+
+  properties
+  begin
+    ordering 
+      precedence * +
+    theorems
+      [T1] x + y == y + x [e] ;
+      [T2] (x * (y + z)) == ((x * y) + (x * z)) [e] ;
+%      [T3] 0 < x == not(x = 0) [e] ;
+      [T4] x < succ(0) == x = 0 [e] ;
+      [T5] (x + y) = 0 == and((x = 0) ,(y = 0)) [e] ;
+      [T6] (x + y) = y == (x = 0) [e] ;
+      [T7] (x + z) = (y + z) == (x = y) [e] ;
+      [T8] (x * y) = 0 == or((x = 0) ,(y = 0)) [e] ;
+      [T9] (x * y) = x == (y = succ(0)) when not(x = 0) == true [e]  ;
+      [T10] (x * y) = x == or((y = succ(0)) ,(x = 0)) [e] ;
+      [T11] (x * y) = succ(0) == and ((x = succ(0)) ,(y = succ(0))) [e] ;
+      [T12] y < succ(y) == true [e] ;
+      [T13] 0 >= u == u = 0 [e] ;
+      [T14] succ(x) < y  == true
+            when and((x < y) ,not(succ(x) = y)) == true [e] ;
+      [T15] u >= z == not(u < z) [e] ;
+      [T16] (u * y) < succ(y) == false
+            when and(not(u = 0) ,and(not(u = succ(0)) ,not(y = 0))) == true [e] ;
+
+  end
+end

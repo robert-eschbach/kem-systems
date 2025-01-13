@@ -1,0 +1,26 @@
+specification nat2
+begin
+  exports
+    begin
+      functions
+	if : bool # NAT # NAT -> NAT
+    end 
+
+  imports 
+    nat1^^ 
+
+  variables
+    x,y : -> NAT
+    b   : -> bool
+
+  equations
+    [N1a] if(true, x, y) == x;
+    [N1b] if(false, x, y) == y;
+
+  properties
+    begin
+      theorems
+	succ(if(b, x, y)) == if(b, succ(x), succ(y)) [ o ] ;
+    end
+
+end

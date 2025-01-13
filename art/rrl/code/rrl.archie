@@ -1,0 +1,141 @@
+colonsay.dcs.ed.ac.uk
+	/export/graphics/jpegv3
+		-rw-r--r--       6758  Mar  2 1992  jwrrle.c
+	/export/graphics/jpegv4
+		-rw-r--r--       6740  Jun 25 1992  jwrrle.c
+emsworth.andrew.cmu.edu
+	/andrew/ams/libs/hdrs
+		-r--r--r--        666  Jan 23 1992  errlvls.h
+	/cdrom/hp700_80/andrew/include/ams
+		-r--r--r--        666  May  3 1992  errlvls.h
+	/cdrom/pmax_ul4/andrew/include/ams
+		-rw-r--r--        666  Jan 23 1992  errlvls.h
+export.lcs.mit.edu
+	/pub/R5untarred/contrib/lib/andrew/ams/libs/hdrs
+		-rw-r--r--        682  Oct  3 1991  errlvls.h
+ftp.belwue.de
+	/news/spool/log/OLD
+		-r--r-----        277  Apr  6 23:04  errlog.1.Z
+		-r--r-----        120  Mar 28 22:57  errlog.10.Z
+		-r--r-----          3  Mar 28 00:01  errlog.11.Z
+		-r--r-----          3  Mar 27 01:15  errlog.12.Z
+		-r--r-----        664  Mar 26 00:34  errlog.13.Z
+		-r--r-----        269  Mar 24 00:30  errlog.14.Z
+		-r--r-----        554  Apr  5 23:39  errlog.2.Z
+		-r--r-----          3  Apr  4 23:02  errlog.3.Z
+		-r--r-----          3  Apr  3 23:26  errlog.4.Z
+		-r--r-----        680  Apr  3 00:25  errlog.5.Z
+		-r--r-----        308  Apr  2 00:53  errlog.6.Z
+		-r--r-----        603  Mar 31 23:33  errlog.7.Z
+		-r--r-----          3  Mar 30 23:25  errlog.8.Z
+		-r--r-----        301  Mar 29 23:38  errlog.9.Z
+	/news/spool/log
+		-rw-r--r--          0  Apr  6 22:59  errlog
+	/news/src/cnews/conf
+		-rw-r--r--          0  Jan 16 1992  errlog
+	/news/src/cnews/relay/regress/master
+		-rw-r--r--          0  Jun  3 1990  errlog
+	/news/src/cnews/relay/regress/out
+		-rw-r--r--          0  Jun  3 1990  errlog
+ftp.germany.eu.net
+	/pub/programming/languages/perl/scripts/convex
+		-rw-r--r--       4542  Mar  4 1990  errlogd
+ftp.uu.net
+	/languages/perl/scripts-convex/convex
+		-rw-r--r--       2927  Mar  3 1990  errlogd.Z
+	/languages/perl/tutorial/eg/convex
+		-rw-r--r--       3116  Jul 19 1990  errlogd.Z
+	/published/usenix/faces/cray.com
+		-rw-rw-r--      13884  Mar  4 1990  rrl.Z
+	/systems/ibmpc/msdos/simtel20/batutl
+		-rw-rw-r--      10511  Jan 30 14:00  errlvl13.zip
+	/systems/unix/bsd-sources/lib/libc/gen
+		-r--r--r--       3580  Apr 30 1991  errlst.c.Z
+garbo.uwasa.fi
+	/pc/batchutil
+		-rw-rw-r--      19778  Oct 15 1991  errlvl12.zip
+ipc1.rvs.uni-hannover.de
+	/ftp1/rus/msdos/editors/memacs
+		-rw-r--r--        853  Jun 18 1991  errlin.cmd
+	/ftp1/rus/msdos/util/batch
+		-rw-r--r--      11225  Apr 12 1991  errlvl11.zip
+	/pub/msdos-koeln/batchutils
+		-rw-r--r--      19508  Oct 15 1991  errlvl12.zip
+		-rw-r--r--      10511  Nov 30 23:00  errlvl13.zip
+	/pub/unix/windows/X11R5/contrib.tape/lib/andrew/ams/libs/hdrs
+		-rw-r--r--        682  Oct  3 1991  errlvls.h
+mcsun.eu.net
+	/misc
+		drwxrwxr-x        512  Apr 17 03:04  rrl/
+	/misc/rrl
+		-rw-r--r--     291581  Dec 11 1989  rrl.tar.Z
+		-rw-r--r--     103365  Dec 11 1989  rrlmanual.tar.Z
+princeton.edu
+	/pub/Graphics/rayshade.4.0/Contrib
+		-rw-r--r--     801440  Aug 20 1992  rayshade-rrlib.tar.Z
+reseq.regent.e-technik.tu-muenchen.de
+	/informatik.public2/comp/X11/contrib/lib/xpm/xpm1icons
+		-r--r--r--       2427  May 17 1990  arrleft.xpm
+	/informatik.public2/comp/X11/contrib/lib/xpm/xpm2icons
+		-r--r--r--       2376  Jan 31 1991  arrleft.xpm
+	/informatik.public2/comp/X11/contrib/lib/xpm/xpm3icons
+		-r--r--r--       2373  Aug 17 1992  arrleft.xpm
+rusmv1.rus.uni-stuttgart.de
+	/soft/pc/editors/emacs
+		-rw-rw-r--        853  Jan 16 1990  errlin.cmd
+	/soft/pc/editors/memacs
+		-rw-rw-r--        853  Jun 18 1991  errlin.cmd
+	/soft/pc/util/batch
+		-rw-rw-r--      11225  Apr 12 1991  errlvl11.zip
+	/soft/scivi/raytracing/Contrib
+		-rw-rw-r--     801440  Aug 20 1992  rayshade-rrlib.tar.Z
+	/soft/unix/bsd-sources/lib/libc/gen
+		-rw-r--r--       5335  Nov 24 1991  errlst.c
+	/soft/unix/i386/386BSD/386bsd-0.1/filesystem/usr/src/lib/libc/gen
+		-rw-rw-r--       6190  Apr 30 1991  errlst.c
+saturn.hrz.tu-chemnitz.de
+	/fs12/pub/simtel/msdos/batutl
+		-r--r--r--      10511  Jan 30 19:00  errlvl13.zip
+	/fs13/pub/ham-radio
+		drwxr-xr-x       1024  Feb 23 00:42  arrl/
+	/fs13/pub/ham-radio/arrl
+		-r--r--r--      18455  Feb  4 1992  arrl-fo.txt
+		-r--r--r--        183  Nov 19 1991  arrlbibs.note
+		-r--r--r--      94727  Nov 19 1991  arrlbibs.zip
+	/fs13/pub/ham-radio
+		-r--r--r--        183  Nov 19 1991  arrlbibs.note
+		-r--r--r--      94727  Nov 19 1991  arrlbibs.zip
+	/fs13/pub/ham-radio/packet
+		drwxr-xr-x       1024  Oct 13 00:00  arrl/
+		drwxr-xr-x       1024  Feb 22 22:44  arrlcnc/
+serv03.zib-berlin.de
+	/pub/netlib/lapack/testing/lin
+		-rw-rw-r--       8663  Mar 11 18:26  cerrlq.f
+		-rw-rw-r--       2792  Mar 11 18:26  cerrlq.f.Z
+		-rw-rw-r--       4881  Mar 11 18:26  cerrls.f
+		-rw-rw-r--       1913  Mar 11 18:26  cerrls.f.Z
+		-rw-rw-r--       8619  Mar 19 15:48  derrlq.f
+		-rw-rw-r--       2780  Mar 19 15:48  derrlq.f.Z
+		-rw-rw-r--       4630  Mar 19 15:49  derrls.f
+		-rw-rw-r--       1880  Mar 19 15:49  derrls.f.Z
+		-rw-rw-r--       8597  Mar 11 18:26  serrlq.f
+		-rw-rw-r--       2758  Mar 11 18:26  serrlq.f.Z
+		-rw-rw-r--       4610  Mar 11 18:26  serrls.f
+		-rw-rw-r--       1849  Mar 11 18:26  serrls.f.Z
+		-rw-rw-r--       8732  Mar 19 14:49  zerrlq.f
+		-rw-rw-r--       2828  Mar 19 14:49  zerrlq.f.Z
+		-rw-rw-r--       4892  Mar 19 14:49  zerrls.f
+		-rw-rw-r--       1946  Mar 19 14:49  zerrls.f.Z
+tybalt.caltech.edu
+	/pub/R5untarred/contrib/lib/andrew/ams/libs/hdrs
+		-rw-r--r--        682  Oct  3 1991  errlvls.h
+ugle.unit.no
+	/pub/unix/bsd-sources/lib/libc/gen
+		-rw-r--r--       5335  Feb 16 1991  errlst.c
+ux1.cso.uiuc.edu
+	/uiuc/src/X11R5/contrib/lib/andrew/ams/libs/hdrs
+		-rw-r--r--        682  Oct  3 1991  errlvls.h
+	/uiuc/src/X11R5/found/clients/xv-2.21/jpeg
+		-rw-r--r--       6758  Jan  7 23:41  jwrrle.c
+	/uiuc/src/X11R5/found/poskbitmaps/mgr
+		-rw-r--r--        741  Jan 25 1989  arrleft

@@ -1,0 +1,39 @@
+specification nat1
+begin
+  exports
+    begin
+      functions
+        _ + _  : NAT # NAT -> NAT
+        _ * _  : NAT # NAT -> NAT
+	_ - _  : NAT # NAT -> NAT
+        _ < _  : NAT # NAT -> bool
+	_ >= _ : NAT # NAT -> bool
+	
+    end 
+
+  imports 
+    nat^^ 
+
+  variables
+    x,y,z,u : -> NAT
+
+  equations
+    [N1a] x + 0 == x ;
+    [N1b] x + succ(y) == succ(x + y) ;
+    
+    [N2a] 0 - x == 0 ;
+    [N2b] x - 0 == x ;
+    [N2c] succ(x) - succ(y) == x - y ;
+
+    [N3a] x * 0 == 0 ;
+    [N3b] x * succ(y) == x + (x * y) ;
+
+    [N4a] x < 0 == false ;
+    [N4b] 0 < succ(x) == true ;
+    [N4c] succ(x) < succ(y) == x < y ;
+
+    [N5a] x >= x == true ;
+    [N5b] 0 >= succ(y) == false ;
+    [N5c] succ(x) >= y == x >= y when (succ(x) = y) == false ;
+
+end

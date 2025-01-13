@@ -1,0 +1,45 @@
+specification primes
+begin
+  exports
+    begin
+      functions
+        prime     : NAT     -> bool
+        primelist : NATLIST -> bool
+        primefac  : NAT      -> NATLIST
+    end
+
+  imports
+    natlist1^^ ,
+    arithmetic^1^1
+
+  functions
+    prime1   : NAT # NAT -> bool
+    timelist : NATLIST   -> NAT
+
+  variables
+    x,y  : -> NAT
+    nl : -> NATLIST
+
+  equations
+    [P1a] prime(0) := false ;
+    [P1b] prime(succ(x)) := prime1(succ(x), x)  ;
+
+    [P2a] primelist(null) := true ;
+    [P2b] primelist(cons(x,nl)) := and(prime(x),primelist(nl)) ;
+
+    [P3a] timelist(null) := succ(0) ;
+    [P3b] timelist(cons(x,nl)) := x * timelist(nl) ;
+
+    [P4a] primefac(0) := null ;
+    [P4b] primefac(succ(0)) := null ;
+    [P4c] primefac(x * y) := append(primefac(x), primefac(y)) 
+            when (x = 0) == false, (y = 0) == false ;
+
+    [P5a] prime1(x, 0) := false ;
+    [P5b] prime1(x, succ(0)) := true ;
+    [P5c] prime1(x, succ(y)) := and(not(divides(succ(y), x)), prime1(x, y)) 
+            when not(y = 0) == true ;
+end
+
+
+

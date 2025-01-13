@@ -1,0 +1,47 @@
+specification primes
+begin
+
+  properties
+  begin
+    ordering 
+      precedence timelist div
+    theorems
+      divides(x, timelist(u)) == true when member(x, u) == true [ o, e ] ;
+      primelist(delete(x, u)) == true when primelist(u) == true [ o, e ] ;
+      (x = suc(0)) == false when prime(x) == true [ o, e ] ;
+      (x = 0) == false when prime(x) == true [ o, e ] ;
+      timelist(delete(x, u)) == div(timelist(u), x) when and(not((x = 0)), member(x, u)) == true [ o, e ] ;
+      (timelist(u) = 0) == false when primelist(u) == true [ o, e ] ;
+      primelist(append(u, v)) == true when primelist(u) == true , primelist(v) == true [ o, e ] ;
+      primelist(append(u, v)) == true when and(primelist(u), primelist(v)) == true [ o, e ] ;
+      prime1((w * z), y) == false when and(not((z = suc(0))), and(not((z = 0)), and((y >= z), not((y = suc(0)))))) == true [ o, e ] ;
+      (x >= y) == not((x < y)) [ o, e ] ;
+      not(divides(z, x)) == true when and(prime1(x, sub1(x)), and(not((z = suc(0))), and(not((z = x)), and(not((x = 0)), not((x = suc(0))))))) == true [ o, e ] ;
+      (rem(x, y) = 0) == false when and(prime(x), and(not((y = suc(0))), not((x = y)))) == true [ o, e ] ;
+      (rem(x, y) = 0) == false when and(prime(y), and(prime(x), not((x = y)))) == true [ o, e ] ;
+      gcd(x, y) == suc(0) when and((rem(x, gcd(x, y)) = 0), and(not((x = 0)), and(not((x = suc(0))), and(prime1(x, sub1(x)), not((gcd(x, y) = x)))))) == true [ o, e ] ;
+      (gcd(x, y) = x) == false when not((rem(y, x) = 0)) == true [ o, e ] ;
+      gcd(x, y) == suc(0) when and(prime1(x, sub1(x)), not((rem(y, x) = 0))) == true [ o, e ] ;
+      (rem((y * z), x) = 0) == false when and(prime(x), and(not(divides(x, y)), not(divides(x, z)))) == true [ o, e ] ;
+      member(x, u) == true when and(prime(x), and(primelist(u), divides(x, timelist(u)))) == true [ o, e ] ;
+      timelist(delete(x, u)) == div(timelist(u), x) when and(divides(x, timelist(u)), and(prime(x), primelist(u))) == true [ o, e ] ;
+      timelist(primefac(x)) == x when not((x = 0)) == true [ o, e ] ;
+      primelist(primefac(x)) == true when not((x = 0)) == true [ o, e ] ;
+      perm(u, v) == true when and(primelist(u), and(primelist(v), (timelist(u) = timelist(v)))) == true [ o, e ] ;
+      rem(timelist(u), x) == 0 when member(x, u) == true [ o ] ;
+      timelist(delete(x, u)) == div(timelist(u), x) when member(x, u) == true , not((0 = x)) == true [ o ] ;
+      prime1((w * z), y) == false when (y >= z) == true , not((0 = z)) == true , not((suc(0) = y)) == true , not((suc(0) = z)) == true [ o ] ;
+      not((x < x)) == true [ o ] ;
+      (suc(x) < y) == (x < y) when not((suc(x) = y)) == true [ o ] ;
+      (rem(x, z) = 0) == false when not((z = x)) == true , not((0 = x)) == true , prime1(x, sub1(x)) == true , not((suc(0) = x)) == true , not((suc(0) = z)) == true [ o ] ;
+      (rem(x, y) = 0) == false when prime(x) == true , not((y = x)) == true , not((suc(0) = y)) == true [ o ] ;
+      (rem((y * z), x) = 0) == false when prime(x) == true , not((rem(y, x) = 0)) == true , not((rem(z, x) = 0)) == true [ o ] ;
+      member(x, u) == true when prime(x) == true , primelist(u) == true , (rem(timelist(u), x) = 0) == true [ o ] ;
+      timelist(primefac(x)) == x when not((0 = x)) == true [ o ] ;
+      primelist(primefac(x)) == true when not((0 = x)) == true [ o ] ;
+      perm(null, v) == true when primelist(v) == true , (timelist(v) = suc(0)) == true [ o ] ;
+      perm(u, null) == true when primelist(u) == true , (timelist(u) = suc(0)) == true [ o ] ;
+      perm(u, v) == true when primelist(u) == true , primelist(v) == true , (timelist(v) = timelist(u)) == true [ o ] ;
+
+  end
+end

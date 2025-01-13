@@ -1,0 +1,53 @@
+;** Hilfe fuer die Funktionen select-variables aus print-asf-file.lisp
+
+
+(setq functions '(("0" NIL ("NAT") "functor") 
+ (">=" ("NAT" "NAT") ("bool") "infix") 
+ ("<" ("NAT" "NAT") ("bool") "infix") 
+ ("-" ("NAT" "NAT") ("NAT") "infix") 
+ ("*" ("NAT" "NAT") ("NAT") "infix") 
+ ("+" ("NAT" "NAT") ("NAT") "infix") 
+ ("succ" ("NAT") ("NAT") "functor")))
+
+(setq formel-1 '(((">=" . "infix") "u" "z") "==" (("not" . "functor") (("<" . "infix") "u" "z")) nil ("o" "in")))
+
+(setq formel-2 '((("+" . "infix") "x" "y") "==" (("+" . "infix") "y" "x") NIL ("o" "in")))
+
+(setq formel-3 '((("*" . "infix") "x" (("+" . "infix") "y" "z")) "==" (("+" . "infix") (("*" . "infix") "x" "y") (("*" . "infix") "x" "z")) NIL ("o" "in")))
+
+(setq formel-4 '((("=" . "infix") (("*" . "infix") "x" "y") "x") "==" (("=" . "infix") "y" (("succ" . "functor") "0")) ((("not" . "functor") (("=" . "infix") "x" "0")) "true") ("o" "in")))
+
+(setq formel-5 '(((< . infix) ((* . infix) u y) ((succ . functor) y)) == false (((and . infix) ((not . functor) ((= . infix) u 0)) ((and . infix) ((not . functor) ((= . infix) u ((succ . functor) 0))) ((not . functor) ((= . infix) y 0)))) true)))
+
+
+(setq formel-6 '(((< . infix) ((* . infix) u y) ((succ . functor) y)) == false (((equ . functor) ((= . infix) 0 u) false) true ((equ . functor) ((= . infix) ((succ . functor) 0) u) false) true ((equ . functor) ((= . infix) 0 y) false) true) (o in)))
+
+(setq formel-7 '((("=" . "infix") (("*" . "infix") "x" "y") "x") "==" (("=" . "infix") "y" (("succ" . "functor") "0")) ((("not" . "functor") (("=" . "infix") "x" "0")) "true" (("not" . "functor") (("=" . "infix") "x" "0")) "true") ("o" "in")))
+
+
+
+(setq term-1 '(("=" . "infix") (("*" . "infix") "x" "y") "x"))
+
+(setq term-2 '(("=" . "infix") "x" "y"))
+
+(setq term-3 '(("=" . "infix") "x" "0"))
+ ((u * y) < succ(y)) == false if { and(not((u = 0)), and(not((u = succ(0))), not((y = 0)))) = true
+(setq variables '(("u" "NAT" ("nat1" NIL NIL #P"/usr/users/madprak1/specs/nat1/nat1.asf")) 
+                  ("z" "NAT" ("nat1" NIL NIL #P"/usr/users/madprak1/specs/nat1/nat1.asf")) 
+		  ("y" "NAT" ("nat1" NIL NIL #P"/usr/users/madprak1/specs/nat1/nat1.asf")) 
+                  ("x" "NAT" ("nat1" NIL NIL #P"/usr/users/madprak1/specs/nat1/nat1.asf"))))
+
+
+(select-variables functions formel-1)
+
+(compute-input-sorts-for-RRL-equality term-1 functions)
+
+(select-variables-term-help functions term-1)
+
+(load "print-asf-file.lisp")
+
+(setq asf-theorems (get-spec *asf-spec* 'prove))
+(setq rrl-theorems (get-spec *log-spec* 'prove))
+(load "save-rrl/compute-difference")
+(equ-diff-prove  asf-theorems rrl-theorems)
+

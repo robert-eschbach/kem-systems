@@ -1,0 +1,59 @@
+specification nat1
+begin
+
+  variables
+    z1 : -> NAT
+    un : -> NAT
+    zn : -> NAT
+    xn : -> NAT
+    yn : -> NAT
+
+  equations
+    The == true ;
+
+  properties
+  begin
+    ac-operators + 
+    theorems
+      ((un * yn) < succ(yn)) == false when equ((0 = un), false) == true , equ((succ(0) = un), false) == true , equ((0 = yn), false) == true [ o ] ;
+      ((un + zn) < succ(succ(yn))) == false when equ((0 = un), false) == true , equ((succ(0) = un), false) == true , equ((zn < succ(yn)), false) == true [ o ] ;
+      ((un + xn) < succ(yn)) == false when equ(((un + xn) < succ(succ(yn))), false) == true , equ((xn < yn), false) == true , equ((succ(0) = un), false) == true , equ((0 = un), false) == true [ o ] ;
+      ((un + xn) < succ(yn)) == false when (xn < succ(yn)) == true , equ((xn < yn), false) == true , equ((succ(0) = un), false) == true , equ((0 = un), false) == true [ o ] ;
+      (un < succ(succ(0))) == false when equ((succ(0) = un), false) == true , equ((0 = un), false) == true [ o ] ;
+      (un >= zn) == xor(true, (un < zn)) [ o ] ;
+      (succ(xn) < zn) == (xn < zn) when equ((succ(xn) = zn), false) == true [ o ] ;
+      xor(true, (un < un)) == true [ o ] ;
+      (0 >= un) == (0 = un) [ o ] ;
+      ((xn * yn) = succ(0)) == false when equ((succ(0) = xn), false) == true [ o ] ;
+      ((xn + zn) = succ(0)) == false when equ((succ(0) = xn), false) == true , equ((succ(0) = zn), false) == true [ o ] ;
+      ((xn * yn) = xn) == xor(xor((0 = xn), (succ(0) = yn)), and((0 = xn), (succ(0) = yn))) [ o ] ;
+      ((xn * yn) = xn) == (succ(0) = yn) when equ((0 = xn), false) == true [ o ] ;
+      ((xn * yn) = 0) == xor(xor((0 = xn), (0 = yn)), and((0 = xn), (0 = yn))) [ o ] ;
+      ((yn + zn) = (xn + zn)) == (yn = xn) [ o ] ;
+      ((xn + yn) = yn) == (0 = xn) [ o ] ;
+      ((xn + yn) = 0) == false when equ((0 = xn), false) == true [ o ] ;
+      (xn < succ(0)) == (0 = xn) [ o ] ;
+      (0 < xn) == xor(true, (0 = xn)) [ o ] ;
+      (xn + (zn + z1)) == (zn + (xn + z1)) [ o ] ;
+      (succ(yn) + xn) == succ((yn + xn)) [ o ] ;
+      (0 + xn) == xn [ o ] ;
+      ((un * yn) < succ(yn)) == false when and(not((un = 0)), and(not((un = succ(0))), not((yn = 0)))) == true [ o, e ] ;
+      (un >= zn) == not((un < zn)) [ o, e ] ;
+      (succ(xn) < yn) == true when and((xn < yn), not((succ(xn) = yn))) == true [ o, e ] ;
+      (succ(xn) < yn) == true when equ((succ(xn) = yn), false) == true , (xn < yn) == true [ o, e ] ;
+      (0 >= un) == (un = 0) [ o, e ] ;
+      (yn < succ(yn)) == true [ o, e ] ;
+      ((xn * yn) = succ(0)) == and((xn = succ(0)), (yn = succ(0))) [ o, e ] ;
+      ((xn * yn) = xn) == or((yn = succ(0)), (xn = 0)) [ o, e ] ;
+      ((xn * yn) = xn) == (yn = succ(0)) when not((xn = 0)) == true [ o, e ] ;
+      ((xn * yn) = 0) == or((xn = 0), (yn = 0)) [ o, e ] ;
+      ((xn + zn) = (yn + zn)) == (xn = yn) [ o, e ] ;
+      ((xn + yn) = yn) == (xn = 0) [ o, e ] ;
+      ((xn + yn) = 0) == and((xn = 0), (yn = 0)) [ o, e ] ;
+      (xn < succ(0)) == (xn = 0) [ o, e ] ;
+      (0 < xn) == not((xn = 0)) [ o, e ] ;
+      (xn * (yn + zn)) == ((xn * yn) + (xn * zn)) [ o, e ] ;
+      (xn + yn) == (yn + xn) [ o, e ] ;
+
+  end
+end

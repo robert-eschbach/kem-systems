@@ -1,0 +1,13 @@
+specification primes
+begin
+
+  equations
+    The == true ;
+    The == true ;
+
+  properties
+  begin
+    ordering 
+      precedence primelist prime, timelist *, primefac append, prime prime1, prime1 rem
+  end
+end

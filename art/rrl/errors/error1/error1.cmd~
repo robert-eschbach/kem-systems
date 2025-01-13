@@ -1,0 +1,826 @@
+;; Dieses File enthaelt den Beweis
+;; zu timelist(primefac(x)) == x if not(x = 0)
+;; Dieser Beweis ist falsch, siehe dazu die Bemerkungen
+;; in diesem File. 
+;; Eschbach Thu Aug 25 12:33:52 MET DST 1994
+
+
+pr
+Type your equation in the format:  L == R [if C] 
+Enter a ']' to exit when no equation is given.
+timelist(primefac(x)) == x if not(x = 0)
+
+
+Let P(X) be [main] TIMELIST(PRIMEFAC(X)) == X if not((0 = X))
+
+The induction will be done on X in PRIMEFAC(X), and will follow the scheme: 
+    [#1] P(0)
+    [#2] P(SUC(0))
+    [#3] P(X) if  { PRIME(X) } 
+    [#4] P((X1 * Y)) if 
+        { not((0 = X1)),
+          not((0 = Y)),
+          not((SUC(0) = X1)),
+          not((SUC(0) = Y)),
+          P(X1),
+          P(Y) } 
+
+By reformulation, 
+     [#1] TIMELIST(PRIMEFAC(0)) == 0 if not((0 = 0))
+     is reduced to true.
+
+By rules [36], [33], 
+     [#2] TIMELIST(PRIMEFAC(SUC(0))) == SUC(0) if not((SUC(0) = 0))
+     is reduced to true.
+
+By rules [116], [37], [34], [33], [6], [5], [3], 
+     [#3] TIMELIST(PRIMEFAC(X)) == X if 
+          (PRIME(X)) and 
+          (not((0 = X)))
+     is reduced to true.
+
+Subgoal [#4] is split into:
+ [#4.1] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (X = 0) and 
+          (Y = 0)
+ [#4.2] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (X = 0) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+ [#4.3] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          (Y = 0)
+ [#4.4] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+
+By reformulation, 
+     [#4.1] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (X = 0) and 
+          (Y = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0)))
+     is reduced to true.
+
+By reformulation, 
+     [#4.2] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (X = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+     is reduced to true.
+
+By reformulation, 
+     [#4.3] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (Y = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X))
+     is reduced to true.
+
+By rules [98], [38], 
+     [#4.4] TIMELIST(PRIMEFAC((X * Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+     is reduced to
+     [#4.4] TIMELIST(APPEND(PRIMEFAC(X), PRIMEFAC(Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+
+The induction hypotheses are not applicable in: 
+    [#4.4] TIMELIST(APPEND(PRIMEFAC(X), PRIMEFAC(Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+
+The above equation is subsumed by the conjecture:
+    TIMELIST(PRIMEFAC(X)) == X  if   { not((0 = X)) }   [USER, 113]
+    so we consider it as a failure.
+
+Generalize [#4.4] TIMELIST(APPEND(PRIMEFAC(X), PRIMEFAC(Y))) == (X * Y) if 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y)) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y)))
+    to [#4.4.1] TIMELIST(APPEND(Z, Z1)) == (X * Y) if 
+          (X = TIMELIST(Z)) and 
+          (Y = TIMELIST(Z1)) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y)))
+
+Let P(Z) be [#4.4.1] TIMELIST(APPEND(Z, Z1)) == (TIMELIST(Z) * TIMELIST(Z1)) if 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(Z1) = 0))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          (not((TIMELIST(Z1) = SUC(0))))
+
+The induction will be done on Z in TIMELIST(Z), and will follow the scheme: 
+    [#4.4.1.1] P(NULL)
+    [#4.4.1.2] P(CONS(X, Y)) if  { P(Y) } 
+
+By rules [120], [31], [33], 
+     [#4.4.1.1] TIMELIST(APPEND(NULL, Z)) == (TIMELIST(Z) * TIMELIST(NULL)) if 
+          (not((TIMELIST(NULL) = 0))) and 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(NULL) = SUC(0)))) and 
+          (not((TIMELIST(Z) = SUC(0))))
+     is reduced to true.
+
+Subgoal [#4.4.1.2] is split into:
+ [#4.4.1.2.1] TIMELIST(APPEND(CONS(X, Y), Z)) == (TIMELIST(Z) * TIMELIST(CONS(X, Y))) if 
+          (not((TIMELIST(CONS(X, Y)) = 0))) and 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(CONS(X, Y)) = SUC(0)))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          ((TIMELIST(Y) = 0))
+ [#4.4.1.2.2] TIMELIST(APPEND(CONS(X, Y), Z)) == (TIMELIST(Z) * TIMELIST(CONS(X, Y))) if 
+          (not((TIMELIST(CONS(X, Y)) = 0))) and 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(CONS(X, Y)) = SUC(0)))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          ((TIMELIST(Y) = SUC(0)))
+ [#4.4.1.2.3] TIMELIST(APPEND(CONS(X, Y), Z)) == (TIMELIST(Z) * TIMELIST(CONS(X, Y))) if 
+          (not((TIMELIST(CONS(X, Y)) = 0))) and 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(CONS(X, Y)) = SUC(0)))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          ((TIMELIST(APPEND(Y, Z)) = (TIMELIST(Y) * TIMELIST(Z))))
+
+By rules [34], [5], 
+     [#4.4.1.2.1] TIMELIST(APPEND(CONS(X, Y), Z)) == (TIMELIST(Z) * TIMELIST(CONS(X, Y))) if 
+          (not((TIMELIST(Z) = 0))) and 
+          ((TIMELIST(Y) = 0)) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          (not((TIMELIST(CONS(X, Y)) = 0))) and 
+          (not((TIMELIST(CONS(X, Y)) = SUC(0))))
+     is reduced to true.
+
+By rules [34], [6], [5], [3], [23], [90], 
+     [#4.4.1.2.2] TIMELIST(APPEND(CONS(X, Y), Z)) == (TIMELIST(Z) * TIMELIST(CONS(X, Y))) if 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          ((TIMELIST(Y) = SUC(0))) and 
+          (not((TIMELIST(CONS(X, Y)) = 0))) and 
+          (not((TIMELIST(CONS(X, Y)) = SUC(0))))
+     is reduced to
+     [#4.4.1.2.2] (X * TIMELIST(APPEND(Y, Z))) == (X * TIMELIST(Z)) if 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          ((TIMELIST(Y) = SUC(0))) and 
+          (not((0 = X))) and 
+          (not((SUC(0) = X)))
+
+The following premises are dropped from:
+   (X * TIMELIST(APPEND(Y, Z))) == (X * TIMELIST(Z))  if  
+        { not((TIMELIST(Z) = 0)),
+          not((TIMELIST(Z) = SUC(0))),
+          not((0 = X)),
+          not((SUC(0) = X)) }   [GENE, 23]
+    the premise: (TIMELIST(Y) = SUC(0))
+
+Let P(Z) be [#4.4.1.2.2] (X * TIMELIST(APPEND(Y, Z))) == (X * TIMELIST(Z)) if 
+          (not((TIMELIST(Z) = 0))) and 
+          (not((TIMELIST(Z) = SUC(0)))) and 
+          (not((0 = X))) and 
+          (not((SUC(0) = X)))
+
+The induction will be done on Z in TIMELIST(Z), and will follow the scheme: 
+    [#4.4.1.2.2.1] P(NULL)
+    [#4.4.1.2.2.2] P(CONS(X1, Y2)) if  { P(Y2) } 
+
+By rules [120], [31], [33], 
+     [#4.4.1.2.2.1] (X * TIMELIST(APPEND(Y, NULL))) == (X * TIMELIST(NULL)) if 
+          (not((0 = X))) and 
+          (not((TIMELIST(NULL) = 0))) and 
+          (not((SUC(0) = X))) and 
+          (not((TIMELIST(NULL) = SUC(0))))
+     is reduced to true.
+
+Subgoal [#4.4.1.2.2.2] is split into:
+ [#4.4.1.2.2.2.1] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * TIMELIST(CONS(X1, Y2))) if 
+          (not((TIMELIST(CONS(X1, Y2)) = 0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = SUC(0)))) and 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          ((TIMELIST(Y2) = 0))
+ [#4.4.1.2.2.2.2] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * TIMELIST(CONS(X1, Y2))) if 
+          (not((TIMELIST(CONS(X1, Y2)) = 0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = SUC(0)))) and 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          ((TIMELIST(Y2) = SUC(0)))
+ [#4.4.1.2.2.2.3] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * TIMELIST(CONS(X1, Y2))) if 
+          (not((TIMELIST(CONS(X1, Y2)) = 0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = SUC(0)))) and 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          (((X * TIMELIST(APPEND(Y, Y2))) = (X * TIMELIST(Y2))))
+
+By rules [34], [5], 
+     [#4.4.1.2.2.2.1] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * TIMELIST(CONS(X1, Y2))) if 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          ((TIMELIST(Y2) = 0)) and 
+          (not((TIMELIST(CONS(X1, Y2)) = 0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = SUC(0))))
+     is reduced to true.
+
+By rules [34], [6], [5], [3], [90], 
+     [#4.4.1.2.2.2.2] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * TIMELIST(CONS(X1, Y2))) if 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          ((TIMELIST(Y2) = SUC(0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = 0))) and 
+          (not((TIMELIST(CONS(X1, Y2)) = SUC(0))))
+     is reduced to
+     [#4.4.1.2.2.2.2] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * X1) if 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          ((TIMELIST(Y2) = SUC(0))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X1)))
+
+The following premises are dropped from:
+   (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * X1)  if  
+        { not((0 = X)),
+          not((SUC(0) = X)),
+          not((0 = X1)),
+          not((SUC(0) = X1)) }   [GENE, 23]
+    the premise: (TIMELIST(Y2) = SUC(0))
+
+Let P(Y) be [#4.4.1.2.2.2.2] (X * TIMELIST(APPEND(Y, CONS(X1, Y2)))) == (X * X1) if 
+          (not((0 = X))) and 
+          (not((SUC(0) = X))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X1)))
+
+The induction will be done on Y in APPEND(Y, CONS(X1, Y2)), and will follow the scheme: 
+    [#4.4.1.2.2.2.2.1] P(NULL)
+    [#4.4.1.2.2.2.2.2] P(CONS(X3, Y4)) if  { P(Y4) } 
+
+By rules [22], [34], [100], [98], 
+     [#4.4.1.2.2.2.2.1] (X * TIMELIST(APPEND(NULL, CONS(X1, Y)))) == (X * X1) if 
+          (not((0 = X))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = X1)))
+     is reduced to
+     [#4.4.1.2.2.2.2.1] TIMELIST(Y) == SUC(0) if 
+          (not((0 = X))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = X1)))
+
+Let P(Y) be [#4.4.1.2.2.2.2.1] TIMELIST(Y) == SUC(0) if 
+          (not((0 = X))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = X1)))
+
+The induction will be done on Y in TIMELIST(Y), and will follow the scheme: 
+    [#4.4.1.2.2.2.2.1.1] P(NULL)
+    [#4.4.1.2.2.2.2.1.2] P(CONS(X2, Y3)) if  { P(Y3) } 
+
+By rule [33], 
+     [#4.4.1.2.2.2.2.1.1] TIMELIST(NULL) == SUC(0) if 
+          (not((0 = X))) and 
+          (not((0 = X1))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = X1)))
+     is reduced to true.
+
+By rules [34], [6], [5], [3], 
+     [#4.4.1.2.2.2.2.1.2] TIMELIST(CONS(X, Y)) == SUC(0) if 
+          (not((0 = X1))) and 
+          (not((0 = X2))) and 
+          (not((SUC(0) = X1))) and 
+          (not((SUC(0) = X2))) and 
+          ((TIMELIST(Y) = SUC(0)))
+     is reduced to
+     [#4.4.1.2.2.2.2.1.2] SUC(0) == X if 
+          (not((0 = X1))) and 
+          (not((0 = X2))) and 
+          (not((SUC(0) = X1))) and 
+          (not((SUC(0) = X2))) and 
+          ((TIMELIST(Y) = SUC(0)))
+
+The following premises are dropped from:
+   SUC(0) == X  if  
+        { not((0 = X1)),
+          not((0 = X2)),
+          not((SUC(0) = X1)),
+          not((SUC(0) = X2)) }   [GENE, 23]
+    the premise: (TIMELIST(Y) = SUC(0))
+
+Proof failed at Step 5:
+    [#4.4.1.2.2.2.2.1.2] SUC(0) == X if 
+          (not((0 = X1))) and 
+          (not((0 = X2))) and 
+          (not((SUC(0) = X1))) and 
+          (not((SUC(0) = X2)))
+
+    The proof failed at node #27 : 
+ [#4.4.1.2.2.2.2.1.2] SUC(0) == X if 
+          (not((0 = X1))) and 
+          (not((0 = X2))) and 
+          (not((SUC(0) = X1))) and 
+          (not((SUC(0) = X2))) and 
+          ((TIMELIST(Y) = SUC(0)))
+
+ Because this proof step is too deep.
+
+      ********************************************
+      *         Failure Handler Of FRI           *
+      ********************************************
+
+
+Type NODES, ONE-NODE, TREE, CURSOR, RESTART, EXIT, ABORT, HELP --> ex
+
+Fail to prove the generated lemma: 
+    [#4.4.1] TIMELIST(APPEND(Z, Z1)) == (X * Y) if 
+          (X = TIMELIST(Z)) and 
+          (Y = TIMELIST(Z1)) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y)))
+ of [#4.4] TIMELIST(APPEND(PRIMEFAC(X), PRIMEFAC(Y))) == (X * Y) if 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y)) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y)))
+
+    The proof failed at node #10 : 
+ [#4.4] TIMELIST(APPEND(PRIMEFAC(X), PRIMEFAC(Y))) == (X * Y) if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X)) and 
+          ((TIMELIST(PRIMEFAC(Y)) = Y))
+
+
+
+      ********************************************
+      *         Failure Handler Of FRI           *
+      ********************************************
+
+Type NODES, ONE-NODE, TREE, CURSOR, RESTART, EXIT, ABORT, HELP --> ex
+
+Do you want to try more inductions on other terms ?(Y,N,YES,NO) y
+
+
+;; Eschbach
+;; Schlechte Induktion, da primefac nicht auf Konstruktoren
+;; definiert wurde !
+
+Let P(X) be [main] TIMELIST(PRIMEFAC(X)) == X if not((0 = X))
+
+The induction will be done on X and will follow the scheme: 
+    [#1] P(0)
+    [#2] P(SUC(X1)) if  { P(X1) } 
+
+By reformulation, 
+     [#1] TIMELIST(PRIMEFAC(0)) == 0 if not((0 = 0))
+     is reduced to true.
+
+Subgoal [#2] is split into:
+ [#2.1] TIMELIST(PRIMEFAC(SUC(X))) == SUC(X) if 
+          (not((SUC(X) = 0))) and 
+          (X = 0)
+ [#2.2] TIMELIST(PRIMEFAC(SUC(X))) == SUC(X) if 
+          (not((SUC(X) = 0))) and 
+          ((TIMELIST(PRIMEFAC(X)) = X))
+
+By rules [36], [33], 
+     [#2.1] TIMELIST(PRIMEFAC(SUC(X))) == SUC(X) if 
+          (X = 0) and 
+          (not((SUC(X) = 0)))
+     is reduced to true.
+
+
+
+;; Eschbach
+;; Mit der Begruendung, dass die Praemisse die
+;; Konklusion subsumiert, wird der Beweis beendet.
+;; Dies ist im 'normalen' Fall richtig, aber dies
+;; gilt natuerlich nicht innerhalb einer Induktion,
+;; in welcher mit einer Induktionsordnung 
+;; gearbeitet wird. Man muss also gewaehrleisten, dass
+;; man nicht zuviel voraussetzt, oder anders ausgedrueckt,
+;; dass die Induktionsvoraussetzung nur fuer die Vorgaenger 
+;; gilt. 
+;; Diese Regel wird hier offensichtlich nicht beachtet.
+  
+Subgoal [#2.2] TIMELIST(PRIMEFAC(SUC(X))) == SUC(X) if (TIMELIST(PRIMEFAC(X)) = X)
+    is subsumed by its ancestor:
+    TIMELIST(PRIMEFAC(X)) == X  if   { not((0 = X)) }   [USER, 113]
+    so it is true by induciton hypothesis.
+
+All subgoals of [main] are proven, hence
+    [main] TIMELIST(PRIMEFAC(X)) == X if not((0 = X))
+    is an inductive theorem.
+
+
+Following equation
+    TIMELIST(PRIMEFAC(X)) == X  if   { not((0 = X)) }   [USER, 113]
+    is an inductive theorem in the current system.
+
+Adding Rule:  [153] TIMELIST(PRIMEFAC(X)) ---> X  if   { not((0 = X)) }   [USER, 113]
+
+
+Time for this command = 9.910 sec      Total time = 158.540 sec
+
+Type Add, Akb, Auto, Break, Clean, Cover, Delete, Disable, Enable, Grammar,
+     History, Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, 
+     Option, Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time,
+     Undo, Unlog, Write or Help.
+RRL-> prove primelist(primefac(x)) if not(x = 0)
+
+
+Let P(X) be [main] PRIMELIST(PRIMEFAC(X)) == TRUE if not((0 = X))
+
+The induction will be done on X in PRIMEFAC(X), and will follow the scheme: 
+    [#1] P(0)
+    [#2] P(SUC(0))
+    [#3] P(X) if  { PRIME(X) } 
+    [#4] P((X1 * Y)) if 
+        { not((0 = X1)),
+          not((0 = Y)),
+          not((SUC(0) = X1)),
+          not((SUC(0) = Y)),
+          P(X1),
+          P(Y) } 
+
+By reformulation, 
+     [#1] PRIMELIST(PRIMEFAC(0)) == TRUE if not((0 = 0))
+     is reduced to true.
+
+By rules [36], [31], 
+     [#2] PRIMELIST(PRIMEFAC(SUC(0))) == TRUE if not((SUC(0) = 0))
+     is reduced to true.
+
+By rules [116], [37], [32], [31], 
+     [#3] PRIMELIST(PRIMEFAC(X)) == TRUE if 
+          (PRIME(X)) and 
+          (not((0 = X)))
+     is reduced to true.
+
+Subgoal [#4] is split into:
+ [#4.1] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (X = 0) and 
+          (Y = 0)
+ [#4.2] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (X = 0) and 
+          (PRIMELIST(PRIMEFAC(Y)))
+ [#4.3] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (PRIMELIST(PRIMEFAC(X))) and 
+          (Y = 0)
+ [#4.4] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0))) and 
+          (PRIMELIST(PRIMEFAC(X))) and 
+          (PRIMELIST(PRIMEFAC(Y)))
+
+By reformulation, 
+     [#4.1] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (X = 0) and 
+          (Y = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0)))
+     is reduced to true.
+
+By reformulation, 
+     [#4.2] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (X = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (PRIMELIST(PRIMEFAC(Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0)))
+     is reduced to true.
+
+By reformulation, 
+     [#4.3] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (Y = 0) and 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (PRIMELIST(PRIMEFAC(X))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0)))
+     is reduced to true.
+
+By rules [98], [38], [121], 
+     [#4.4] PRIMELIST(PRIMEFAC((X * Y))) == TRUE if 
+          (not((0 = X))) and 
+          (not((0 = Y))) and 
+          (PRIMELIST(PRIMEFAC(X))) and 
+          (PRIMELIST(PRIMEFAC(Y))) and 
+          (not((SUC(0) = X))) and 
+          (not((SUC(0) = Y))) and 
+          (not(((X * Y) = 0)))
+     is reduced to true.
+
+All subgoals of [main] are proven, hence
+    [main] PRIMELIST(PRIMEFAC(X)) == TRUE if not((0 = X))
+    is an inductive theorem.
+
+
+Following equation
+    PRIMELIST(PRIMEFAC(X)) == TRUE  if   { not((0 = X)) }   [USER, 114]
+    is an inductive theorem in the current system.
+
+In PRIMELIST(PRIMEFAC(X)) == TRUE  if   { not((0 = X)) }   [USER, 114]
+    the premise not((0 = X)) is released,
+    because the equation is true under its negation.
+
+Adding Rule:  [154] PRIMELIST(PRIMEFAC(X)) ---> TRUE  [USER, 114]
+
+
+Time for this command = 1.990 sec      Total time = 160.560 sec
+
+Type Add, Akb, Auto, Break, Clean, Cover, Delete, Disable, Enable, Grammar,
+     History, Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, 
+     Option, Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time,
+     Undo, Unlog, Write or Help.
+RRL-> list
+
+The arities of the operators are:
+      [SUC : NUM -> NUM ]
+      [1 : -> NUM ]
+      [0 : -> NUM ]
+      [2 : -> NUM ]
+      [+ : NUM, NUM -> NUM ]
+      [* : NUM, NUM -> NUM ]
+      [< : NUM, NUM -> BOOL ]
+      [SUB1 : NUM -> NUM ]
+      [- : NUM, NUM -> NUM ]
+      [DIV : NUM, NUM -> NUM ]
+      [REM : NUM, NUM -> NUM ]
+      [DIVIDES : NUM, NUM -> BOOL ]
+      [NULL : -> LIST ]
+      [CONS : UNIV, LIST -> LIST ]
+      [APPEND : LIST, LIST -> LIST ]
+      [DELETE : UNIV, LIST -> LIST ]
+      [PRIME1 : NUM, NUM -> BOOL ]
+      [PRIME : NUM -> BOOL ]
+      [PRIMELIST : LIST -> BOOL ]
+      [TIMELIST : LIST -> NUM ]
+      [PRIMEFAC : NUM -> LIST ]
+      [MEMBER : UNIV, LIST -> BOOL ]
+      [PERM : LIST, LIST -> BOOL ]
+      [>= : NUM, NUM -> BOOL ]
+      [GCD : NUM, NUM -> NUM ]
+
+
+Associative & commutative operator set = { *, + }
+
+Commutative operator set = { GCD }
+No equations in current system.
+
+Rules:
+  [1] 1 ---> SUC(0)  [USER, 1]
+  [2] 2 ---> SUC(SUC(0))  [USER, 2]
+  [3] (X + 0) ---> X  [DEF, 3]
+  [4] (X + SUC(Y)) ---> SUC((X + Y))  [DEF, 4]
+  [5] (X * 0) ---> 0  [DEF, 5]
+  [6] (X * SUC(Y)) ---> (X + (X * Y))  [DEF, 6]
+  [7] (0 < SUC(X)) ---> TRUE  [DEF, 7]
+  [8] (X < 0) ---> FALSE  [DEF, 8]
+  [9] (SUC(X) < SUC(Y)) ---> (X < Y)  [DEF, 9]
+ [10] SUB1(0) ---> 0  [DEF, 10]
+ [11] SUB1(SUC(X)) ---> X  [DEF, 11]
+ [12] (0 - X) ---> 0  [DEF, 12]
+ [13] (X - 0) ---> X  [DEF, 13]
+ [14] (SUC(X) - SUC(Y)) ---> (X - Y)  [DEF, 14]
+ [15] DIV(X, 0) ---> 0  [DEF, 15]
+ [16] DIV(X, Y) ---> 0  if   { (X < Y) }   [DEF, 16]
+ [17] DIV((X + Y), Y) ---> SUC(DIV(X, Y))  if   { not((0 = Y)) }   [DEF, 17]
+ [18] REM(X, 0) ---> X  [DEF, 18]
+ [19] REM(X, Y) ---> X  if   { (X < Y) }   [DEF, 19]
+ [20] REM((X + Y), Y) ---> REM(X, Y)  [DEF, 20]
+ [21] DIVIDES(X, Y) ---> (REM(Y, X) = 0)  [DEF, 21]
+ [22] APPEND(NULL, Y) ---> Y  [DEF, 22]
+ [23] APPEND(CONS(X, Y), Z) ---> CONS(X, APPEND(Y, Z))  [DEF, 23]
+ [24] DELETE(X, NULL) ---> NULL  [DEF, 24]
+ [25] DELETE(X, CONS(Y, Z)) ---> COND((Y = X), Z, CONS(Y, DELETE(X, Z)))  [DEF, 25]
+ [26] PRIME1(X, 0) ---> FALSE  [DEF, 26]
+ [27] PRIME1(X, SUC(0)) ---> TRUE  [DEF, 27]
+ [28] PRIME1(X, SUC(Y)) ---> COND((REM(X, SUC(Y)) = 0), FALSE, PRIME1(X, Y))  if   { not((0 = Y)) }   [DEF, 28]
+ [29] PRIME(0) ---> FALSE  [DEF, 29]
+ [30] PRIME(SUC(X)) ---> PRIME1(SUC(X), X)  [DEF, 30]
+ [31] PRIMELIST(NULL) ---> TRUE  [DEF, 31]
+ [32] PRIMELIST(CONS(X, Y)) ---> COND(PRIME(X), PRIMELIST(Y), FALSE)  [DEF, 32]
+ [34] TIMELIST(CONS(X, Y)) ---> (X * TIMELIST(Y))  [DEF, 34]
+ [35] PRIMEFAC(0) ---> NULL  [DEF, 35]
+ [36] PRIMEFAC(SUC(0)) ---> NULL  [DEF, 36]
+ [37] PRIMEFAC(X) ---> CONS(X, NULL)  if   { PRIME(X) }   [DEF, 37]
+ [38] PRIMEFAC((X * Y)) ---> APPEND(PRIMEFAC(X), PRIMEFAC(Y))  if  
+        { not((0 = X)),
+          not((0 = Y)),
+          not((SUC(0) = X)),
+          not((SUC(0) = Y)) }   [DEF, 38]
+ [39] MEMBER(X, NULL) ---> FALSE  [DEF, 39]
+ [40] MEMBER(X, CONS(Y, Z)) ---> COND((Y = X), TRUE, MEMBER(X, Z))  [DEF, 40]
+ [41] PERM(NULL, NULL) ---> TRUE  [DEF, 41]
+ [42] PERM(NULL, CONS(X, Y)) ---> FALSE  [DEF, 42]
+ [43] PERM(CONS(X, Y), NULL) ---> FALSE  [DEF, 43]
+ [44] PERM(CONS(X, Y), Z) ---> COND(MEMBER(X, Z), PERM(Y, DELETE(X, Z)), FALSE)  [DEF, 44]
+ [45] (X >= X) ---> TRUE  [DEF, 45]
+ [46] (0 >= SUC(Y)) ---> FALSE  [DEF, 46]
+ [47] (SUC(X) >= Y) ---> (X >= Y)  if   { not((SUC(X) = Y)) }   [DEF, 47]
+ [48] GCD(X, 0) ---> X  [DEF, 48]
+ [50] GCD(Y, (X + Y)) ---> GCD(X, Y)  [DEF, 50]
+ [52] DIV(0, Y) ---> 0  [USER, 52]
+ [53] REM(0, Y) ---> 0  [USER, 53]
+ [55] DIV(Y, Y) ---> SUC(0)  if   { not((0 = Y)) }   [3, 17]
+ [57] REM(Y, Y) ---> 0  [3, 20]
+ [59] APPEND(PRIMEFAC(X), PRIMEFAC(Y)) ---> CONS((X * Y), NULL)  if  
+        { not((0 = X)),
+          PRIME((X * Y)),
+          not((SUC(0) = X)) }   [38, 37]
+ [72] ((X + Y) < Y) ---> FALSE  [DELETED, 66]
+ [73] DIV(SUC((Y + Y1)), Y1) ---> SUC(DIV(SUC(Y), Y1))  if   { not((0 = Y1)) }   [DELETED, 67]
+ [74] REM(SUC((Y + Y1)), Y1) ---> REM(SUC(Y), Y1)  [DELETED, 68]
+ [86] PRIMEFAC((X + (X * Y))) ---> APPEND(PRIMEFAC(X), PRIMEFAC(SUC(Y)))  if  
+        { not((0 = Y)),
+          not((0 = X)) }   [DELETED, 75]
+ [87] (Y * DIV((X + Y), Y)) ---> (Y + (Y * DIV(X, Y)))  [DELETED, 79]
+ [88] ((Y * DIV(X, Y)) + REM(X, Y)) ---> X  [DELETED, 80]
+ [89] (Y * DIV(X, Y)) ---> X  if   { (REM(X, Y) = 0) }   [DELETED, 81]
+ [90] (X * (Y + Z)) ---> ((X * Y) + (X * Z))  [DELETED, 82]
+ [91] (0 < X) ---> NOT((0 = X))  [USER, 62]
+ [92] (X < SUC(0)) ---> (0 = X)  [USER, 63]
+ [94] ((X + Y) = 0) ---> COND((0 = X), (0 = Y), FALSE)  [USER, 64]
+ [95] ((X + Y) = Y) ---> (0 = X)  [USER, 65]
+ [96] ((Y + Z) = (X + Z)) ---> (Y = X)  [USER, 66]
+ [98] ((X * Y) = 0) ---> COND((0 = X), TRUE, (0 = Y))  [USER, 67]
+ [100] ((X * Y) = X) ---> COND((0 = X), TRUE, (SUC(0) = Y))  [USER, 69]
+ [101] ((X + Z) = SUC(0)) ---> FALSE  if  
+        { not((SUC(0) = Z)),
+          not((SUC(0) = X)) }   [GENE, 3]
+ [103] ((X * Y) = SUC(0)) ---> COND((SUC(0) = X), (SUC(0) = Y), FALSE)  [USER, 70]
+ [106] REM((Y * Z), X) ---> 0  if   { (REM(Z, X) = 0) }   [USER, 73]
+ [107] REM((X + Y), Z) ---> REM(X, Z)  if   { (REM(Y, Z) = 0) }   [USER, 74]
+ [109] (SUC(Z) < (X + Y)) ---> TRUE  if  
+        { (Z < X),
+          not((0 = Y)) }   [GENE, 8]
+ [110] (DIV(X, Y) < X) ---> TRUE  if  
+        { not((0 = X)),
+          not((SUC(0) = Y)) }   [USER, 76]
+ [111] REM(TIMELIST(Y), X) ---> 0  if   { MEMBER(X, Y) }   [USER, 77]
+ [112] DELETE(X, Y) ---> Y  if   { not(MEMBER(X, Y)) }   [USER, 78]
+ [113] PRIMELIST(DELETE(X, Y)) ---> TRUE  if   { PRIMELIST(Y) }   [USER, 79]
+ [114] (Y < SUC(Y)) ---> TRUE  [USER, 80]
+ [115] (SUC(0) = X) ---> FALSE  if   { PRIME(X) }   [USER, 81]
+ [116] (0 = X) ---> FALSE  if   { PRIME(X) }   [USER, 82]
+ [117] DIV((Y + Z), X) ---> (DIV(Y, X) + DIV(Z, X))  if   { (REM(Z, X) = 0) }   [USER, 83]
+ [118] DIV((Y * Z), X) ---> (Y * DIV(Z, X))  if   { (REM(Z, X) = 0) }   [USER, 84]
+ [119] TIMELIST(DELETE(X, Y)) ---> DIV(TIMELIST(Y), X)  if  
+        { MEMBER(X, Y),
+          not((0 = X)) }   [USER, 85]
+ [120] (TIMELIST(X) = 0) ---> FALSE  if   { PRIMELIST(X) }   [USER, 86]
+ [121] PRIMELIST(APPEND(Z, Z1)) ---> TRUE  if  
+        { PRIMELIST(Z),
+          PRIMELIST(Z1) }   [USER, 87]
+ [123] REM(SUC(0), X) ---> SUC(0)  if   { not((SUC(0) = X)) }   [USER, 89]
+ [124] PRIME1((W * Z), U) ---> FALSE  if  
+        { (U >= Z),
+          not((0 = Z)),
+          not((SUC(0) = Z)) }   [USER, 90]
+ [125] (X < SUC(Y)) ---> FALSE  if   { (Y < X) }   [USER, 91]
+ [127] (U < U) ---> FALSE  [USER, 93]
+ [128] (SUC(X) < Z) ---> (X < Z)  if   { not((SUC(X) = Z)) }   [USER, 93]
+ [129] (U >= Z) ---> NOT((U < Z))  [USER, 93]
+ [130] (Z < Y) ---> FALSE  if   { not((Z < SUC(Y))) }   [GENE, 13]
+ [131] ((U + Z) < SUC(SUC(Y))) ---> FALSE  if  
+        { not((0 = U)),
+          not((Z < SUC(Y))) }   [GENE, 13]
+ [132] ((U * Y) < SUC(Y)) ---> FALSE  if  
+        { not((0 = U)),
+          not((0 = Y)),
+          not((SUC(0) = U)) }   [USER, 94]
+ [133] (SUB1(X) < Y) ---> (X < SUC(Y))  if   { not((0 = X)) }   [USER, 95]
+ [134] (REM(X, Z) = 0) ---> FALSE  if  
+        { not((Z = X)),
+          PRIME1(X, SUB1(X)),
+          not((SUC(0) = Z)) }   [USER, 96]
+ [135] (REM(X, Y) = 0) ---> FALSE  if  
+        { PRIME(X),
+          not((Y = X)),
+          not((SUC(0) = Y)) }   [USER, 97]
+ [136] (REM(X, Y) = 0) ---> FALSE  if  
+        { PRIME(X),
+          PRIME(Y),
+          not((Y = X)) }   [USER, 98]
+ [137] GCD(X, X) ---> X  [DELETED, 62]
+ [138] GCD(SUC(Y), SUC((X + Y))) ---> GCD(X, SUC(Y))  [DELETED, 76]
+ [139] GCD(X, SUC((X + Y))) ---> GCD(X, SUC(Y))  [DELETED, 77]
+ [140] GCD((X * Z), (Y * Z)) ---> (Z * GCD(X, Y))  [USER, 100]
+ [141] (GCD(Z, (X * Y)) = Y) ---> FALSE  if  
+        { (REM(Z, X) = 0),
+          not((REM(Y, X) = 0)) }   [USER, 101]
+ [142] (REM((Y * Z), X) = 0) ---> FALSE  if  
+        { (GCD((X * Y), (Y * Z)) = Y),
+          not((REM(Y, X) = 0)) }   [USER, 102]
+ [143] GCD(X, SUC(0)) ---> SUC(0)  [USER, 103]
+ [144] GCD(X, Y) ---> SUC(0)  if  
+        { (REM(X, GCD(X, Y)) = 0),
+          PRIME1(X, SUB1(X)),
+          not((GCD(X, Y) = X)) }   [USER, 104]
+ [145] REM(X, GCD(X, Y)) ---> 0  [USER, 105]
+ [146] (GCD(X, Y) = X) ---> FALSE  if   { not((REM(Y, X) = 0)) }   [USER, 106]
+ [147] GCD(X, Y) ---> SUC(0)  if  
+        { PRIME1(X, SUB1(X)),
+          not((REM(Y, X) = 0)) }   [USER, 107]
+ [148] (REM((Y * Z), X) = 0) ---> FALSE  if  
+        { PRIME(X),
+          not((REM(Y, X) = 0)),
+          not((REM(Z, X) = 0)) }   [USER, 108]
+ [149] MEMBER(X, Y) ---> TRUE  if  
+        { PRIME(X),
+          PRIMELIST(Y),
+          (REM(TIMELIST(Y), X) = 0) }   [USER, 109]
+ [150] TIMELIST(DELETE(X, Y)) ---> DIV(TIMELIST(Y), X)  if  
+        { PRIME(X),
+          PRIMELIST(Y),
+          DIVIDES(X, TIMELIST(Y)) }   [USER, 110]
+ [153] TIMELIST(PRIMEFAC(X)) ---> X  if   { not((0 = X)) }   [USER, 113]
+ [154] PRIMELIST(PRIMEFAC(X)) ---> TRUE  [USER, 114]
+ [155] TIMELIST(NULL) ---> SUC(0)  [USER, 115]
+Time for this command = 5.460 sec      Total time = 182.380 sec
+
+Type Add, Akb, Auto, Break, Clean, Cover, Delete, Disable, Enable, Grammar,
+     History, Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, 
+     Option, Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time,
+     Undo, Unlog, Write or Help.
+RRL-> 

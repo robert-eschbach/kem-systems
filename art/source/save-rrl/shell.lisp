@@ -1,0 +1,10 @@
+(defun x-vi (filename)
+  (let* ((command (concatenate 'string "xterm  -g 100x60-200+00 -title " filename " -e vi -l " filename " &"))
+	 )
+	(shell command)
+	)
+  )
+
+(x-vi "save-rrl.lisp")
+(x-vi "compute-difference")
+(x-vi "print-asf-file.lisp")

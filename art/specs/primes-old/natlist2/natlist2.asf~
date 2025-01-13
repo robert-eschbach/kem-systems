@@ -1,0 +1,94 @@
+specification natlist2
+begin
+  exports
+    begin
+      sorts
+        LISTPAIR
+      functions
+        2             : -> NAT
+        rev,rev2      : NATLIST -> NATLIST
+        length        : NATLIST -> NAT
+	pair          : NATLIST # NATLIST  -> LISTPAIR
+        right, left   : LISTPAIR           -> NATLIST
+        n_elem        : NAT # NATLIST # NATLIST -> LISTPAIR
+        is_equal_set  : NATLIST # NATLIST -> bool
+        is_equal_multiset  : NATLIST # NATLIST -> bool
+        is_element    : NAT # NATLIST -> bool
+        is_subset     : NATLIST # NATLIST -> bool
+      end
+
+  imports
+    natlist1^^, nat1^^
+
+  variables
+    x, y : -> NAT
+    u,v       : -> NATLIST
+
+  equations
+     left(pair(u, v)) == u ;
+     right(pair(u, v)) == v ;
+
+
+    2 == succ(succ(0)) ;
+
+    rev(null) == null ;
+    rev(cons(x,u)) == append(rev(u),cons(x,null)) ;
+
+    length(null) == 0 ;
+    length(cons(x,u)) == succ(length(u)) ;
+
+     n_elem(0, u, v) == pair(u, v) ;
+     n_elem(succ(x), u, null) == pair(u, null) ;
+     n_elem(succ(x), u, cons(y,v)) == n_elem(x,append(u, cons(y, null)), v) ;
+
+          
+    is_element(x,null) == false ;
+    is_element(x,cons(y,u)) == or((x = y), is_element(x,u)) ;
+ 
+    is_subset(null,u) == true ;
+    is_subset(cons(x,u),v) == and(member(x,v),is_subset(u,v)) ;
+    
+    is_equal_set(u, v) == and(is_subset(u, v), is_subset(v, u)) ;
+
+    is_equal_multiset(null,null) == true ;
+    is_equal_multiset(null,cons(x,u)) == false ;
+    is_equal_multiset(cons(x, u), v) == is_equal_multiset(u, delete(x, v)) 
+      when is_element(x, v) == true ;
+    is_equal_multiset(cons(x, u), v) == false when not(is_element(x, v)) == true ;
+
+
+  properties
+  begin
+    ordering lrpo
+      precedence
+        perm member, perm delete, * +, rev append, is_subset member, is_equal_set is_subset
+      status 
+	perm n_elem is_equal_multiset : l 
+
+    theorems  
+	% kann nicht bewiesen werden       
+       member(x, cons(y,u)) == true when member(x,u) == true [h, e] ;
+
+       rev(rev(u)) == u [e] ;    
+       member(x, append(u,v)) == true when member(x,u) == true [e] ;
+       member(x, append(u,v)) == true when member(x,v) == true [e] ;
+       member(x, cons(y,u)) == true when member(x,u) == true [e] ;
+       is_subset(cons(x, u), rev(cons(x, u))) == true  
+         when  is_subset(u, rev(u)) == true [e] ;
+       is_subset(u, rev(v)) == true
+         when u = v == true [e] ;
+       is_subset(rev(v), u) == true  
+         when u = v == true [e] ;
+       is_equal_set(u,rev(u)) == true [e] ;
+% is_element(x, append(u, cons(x,null)))
+% is_equal_multiset(u,rev(u))
+
+  end
+end  
+
+
+
+
+
+
+

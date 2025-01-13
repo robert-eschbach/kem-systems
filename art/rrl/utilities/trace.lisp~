@@ -1,0 +1,37 @@
+(in-package 'trace)
+
+;; there is nothing to shadow
+
+;; the external interface 
+(export '(go-trace stop-trace))
+
+;; no other module is needed
+
+(defun go-trace ()
+  (let* ((trace-win 
+	  (create-instance 
+	   nil inter:interactor-window
+	   (:title "trace") 
+	   (:left 0)(:top 400)(:width 480)(:height 450)))
+
+	 (trace-agg 
+	  (create-instance 'trace-agg opal:aggregate))
+
+	 (scroll-win 
+	  (create-instance 
+	   'scroll-win garnet-gadgets:motif-scrolling-window-with-bars
+	   (:left 100) (:top 10)	
+	   (:width 350)(:height 150)
+	   (:background-color opal:motif-gray)
+	   (:parent-window trace-win)))
+
+	 (text 
+	  (create-instance 
+	   'text opal:multi-text ; This is the internal multifont
+	   (:word-wrap-p T)	; text object.
+	   (:auto-scroll-p T)
+	   (:scrolling-window scroll-win)
+	   ))
+	 )
+    (s-value observer-win :aggregate trace-agg)
+    ))

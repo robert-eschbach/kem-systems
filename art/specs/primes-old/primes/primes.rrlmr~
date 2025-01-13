@@ -1,0 +1,256 @@
+
+init
+
+log
+/usr/users/eschbach/specs/primes/primes
+
+
+ADD
+[null: NATLIST]
+[cons: NAT, NATLIST -> NATLIST]
+[append: NATLIST, NATLIST -> NATLIST]
+[delete: NAT, NATLIST -> NATLIST]
+[member: NAT, NATLIST -> bool]
+[perm: NATLIST, NATLIST -> bool]
+[0: NAT]
+[succ: NAT -> NAT]
+[+: NAT, NAT -> NAT]
+[*: NAT, NAT -> NAT]
+[-: NAT, NAT -> NAT]
+[<: NAT, NAT -> bool]
+[>=: NAT, NAT -> bool]
+[div: NAT, NAT -> NAT]
+[rem: NAT, NAT -> NAT]
+[divides: NAT, NAT -> bool]
+[gcd: NAT, NAT -> NAT]
+[sub1: NAT -> NAT]
+[prime: NAT -> bool]
+[primelist: NATLIST -> bool]
+[primefac: NAT -> NATLIST]
+[prime1: NAT, NAT -> bool]
+[timelist: NATLIST -> NAT]
+append(null, xnl1) := xnl1
+append(cons(x, xnl1), xnl2) := cons(x, append(xnl1, xnl2))
+delete(x, null) := null
+delete(x, cons(x, xnl1)) := xnl1
+delete(x, cons(y, xnl1)) := cons(y, delete(x, xnl1)) if not ((y = x))
+member(x, null) := false
+member(x, cons(x, xnl1)) := true
+member(x, cons(y, xnl1)) := member(x, xnl1) if not ((x = y))
+perm(null, null) := true
+perm(null, cons(x, xnl1)) := false
+perm(cons(x, xnl1), null) := false
+perm(cons(x, xnl1), xnl2) := (member(x, xnl1) and perm(xnl1, delete(x, xnl2)))
+(x + 0) := x
+(x + succ(y)) := succ((x + y))
+(0 - x) := 0
+(x - 0) := x
+(succ(x) - succ(y)) := (x - y)
+(x * 0) := 0
+(x * succ(y)) := (x + (x * y))
+(x < 0) := false
+(0 < succ(x)) := true
+(succ(x) < succ(y)) := (x < y)
+(x >= x) := true
+(0 >= succ(y)) := false
+(succ(x) >= y) := (x >= y) if not ((succ(x) = y))
+div(x, 0) := 0
+div(x, y) := 0 if (x < y)
+div((y + x), y) := succ(div(x, y)) if not ((0 = y))
+rem(x, 0) := x
+rem(x, y) := x if (x < y)
+rem((y + x), y) := rem(x, y)
+divides(x, y) := (rem(y, x) = 0)
+gcd(x, 0) := x
+gcd(0, y) := y
+gcd((x + y), y) := gcd(x, y)
+gcd(x, (x + y)) := gcd(x, y)
+sub1(0) := 0
+sub1(succ(x)) := x
+rem(yna, yna) := 0
+rem(succ((yna + xna)), yna) := rem(succ(xna), yna)
+div(yna, yna) := succ(0) if not((0 = yna))
+prime(0) := false
+prime(succ(x)) := prime1(succ(x), x)
+primelist(null) := true
+primelist(cons(x, xnl)) := (prime(x) and primelist(xnl))
+timelist(null) := succ(0)
+timelist(cons(x, xnl)) := (x * timelist(xnl))
+primefac(0) := null
+primefac(succ(0)) := null
+primefac((x * y)) := append(primefac(x), primefac(y)) if not ((x = 0)) & not ((y = 0))
+prime1(x, 0) := false
+prime1(x, succ(0)) := true
+prime1(x, succ(y)) := (not(divides(succ(y), x)) and prime1(x, y)) if not((y = 0))
+delete(x, xnl1) == xnl1 if not(member(x, xnl1))
+((un * yn) < succ(yn)) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((0 = yn) equ false)
+((un + zn) < succ(succ(yn))) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((zn < succ(yn)) equ false)
+((un + xn) < succ(yn)) == false if (((un + xn) < succ(succ(yn))) equ false) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+((un + xn) < succ(yn)) == false if (xn < succ(yn)) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un < succ(succ(0))) == false if ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un >= zn) == (true xor (un < zn))
+(succ(xn) < zn) == (xn < zn) if ((succ(xn) = zn) equ false)
+(true xor (un < un)) == true
+(0 >= un) == (0 = un)
+((xn * yn) = succ(0)) == false if ((succ(0) = xn) equ false)
+((xn + zn) = succ(0)) == false if ((succ(0) = xn) equ false) & ((succ(0) = zn) equ false)
+((xn * yn) = xn) == (((0 = xn) xor (succ(0) = yn)) xor ((0 = xn) and (succ(0) = yn)))
+((xn * yn) = xn) == (succ(0) = yn) if ((0 = xn) equ false)
+((xn * yn) = 0) == (((0 = xn) xor (0 = yn)) xor ((0 = xn) and (0 = yn)))
+((yn + zn) = (xn + zn)) == (yn = xn)
+((xn + yn) = yn) == (0 = xn)
+((xn + yn) = 0) == false if ((0 = xn) equ false)
+(xn < succ(0)) == (0 = xn)
+(0 < xn) == (true xor (0 = xn))
+(xn + (zn + z1)) == (zn + (xn + z1))
+(succ(yn) + xn) == succ((yn + xn))
+(0 + xn) == xn
+((un * yn) < succ(yn)) == false if (not((un = 0)) and (not((un = succ(0))) and not((yn = 0))))
+(un >= zn) == not((un < zn))
+(succ(xn) < yn) == true if ((xn < yn) and not((succ(xn) = yn)))
+(succ(xn) < yn) == true if ((succ(xn) = yn) equ false) & (xn < yn)
+(0 >= un) == (un = 0)
+(yn < succ(yn)) == true
+((xn * yn) = succ(0)) == ((xn = succ(0)) and (yn = succ(0)))
+((xn * yn) = xn) == ((yn = succ(0)) or (xn = 0))
+((xn * yn) = xn) == (yn = succ(0)) if not((xn = 0))
+((xn * yn) = 0) == ((xn = 0) or (yn = 0))
+((xn + zn) = (yn + zn)) == (xn = yn)
+((xn + yn) = yn) == (xn = 0)
+((xn + yn) = 0) == ((xn = 0) and (yn = 0))
+(xn < succ(0)) == (xn = 0)
+(0 < xn) == not((xn = 0))
+(xn * (yn + zn)) == ((xn * yn) + (xn * zn))
+(xn + yn) == (yn + xn)
+rem(y, y) == 0
+rem(succ((y + x)), y) == rem(succ(x), y)
+div(y, y) == succ(0) if not((0 = y))
+gcd(xna, succ(0)) == succ(0) if ((0 = xna) equ false)
+(sub1(xna) < yna) == (xna < succ(yna)) if ((0 = xna) equ false)
+rem(succ(0), xna) == succ(0) if ((succ(0) = xna) equ false)
+div((yna + (xna * zna)), xna) == (zna + div(yna, xna)) if ((0 = xna) equ false)
+(div(xna, yna) < xna) == true if ((0 = xna) equ false) & ((0 = yna) equ false) & ((succ(0) = yna) equ false)
+(succ(zna) < (xna + yna)) == true if ((0 = yna) equ false) & ((succ(0) = yna) equ false) & (zna < xna)
+rem((xna + (zna * z1n)), zna) == rem(xna, zna)
+rem((xna * yna), xna) == 0
+div((xna * yna), xna) == yna if ((0 = xna) equ false)
+(xna * (yna * zna)) == (zna * (xna * yna))
+(succ(yna) * xna) == (xna + (yna * xna))
+(0 * xna) == 0
+((yna * div(xna, yna)) + rem(xna, yna)) == xna
+(yna * div((xna + yna), yna)) == (yna + (yna * div(xna, yna)))
+(succ(succ((xna + yna))) < yna) == false if ((xna + yna) < yna) & (xna < yna)
+(succ(xna) < xna) == false
+(gcd(xna, yna) = xna) == false if not((rem(yna, xna) = 0))
+rem(xna, gcd(xna, yna)) == 0
+gcd(xna, succ(0)) == succ(0) if not((xna = 0))
+(rem((yna * zna), xna) = 0) == false if ((gcd((xna * yna), (yna * zna)) = yna) and (not((yna = 0)) and not((rem(yna, xna) = 0))))
+(gcd((xna * yna), zna) = yna) == false if ((rem(zna, xna) = 0) and not((rem(yna, xna) = 0)))
+gcd((xna * zna), (yna * zna)) == (zna * gcd(xna, yna))
+gcd(xna, yna) == gcd(yna, xna)
+(sub1(xna) < yna) == (xna < succ(yna)) if not((xna = 0))
+rem(succ(0), xna) == succ(0) if not((xna = succ(0)))
+div((zna * yna), xna) == (yna * div(zna, xna)) if (divides(xna, zna) and not((xna = 0)))
+div((zna + yna), xna) == (div(zna, xna) + div(yna, xna)) if (divides(xna, zna) and not((xna = 0)))
+(div(xna, yna) < xna) == true if (not((xna = 0)) and (not((yna = 0)) and not((yna = succ(0)))))
+rem((xna + yna), zna) == rem(xna, zna) if (rem(yna, zna) = 0)
+rem((yna * zna), xna) == 0 if ((rem(zna, xna) = 0) and not((xna = 0)))
+rem((yna * xna), xna) == 0
+div((xna * yna), xna) == yna if not((xna = 0))
+(xna * (yna * zna)) == ((xna * yna) * zna)
+(xna * yna) == (yna * xna)
+(yna * div(xna, yna)) == xna if divides(yna, xna)
+(rem(xna, yna) + (yna * div(xna, yna))) == xna
+(yna * div((yna + xna), yna)) == (yna * succ(div(xna, yna)))
+rem(0, yna) == 0
+div(0, yna) == 0
+]
+
+
+
+
+operator
+constructor
+null
+ 
+
+operator
+constructor
+cons
+yes
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+operator
+acoperator
++ * 
+
+operator
+commutativ
+gcd 
+
+operator
+precedence
+perm member 
+
+operator
+precedence
+perm delete 
+
+operator
+precedence
+* + 
+
+operator
+precedence
+>= < 
+
+operator
+precedence
+divides rem 
+
+operator
+precedence
+div * 
+
+operator
+precedence
+gcd * 
+
+operator
+status
+perm
+lr
+
+operator
+status
+*
+rl
+
+operator
+status
+<
+lr
+
+
+
+mr
+
+option
+prove
+e
+
+
+
+
+write
+spec-write
+/usr/users/eschbach/specs/primes/primes.spec

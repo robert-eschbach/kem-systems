@@ -1,0 +1,253 @@
+
+init
+
+log
+/usr/users/eschbach/specs/primes/primes.impl_1/primes.impl_1
+option
+undo
+noundo
+
+
+
+ADD
+[+: NAT, NAT -> NAT]
+[*: NAT, NAT -> NAT]
+[-: NAT, NAT -> NAT]
+[<: NAT, NAT -> bool]
+[>=: NAT, NAT -> bool]
+[div: NAT, NAT -> NAT]
+[rem: NAT, NAT -> NAT]
+[divides: NAT, NAT -> bool]
+[gcd: NAT, NAT -> NAT]
+[sub1: NAT -> NAT]
+[0: NAT]
+[succ: NAT -> NAT]
+[null: NATLIST]
+[cons: NAT, NATLIST -> NATLIST]
+[append: NATLIST, NATLIST -> NATLIST]
+[delete: NAT, NATLIST -> NATLIST]
+[member: NAT, NATLIST -> bool]
+[perm: NATLIST, NATLIST -> bool]
+[prime: NAT -> bool]
+[primelist: NATLIST -> bool]
+[primefac: NAT -> NATLIST]
+[prime1: NAT, NAT -> bool]
+[timelist: NATLIST -> NAT]
+(x + 0) == x
+(x + succ(y)) == succ((x + y))
+(0 - x) == 0
+(x - 0) == x
+(succ(x) - succ(y)) == (x - y)
+(x * 0) == 0
+(x * succ(y)) == (x + (x * y))
+(x < 0) == false
+(0 < succ(x)) == true
+(succ(x) < succ(y)) == (x < y)
+(x >= x) == true
+(0 >= succ(y)) == false
+(succ(x) >= y) == (x >= y) if not ((succ(x) = y))
+div(x, 0) == 0
+div(x, y) == 0 if (x < y)
+div((y + x), y) == succ(div(x, y)) if not ((0 = y))
+rem(x, 0) == x
+rem(x, y) == x if (x < y)
+rem((y + x), y) == rem(x, y)
+divides(x, y) == (rem(y, x) = 0)
+gcd(x, 0) == x
+gcd(0, y) == y
+gcd((x + y), y) == gcd(x, y)
+gcd(x, (x + y)) == gcd(x, y)
+sub1(0) == 0
+sub1(succ(x)) == x
+append(null, xnl1) == xnl1
+append(cons(x, xnl1), xnl2) == cons(x, append(xnl1, xnl2))
+delete(x, null) == null
+delete(x, cons(x, xnl1)) == xnl1
+delete(x, cons(y, xnl1)) == cons(y, delete(x, xnl1)) if not ((y = x))
+member(x, null) == false
+member(x, cons(x, xnl1)) == true
+member(x, cons(y, xnl1)) == member(x, xnl1) if not ((x = y))
+perm(null, null) == true
+perm(null, cons(x, xnl1)) == false
+perm(cons(x, xnl1), null) == false
+perm(cons(x, xnl1), xnl2) == (member(x, xnl2) and perm(xnl1, delete(x, xnl2)))
+prime(0) == false
+prime(succ(x)) == prime1(succ(x), x)
+primelist(null) == true
+primelist(cons(x, xnl)) == (prime(x) and primelist(xnl))
+timelist(null) == succ(0)
+timelist(cons(x, xnl)) == (x * timelist(xnl))
+primefac(0) == null
+primefac(succ(0)) == null
+primefac((x * y)) == append(primefac(x), primefac(y)) if not ((x = 0)) & not ((y = 0))
+prime1(x, 0) == false
+prime1(x, succ(0)) == true
+prime1(x, succ(y)) == (not(divides(succ(y), x)) and prime1(x, y)) if not((y = 0))
+]
+
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+operator
+constructor
+null
+ 
+
+operator
+constructor
+cons
+yes
+
+operator
+acoperator
++ * 
+
+operator
+commutativ
+gcd 
+
+operator
+precedence
+* + 
+
+operator
+precedence
+>= < 
+
+operator
+precedence
+divides rem 
+
+operator
+precedence
+div * 
+
+operator
+precedence
+gcd * 
+
+operator
+precedence
+perm member 
+
+operator
+precedence
+perm delete 
+
+operator
+precedence
+primelist prime 
+
+operator
+precedence
+timelist * 
+
+operator
+precedence
+primefac append 
+
+operator
+precedence
+prime prime1 
+
+operator
+precedence
+prime1 rem 
+
+operator
+status
+*
+rl
+
+operator
+status
+<
+lr
+
+operator
+status
+perm
+lr
+
+
+
+kb
+
+suff
+option
+prove
+s
+
+
+prove
+divides(x, timelist(xnl)) == true if member(x, xnl)
+
+prove
+(x = succ(0)) == false if prime(x)
+
+prove
+(x = 0) == false if prime(x)
+
+prove
+primelist(delete(x, xnl)) == true if primelist(xnl)
+
+prove
+timelist(delete(x, xnl)) == div(timelist(xnl), x) if (not((x = 0)) and member(x, xnl))
+
+prove
+(timelist(xnl) = 0) == false if primelist(xnl)
+
+prove
+timelist(append(xnl, x1nl1)) == (timelist(xnl) * timelist(x1nl1)) if (not((timelist(xnl) = 0)) and not((timelist(x1nl1) = 0)))
+
+prove
+timelist(primefac(x)) == x if not((x = 0))
+
+prove
+primelist(primefac(x)) == true if not((x = 0))
+
+prove
+prime1((x * z), u) == false if (not((z = succ(0))) and (not((z = 0)) and ((u >= z) and not((u = succ(0))))))
+
+prove
+(u >= z) == not((u < z))
+
+prove
+prime1(x, sub1(x)) == false if (not((z = succ(0))) and (not((z = x)) and (not((x = 0)) and (not((x = succ(0))) and divides(z, x)))))
+
+prove
+(rem(x, y) = 0) == false if (prime(x) and (not((y = succ(0))) and not((x = y))))
+
+prove
+prime(y) == false if ((rem(x, y) = 0) and (prime(x) and not((x = y))))
+
+prove
+gcd(x, y) == succ(0) if ((rem(x, gcd(x, y)) = 0) and (not((x = 0)) and (not((x = succ(0))) and (prime1(x, sub1(x)) and not((gcd(x, y) = x))))))
+
+prove
+prime1(x, sub1(x)) == false if (not((rem(y, x) = 0)) and not((gcd(x, y) = succ(0))))
+
+prove
+(rem((y * z), x) = 0) == false if (prime(x) and (not(divides(x, y)) and not(divides(x, z))))
+
+prove
+member(x, xnl) == true if (prime(x) and (primelist(xnl) and divides(x, timelist(xnl))))
+
+prove
+perm(xnl, x1nl1) == true if (primelist(xnl) and (primelist(x1nl1) and (timelist(xnl) = timelist(x1nl1))))
+
+
+
+write
+spec-write
+/usr/users/eschbach/specs/primes/primes.impl_1/primes.impl_1.spec

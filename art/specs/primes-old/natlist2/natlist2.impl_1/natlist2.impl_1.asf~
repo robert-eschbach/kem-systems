@@ -1,0 +1,27 @@
+specification natlist2
+begin
+
+  variables
+    z : -> NATLIST
+
+  properties
+  begin
+    theorems
+      is_subset(rev(v), v) == true [ o ] ;
+      is_subset(append(z, cons(x, null)), cons(x, u)) == true when is_subset(z, u) == true [ o ] ;
+      is_subset(v, rev(v)) == true [ o ] ;
+      member(x, append(z, cons(x, null))) == true when is_subset(u, z) == true [ o ] ;
+      member(x, append(z, cons(x, null))) == true [ o ] ;
+      is_subset(u, append(z, cons(x, null))) == true when is_subset(u, z) == true [ o ] ;
+      rev(append(z, cons(x, null))) == cons(x, rev(z)) [ o ] ;
+      is_equal_set(u, rev(u)) == true [ o, e ] ;
+      is_subset(rev(v), u) == true when (u = v) == true [ o, e ] ;
+      is_subset(u, rev(v)) == true when (u = v) == true [ o, e ] ;
+      is_subset(cons(x, u), rev(cons(x, u))) == true when is_subset(u, rev(u)) == true [ o, e ] ;
+      member(x, cons(y, u)) == true when member(x, u) == true [ o, e ] ;
+      member(x, append(u, v)) == true when member(x, u) == true [ o, e ] ;
+      member(x, append(u, v)) == true when member(x, u) == true [ o, e ] ;
+      rev(rev(u)) == u [ o, e ] ;
+
+  end
+end

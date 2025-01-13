@@ -1,0 +1,50 @@
+specification primes
+begin
+
+  variables
+    z1 : -> NAT
+    zn : -> NATLIST
+    z1n : -> NATLIST
+
+  equations
+    The == true ;
+    The == true ;
+
+  properties
+  begin
+    ordering 
+      precedence timelist div
+    theorems
+      perm(nl, nl1) == true when and(primelist(nl), and(primelist(nl1), (timelist(nl) = timelist(nl1)))) == true [ o ] ;
+      perm(nl, nl1) == true when primelist(nl1) == true , primelist(nl) == true , (timelist(nl) = timelist(nl1)) == true [ o ] ;
+      member(x, nl) == true when and(prime(x), and(primelist(nl), divides(x, timelist(nl)))) == true [ o ] ;
+      member(x, nl) == true when prime(x) == true , primelist(nl) == true , (rem(timelist(nl), x) = 0) == true [ o ] ;
+      prime(y) == false when and((rem(x, y) = 0), and(prime(x), not((x = y)))) == true [ o ] ;
+      (rem((y * z), x) = 0) == false when equ((rem(y, x) = 0), false) == true , equ((rem(z, x) = 0), false) == true , prime(x) == true [ o ] ;
+      (rem(x, y) = 0) == false when and(prime(x), and(not((y = succ(0))), not((x = y)))) == true [ o ] ;
+      (rem(x, y) = 0) == false when equ((y = x), false) == true , equ((succ(0) = y), false) == true , prime(x) == true [ o ] ;
+      prime1(x, sub1(x)) == false when and(not((z = succ(0))), and(not((z = x)), and(not((x = 0)), and(not((x = succ(0))), divides(z, x))))) == true [ o ] ;
+      prime1((z * z1), sub1((z * z1))) == false when equ((succ(0) = z1), false) == true , equ((0 = z1), false) == true , equ((0 = z), false) == true , equ((succ(0) = z), false) == true [ o ] ;
+      (u >= z) == not((u < z)) [ o ] ;
+      (u >= z) == xor(true, (u < z)) [ o ] ;
+      prime1((x * z), u) == false when and(not((z = succ(0))), and(not((z = 0)), and((u >= z), not((u = succ(0)))))) == true [ o ] ;
+      prime1((x * z), u) == false when equ((succ(0) = u), false) == true , equ((0 = z), false) == true , equ((succ(0) = z), false) == true , (u >= z) == true [ o ] ;
+      prime1((u * x), u) == false when equ((0 = u), false) == true , equ((succ(0) = u), false) == true [ o ] ;
+      rem((x * z), succ(succ(0))) == 0 when (succ(succ(0)) >= z) == true , equ((succ(0) = z), false) == true , equ((0 = z), false) == true [ o ] ;
+      primelist(primefac(x)) == true when not((x = 0)) == true [ o ] ;
+      primelist(primefac(x)) == true when equ((0 = x), false) == true [ o ] ;
+      primelist(append(zn, z1n)) == true when primelist(z1n) == true , primelist(zn) == true [ o ] ;
+      timelist(primefac(x)) == x when not((x = 0)) == true [ o ] ;
+      timelist(primefac(x)) == x when equ((0 = x), false) == true [ o ] ;
+      timelist(append(nl, nl1)) == (timelist(nl) * timelist(nl1)) when and(not((timelist(nl) = 0)), not((timelist(nl1) = 0))) == true [ o ] ;
+      timelist(append(nl, nl1)) == (timelist(nl1) * timelist(nl)) when equ((timelist(nl1) = 0), false) == true , equ((timelist(nl) = 0), false) == true [ o ] ;
+      (timelist(nl) = 0) == false when primelist(nl) == true [ o ] ;
+      timelist(delete(x, nl)) == div(timelist(nl), x) when and(not((x = 0)), member(x, nl)) == true [ o ] ;
+      timelist(delete(x, nl)) == div(timelist(nl), x) when equ((0 = x), false) == true , member(x, nl) == true [ o ] ;
+      (x = succ(0)) == false when prime(x) == true [ o ] ;
+      primelist(delete(x, nl)) == true when primelist(nl) == true [ o ] ;
+      divides(x, timelist(nl)) == true when member(x, nl) == true [ o ] ;
+      rem(timelist(nl), x) == 0 when member(x, nl) == true [ o ] ;
+
+  end
+end

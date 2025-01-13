@@ -1,0 +1,98 @@
+;; 20.08.93
+
+init
+option prove e
+
+add
+[ 0 : num]
+[ suc : num -> num]
+[ + : num, num -> num]
+[ * : num, num -> num]
+[- : num, num -> num]
+[ < : num, num -> bool]
+[div : num, num -> num]
+[rem : num, num -> num]
+[gcd : num, num -> num]
+
+x + 0 := x
+x + suc(y) := suc(x + y)
+
+x * 0 := 0
+x * suc(y) := x + x * y
+
+0 < suc(x) := true
+x < 0 := false
+suc(x) < suc(y) := x < y
+;; hier ist wichtig, dass option prove e gesetzt ist,
+;; sonst wird diese Gleichung nicht zur Reduktion herangezogen !
+;; x < y := true if (x < z) and (z < y)
+
+0 - x := 0
+x - 0 := x
+suc(x) - suc(y) := x - y
+
+div(x, 0) := 0
+div(x, y) := 0 if x < y
+div(y + x, y) := suc(div(x, y)) if not(0 = y)
+
+rem(x, 0) := x
+rem(x, y) := x if x < y
+rem(y + x, y) := rem(x, y)
+
+gcd(x, 0) := x
+gcd(0, y) := y
+gcd(x + y, y) := gcd(x, y)
+gcd(x, x + y) := gcd(x, y)
+]
+
+;; auto 19.08.93
+
+operator constructor
+0 suc
+y
+
+operator precedence
+* +
+
+makerule
+
+suffice
+y
+y
+
+add
+rem(gcd(x, y), x) == 0
+]
+
+makerule
+
+;; auto 20.08.93
+
+;; prove
+;; rem(x, y) == 0 if gcd(x,y) = x
+
+prove 
+x + y == y + x
+
+prove
+x + y == x if y = 0
+
+prove
+gcd(x, y) == gcd(y, x)
+
+prove
+gcd(x,y) == x if (rem(x, y) = 0) and not(x = 0) and not(y = 0)
+
+
+
+add
+a0 == b0 if (a1 = b1)
+a1 == b1 if (a2 = b2)
+a2 == b2 if (a3 = b3)
+
+;; (a0 = b0) or not(a2 = b2)
+;; (a0 = b0) or not(a3 = b3)
+]
+
+
+

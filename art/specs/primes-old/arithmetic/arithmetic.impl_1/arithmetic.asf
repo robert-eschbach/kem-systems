@@ -1,0 +1,46 @@
+specification arithmetic
+begin
+  properties
+    begin
+      theorems
+	[T1]  div(0, y) == 0 [ e ] ;
+	[T2]  rem(0, y) == 0 [ e ] ;
+	[T3]  y * div(y + x, y) == y * succ(div(x, y)) [ e ] ;
+	[T4]  (rem(x, y) + (y * div(x, y))) == x [ e ] ;
+	[T5]  (y * div(x, y)) == x when divides(y, x) == true [ e ] ;
+	[T6]  div((x * y), x) == y when not((x = 0)) == true [ e ] ;
+	[T7]  rem((y * x), x) == 0 [ e] ;
+	[T8]  rem((y * z), x) == 0 when and((rem(z, x) = 0), not(x = 0)) == true [ e ] ;
+	[T9]  rem(x + y, z) == rem(x, z) when (rem(y, z) = 0) == true [ e] ;
+	[T10] div(x, y) < x == true
+		when and(not(x = 0), and(not(y = 0), (not (y = succ(0))))) == true [ e ] ;
+	[T11] div(z + y, x) == div(z, x) + div(y, x) 
+		when and(divides(x, z), not(x = 0)) == true [ e ] ;
+	[T12] div(z * y, x) == y * div(z, x) 
+		when and(divides(x, z), not(x = 0)) == true [ e ] ;
+	[T13] rem(succ(0), x) == succ(0) 
+		when not(x = succ(0)) == true [ e] ; 
+	[T14] sub1(x) < y == x < succ(y) when not(x = 0) == true [ e ] ;
+	[T15] gcd(x, y) == gcd(y, x) [ e ] ;
+	[T16] gcd((x * z), (y * z)) == (z * gcd(x, y)) [ e ] ;
+	[T17] gcd(x*y, z) = y == false 
+		when and((rem(z, x) = 0), not(rem(y, x) = 0)) == true [ e ] ;
+	[T18] rem(y * z, x) = 0 == false 
+		when and((gcd(x*y, y*z) = y), and(not(y = 0), not(rem(y, x) = 0))) == true [ e ] ;
+	[T19] gcd(x, succ(0)) == succ(0) when not((x = 0)) == true [ e ] ;
+	[T20] rem(x, gcd(x, y)) == 0 [ e ] ;
+	[T21] gcd(x, y) = x == false 
+		when not(rem(y, x) = 0) == true [ e ] ;
+
+	% CP1 bis CP3 sind Gleichungen aus der Gleichheits-Theorie.
+	% Sie enstehen durch Bildung Kritischer Paare zwischen 
+	% den Gleichungen aus arithmetic.asf.
+	% Diese sind mit der cover-set induction nicht beweisbar (glaube ich
+	% zumindest !)  
+	[CP1] rem(y, y) == 0 [ h , e ] ;
+	[CP2] rem(succ((y + x)), y) ==  rem(succ(x), y) [ h , e ] ;
+	[CP3] div(y, y) == succ(0) when not(0 = y) == true [ h , e ] ;
+  end  
+
+end
+

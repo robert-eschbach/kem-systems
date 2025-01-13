@@ -1,0 +1,8 @@
+(trace cover-normal-proof)
+(trace cover-normalize)
+(trace cover-condi-norm)
+(trace simplify-all-premises)
+(trace simplify-one-pre)
+(trace norm-one-pre)
+(trace cover-norm-term)
+(trace norm-bool-innermost)

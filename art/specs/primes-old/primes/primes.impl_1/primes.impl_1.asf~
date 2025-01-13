@@ -1,0 +1,56 @@
+specification primes
+begin
+  variables
+    z,u  : -> NAT
+    nl1  : -> NATLIST
+  properties
+  begin
+    ordering 
+      precedence primelist prime, timelist *, primefac append, 
+                 prime prime1, prime1 rem
+    theorems
+      [T]  divides(x, timelist(nl)) == true 
+             when member(x, nl) == true ;
+      [T]  (x = succ(0)) == false 
+             when prime(x) == true ;
+      [T]  (x = 0) == false 
+             when prime(x) == true ;
+      [T1] primelist(delete(x, nl)) == true 
+             when primelist(nl) == true ;
+      [T2] timelist(delete(x, nl)) == div(timelist(nl), x) 
+             when and(not(x = 0), member(x, nl)) == true ;
+      [T3] timelist(nl) = 0 == false 
+             when  primelist(nl) == true ;
+      [T4] timelist(append(nl, nl1)) == (timelist(nl) * timelist(nl1)) 
+             when and(not(timelist(nl) = 0), not(timelist(nl1) = 0)) == true ;
+      [T5] timelist(primefac(x)) == x 
+             when not(x = 0) == true ;
+      [T6] primelist(primefac(x)) == true 
+             when not(x = 0) == true ;
+      [T7] prime1(x*z, u) == false 
+             when and(not(z = succ(0)), and(not(z = 0), and((u >= z), not(u = succ(0))))) == true ;
+      [T]  u >= z == not(u < z) ;
+      [T8] prime1(x, sub1(x)) == false 
+             when and(not(z = succ(0)), and(not(z = x), 
+                  and(not(x = 0), and(not(x = succ(0)), divides(z, x))))) == true ;
+      [T9] rem(x, y) = 0 == false 
+           when and(prime(x), and(not(y = succ(0)), not(x = y))) == true ;
+     [T10] prime(y) == false 
+           when and((rem(x, y) = 0), and(prime(x), not(x = y))) == true ;
+     [T11] gcd(x, y) == succ(0) 
+             when and((rem(x, gcd(x, y)) = 0), and(not(x = 0), and(not(x = succ(0)), 
+             and(prime1(x, sub1(x)), not(gcd(x, y) = x))))) == true ;
+     [T12] prime1(x, sub1(x)) == false 
+             when and(not(rem(y, x) = 0), not(gcd(x,y) = succ(0))) == true ;
+     [T13] rem(y * z, x) = 0 == false 
+             when and( prime(x), and(not(divides(x, y)), not(divides(x, z)))) == true ;
+     [T14] member(x, nl) == true 
+             when and(prime(x), and(primelist(nl), divides(x, timelist(nl)))) == true ;
+     [T15] perm(nl, nl1) == true 
+             when and(primelist(nl), and(primelist(nl1), (timelist(nl) = timelist(nl1)))) == true ;
+  end
+end
+
+
+
+

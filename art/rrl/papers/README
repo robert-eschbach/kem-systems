@@ -1,0 +1,65 @@
+This directory contains the dvi files of some recent papers
+of Professor Hantao Zhang:
+
+File                      Paper Reference 
+===================================================================
+ramsey.dvi :  Zhang, H., Hua, X.: (1992)
+              Proving Ramsey theorem by cover set induction: a case and 
+              comparison study.  
+              Presented at Second International Symposium on Artificial 
+              Intelligence and Mathematics.  Fort Lauderdale, Florida.
+
+oddstr.dvi :  Zhang, H.: (1992) 
+              A new strategy for the boolean ring based theorem proving.  
+              Presented at Second International Symposium on Artificial 
+              Intelligence and Mathematics.  Fort Lauderdale, Florida.
+
+lakes.dvi  :  Hua, X., Zhang, H.: (1992) 
+              Axiomatic semantics of a hardware specification language.  
+              In the Proc. of the Second IEEE Great Lakes Symposium on VLSI 
+              Design. Kalamazoo, MI. pp. 183-190.
+
+remain.dvi :  Zhang, H., Hua, X.: (1992) 
+              Proving the Chinese remainder theorem by the cover ste induction
+              In Kapur, D. (ed.): Proc. of 1992 International Conference
+              of Automated Deduction. Saratoga, NY. 
+              Lecture Notes in Artificial Intelligence 607, pp. 431-445.
+
+fri.dvi    :  Hua, X., Zhang, H.: (1992) 
+              FRI: Failure Resistant Induction in RRL.
+              In Kapur, D. (ed.): Proc. of 1992 International Conference
+              of Automated Deduction. Saratoga, NY.
+              Lecture Notes in Artificial Intelligence 607, pp. 691-695.
+
+herky.dvi  :  Zhang, H.: (1992) 
+              Herky: High-performance rewriting techniques in RRL.
+              In Kapur, D. (ed.): Proc. of 1992 International Conference
+              of Automated Deduction. Saratoga, NY.
+              Lecture Notes in Artificial Intelligence 607, pp. 696-700.
+
+contex.dvi :  Zhang, H.: (1992) 
+              Implementing contextual rewriting. 
+              In Rusinowitch, M. and Remy, J.L. (eds): Proc. of 3rd 
+              International Workshop on Conditional Term Rewriting Systems.  
+              Pont-A-Mousson, France.
+
+gisomo.dvi :  Zhang, H.: (1992) 
+              Proving group isomorphism theorems; a case study of
+              conditional completion.  
+              In Rusinowitch, M. and Remy, J.L. (eds): Proc. of 3rd 
+              International Workshop on Conditional Term Rewriting Systems.  
+              Pont-A-Mousson, France.
+
+slogic.dvi :  Lee, S.K., Lin, X., Zhang, H.: (1992) 
+              Efficient decision procedures of strength logic.  
+              In the proceedings of 1992 Pacific-Rim International
+              Conference on Artificial Intelligence.
+
+lunify.dvi :  Zhang, H. (1992): 
+              A linear Robinson unification algorithm.
+              Presented at U.S./Japan Joint Workshop on Automated Reasoning.
+              Argonne, Illinois.
+
+compet.dvi :  Zhang, H. (1992): 
+              Automaic proofs of equality problems in Overbeek's competition.
+              Submitted to J. Automated Reasoning.

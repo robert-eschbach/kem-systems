@@ -1,0 +1,47 @@
+specification nat
+begin
+  exports
+    begin
+      sorts NAT
+      functions
+        0      :           -> NAT
+        suc    : NAT       -> NAT
+        _ + _  : NAT # NAT -> NAT
+        _ * _  : NAT # NAT -> NAT
+	_ - _  : NAT # NAT -> NAT
+        _ < _  : NAT # NAT -> bool
+	_ >= _ : NAT # NAT -> bool
+	
+    end 
+
+  imports boolean
+
+  variables
+    x,y : -> NAT
+
+  equations
+    [N1a] x + 0 == x ;
+    [N1b] x + suc(y) == suc(x + y) ;
+    
+    [N2a] 0 - x == 0 ;
+    [N2b] x - 0 == x ;
+    [N2c] suc(x) - suc(y) == x - y ;
+
+    [N3a] x * 0 == 0 ;
+    [N3b] x * suc(y) == x + (x * y) ;
+
+    [N4a] x < 0 == false ;
+    [N4b] 0 < suc(x) == true ;
+    [N4c] suc(x) < suc(y) == x < y ;
+
+    [N5a] x >= x == true ;
+    [N5b] 0 >= suc(y) == false ;
+    [N5c] suc(x) >= y == x >= y when (suc(x) = y) == false ;
+
+  properties begin      
+    constructors 
+      0 : f 
+      suc : f      
+    ordering lrpo
+  end
+end
