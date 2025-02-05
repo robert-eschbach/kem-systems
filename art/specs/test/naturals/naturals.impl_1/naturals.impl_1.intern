@@ -1,0 +1,12 @@
+
+((("NAT"
+   ("naturals" 1 NIL
+    #p"/home/systeme/art/specs/test/naturals/naturals.impl_1/naturals.impl_1.asf")
+   "hidden" "sort"))
+ NIL NIL NIL
+ (NIL NIL NIL
+  (((NIL (("*" "+")) NIL)
+    ("naturals" 1 NIL
+     #p"/home/systeme/art/specs/test/naturals/naturals.impl_1/naturals.impl_1.asf")))
+  NIL)
+ NIL) 

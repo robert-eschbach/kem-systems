@@ -1,0 +1,2 @@
+(echo auto $1 ;cat)| /usr/progress/art/rrl/arrl
+

@@ -1,0 +1,72 @@
+
+init
+
+log
+art/specs/docu/naturals/naturals
+option
+undo
+noundo
+
+
+
+ADD
+[0: NAT]
+[succ: NAT -> NAT]
+[+: NAT, NAT -> NAT]
+[*: NAT, NAT -> NAT]
+(x + 0) := x
+(x + succ(y)) := succ((x + y))
+(x * 0) := 0
+(x * succ(y)) := (x + (x * y))
+]
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+operator
+order
+l
+
+
+
+makerule
+
+suffice
+
+option
+prove
+e
+
+cover
+
+add
+]
+
+makerule
+
+prove
+(x + y) == (y + x)
+
+prove
+(x + (y + z)) == ((x + y) + z)
+
+prove
+(x * (y * z)) == ((x * y) * z)
+
+prove
+(x * (y + z)) == ((x * y) + (x * z))
+
+
+
+write
+spec-write
+art/specs/docu/naturals/naturals.spec

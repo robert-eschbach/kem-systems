@@ -1,0 +1,16 @@
+specification nat2
+begin
+
+  variables
+    xn : -> NAT
+    yn : -> NAT
+
+  properties
+  begin
+    ordering 
+      precedence * +
+    theorems
+      succ(if(b, xn, yn)) == if(b, succ(xn), succ(yn)) [ o ] ;
+
+  end
+end

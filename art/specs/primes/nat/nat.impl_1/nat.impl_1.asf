@@ -1,0 +1,49 @@
+specification nat
+begin
+
+  properties
+  begin
+    ac-operators + 
+    theorems
+      (x + y) == (y + x) [ o, e ] ;
+      ((x + y) + z) == (x + (y + z)) [ o, e ] ;
+      (x * (y + z)) == ((x * y) + (x * z)) [ o, e ] ;
+      (0 < x) == not((x = 0)) [ o, e ] ;
+      (x < suc(0)) == (x = 0) [ o, e ] ;
+      ((x + y) = 0) == cond((x = 0), (y = 0), false) [ o, e ] ;
+      ((x + y) = y) == (x = 0) [ o, e ] ;
+      ((x + z) = (y + z)) == (x = y) [ o, e ] ;
+      ((x * y) = 0) == cond((x = 0), true, (y = 0)) [ o, e ] ;
+      ((x * y) = x) == (y = suc(0)) when not((x = 0)) == true [ o, e ] ;
+      ((x * y) = x) == cond((y = suc(0)), true, (x = 0)) [ o, e ] ;
+      ((x * y) = suc(0)) == cond((x = suc(0)), (y = suc(0)), false) [ o, e ] ;
+      (suc(0) < y) == true when and(not((y = 0)), not((y = suc(0)))) == true [ o, e ] ;
+      (y < suc(y)) == true [ o, e ] ;
+      (0 >= u) == (u = 0) [ o, e ] ;
+      not((x < suc(y))) == true when (y < x) == true [ o, e ] ;
+      (suc(x) < y) == true when (x < y) == true , not((suc(x) = y)) == true [ o, e ] ;
+      (suc(x) < y) == true when and((x < y), not((suc(x) = y))) == true [ o, e ] ;
+      ((u * y) < suc(y)) == false when and(not((u = 0)), and(not((u = suc(0))), not((y = 0)))) == true [ o, e ] ;
+      (0 + x) == x [ o ] ;
+      (suc(y) + x) == suc((y + x)) [ o ] ;
+      (z + (x + y)) == (x + (y + z)) [ o ] ;
+      (0 < x) == not((0 = x)) [ o ] ;
+      (x < suc(0)) == (0 = x) [ o ] ;
+      ((x + y) = 0) == false when not((0 = x)) == true [ o ] ;
+      ((x + y) = y) == (0 = x) [ o ] ;
+      ((y + z) = (x + z)) == (y = x) [ o ] ;
+      (0 * y) == 0 [ o ] ;
+      ((x * y) = 0) == (0 = y) when not((0 = x)) == true [ o ] ;
+      ((x * y) = x) == (suc(0) = y) when not((0 = x)) == true [ o ] ;
+      ((x * y) = x) == (0 = x) when not((suc(0) = y)) == true [ o ] ;
+      ((x + z) = suc(0)) == false when not((suc(0) = z)) == true , not((suc(0) = x)) == true [ o ] ;
+      ((x * y) = suc(0)) == false when not((suc(0) = x)) == true [ o ] ;
+      (suc(0) < y) == true when not((0 = y)) == true , not((suc(0) = y)) == true [ o ] ;
+      (0 >= u) == (0 = u) [ o ] ;
+      (x < suc(y)) == false when (y < x) == true [ o ] ;
+      (z < y) == false when not((z < suc(y))) == true [ o ] ;
+      ((u + z) < suc(suc(y))) == false when not((0 = u)) == true , not((z < suc(y))) == true , not((suc(0) = u)) == true [ o ] ;
+      ((u * y) < suc(y)) == false when not((0 = u)) == true , not((0 = y)) == true , not((suc(0) = u)) == true [ o ] ;
+
+  end
+end

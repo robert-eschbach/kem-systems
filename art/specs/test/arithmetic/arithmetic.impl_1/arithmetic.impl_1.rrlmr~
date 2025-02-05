@@ -1,0 +1,211 @@
+
+init
+
+log
+/usr/users/eschbach/specs/arithmetic/arithmetic.impl_1/arithmetic.impl_1
+
+
+ADD
+[0: NAT]
+[succ: NAT -> NAT]
+[+: NAT, NAT -> NAT]
+[*: NAT, NAT -> NAT]
+[-: NAT, NAT -> NAT]
+[<: NAT, NAT -> bool]
+[>=: NAT, NAT -> bool]
+[div: NAT, NAT -> NAT]
+[rem: NAT, NAT -> NAT]
+[divides: NAT, NAT -> bool]
+[gcd: NAT, NAT -> NAT]
+[sub1: NAT -> NAT]
+(x + 0) := x
+(x + succ(y)) := succ((x + y))
+(0 - x) := 0
+(x - 0) := x
+(succ(x) - succ(y)) := (x - y)
+(x * 0) := 0
+(x * succ(y)) := (x + (x * y))
+(x < 0) := false
+(0 < succ(x)) := true
+(succ(x) < succ(y)) := (x < y)
+(x >= x) := true
+(0 >= succ(y)) := false
+(succ(x) >= y) := (x >= y) if not ((succ(x) = y))
+div(x, 0) := 0
+div(x, y) := 0 if (x < y)
+div((y + x), y) := succ(div(x, y)) if not ((0 = y))
+rem(x, 0) := x
+rem(x, y) := x if (x < y)
+rem((y + x), y) := rem(x, y)
+divides(x, y) := (rem(y, x) = 0)
+gcd(x, 0) := x
+gcd(0, y) := y
+gcd((x + y), y) := gcd(x, y)
+gcd(x, (x + y)) := gcd(x, y)
+sub1(0) := 0
+sub1(succ(x)) := x
+((un * yn) < succ(yn)) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((0 = yn) equ false)
+((un + zn) < succ(succ(yn))) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((zn < succ(yn)) equ false)
+((un + xn) < succ(yn)) == false if (((un + xn) < succ(succ(yn))) equ false) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+((un + xn) < succ(yn)) == false if (xn < succ(yn)) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un < succ(succ(0))) == false if ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un >= zn) == (true xor (un < zn))
+(succ(xn) < zn) == (xn < zn) if ((succ(xn) = zn) equ false)
+(true xor (un < un)) == true
+(0 >= un) == (0 = un)
+((xn * yn) = succ(0)) == false if ((succ(0) = xn) equ false)
+((xn + zn) = succ(0)) == false if ((succ(0) = xn) equ false) & ((succ(0) = zn) equ false)
+((xn * yn) = xn) == (((0 = xn) xor (succ(0) = yn)) xor ((0 = xn) and (succ(0) = yn)))
+((xn * yn) = xn) == (succ(0) = yn) if ((0 = xn) equ false)
+((xn * yn) = 0) == (((0 = xn) xor (0 = yn)) xor ((0 = xn) and (0 = yn)))
+((yn + zn) = (xn + zn)) == (yn = xn)
+((xn + yn) = yn) == (0 = xn)
+((xn + yn) = 0) == false if ((0 = xn) equ false)
+(xn < succ(0)) == (0 = xn)
+(0 < xn) == (true xor (0 = xn))
+(xn + (zn + z1)) == (zn + (xn + z1))
+(succ(yn) + xn) == succ((yn + xn))
+(0 + xn) == xn
+((un * yn) < succ(yn)) == false if (not((un = 0)) and (not((un = succ(0))) and not((yn = 0))))
+(un >= zn) == not((un < zn))
+(succ(xn) < yn) == true if ((xn < yn) and not((succ(xn) = yn)))
+(succ(xn) < yn) == true if ((succ(xn) = yn) equ false) & (xn < yn)
+(0 >= un) == (un = 0)
+(yn < succ(yn)) == true
+((xn * yn) = succ(0)) == ((xn = succ(0)) and (yn = succ(0)))
+((xn * yn) = xn) == ((yn = succ(0)) or (xn = 0))
+((xn * yn) = xn) == (yn = succ(0)) if not((xn = 0))
+((xn * yn) = 0) == ((xn = 0) or (yn = 0))
+((xn + zn) = (yn + zn)) == (xn = yn)
+((xn + yn) = yn) == (xn = 0)
+((xn + yn) = 0) == ((xn = 0) and (yn = 0))
+(xn < succ(0)) == (xn = 0)
+(0 < xn) == not((xn = 0))
+(xn * (yn + zn)) == ((xn * yn) + (xn * zn))
+(xn + yn) == (yn + xn)
+rem(y, y) == 0
+rem(succ((y + x)), y) == rem(succ(x), y)
+div(y, y) == succ(0) if not((0 = y))
+]
+
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+operator
+acoperator
++ 
+
+operator
+order
+l
+
+operator
+precedence
+* + 
+
+operator
+precedence
+>= < 
+
+operator
+precedence
+divides rem 
+
+operator
+status
+*
+rl
+
+
+
+mr
+
+option
+prove
+e
+
+
+prove
+div(0, y) == 0
+
+prove
+rem(0, y) == 0
+
+prove
+(y * div((y + x), y)) == (y * succ(div(x, y)))
+
+prove
+(rem(x, y) + (y * div(x, y))) == x
+
+prove
+(y * div(x, y)) == x if divides(y, x)
+
+prove
+(x * y) == (y * x)
+
+prove
+(x * (y * z)) == ((x * y) * z)
+
+prove
+div((x * y), x) == y if not((x = 0))
+
+prove
+rem((y * x), x) == 0
+
+prove
+rem((y * z), x) == 0 if ((rem(z, x) = 0) and not((x = 0)))
+
+prove
+rem((x + y), z) == rem(x, z) if (rem(y, z) = 0)
+
+prove
+(div(x, y) < x) == true if (not((x = 0)) and (not((y = 0)) and not((y = succ(0)))))
+
+prove
+div((z + y), x) == (div(z, x) + div(y, x)) if (divides(x, z) and not((x = 0)))
+
+prove
+div((z * y), x) == (y * div(z, x)) if (divides(x, z) and not((x = 0)))
+
+prove
+rem(succ(0), x) == succ(0) if not((x = succ(0)))
+
+prove
+(sub1(x) < y) == (x < succ(y)) if not((x = 0))
+
+prove
+gcd(x, y) == gcd(y, x)
+
+prove
+gcd((x * z), (y * z)) == (z * gcd(x, y))
+
+prove
+(gcd((x * y), z) = y) == false if ((rem(z, x) = 0) and not((rem(y, x) = 0)))
+
+prove
+(rem((y * z), x) = 0) == false if ((gcd((x * y), (y * z)) = y) and (not((y = 0)) and not((rem(y, x) = 0))))
+
+prove
+gcd(x, succ(0)) == succ(0) if not((x = 0))
+
+prove
+rem(x, gcd(x, y)) == 0
+
+prove
+(gcd(x, y) = x) == false if not((rem(y, x) = 0))
+
+
+
+write
+spec-write
+/usr/users/eschbach/specs/arithmetic/arithmetic.impl_1/arithmetic.impl_1.spec

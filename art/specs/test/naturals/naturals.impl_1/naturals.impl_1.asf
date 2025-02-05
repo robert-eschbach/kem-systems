@@ -1,0 +1,11 @@
+specification naturals
+begin
+
+  sorts NAT 
+
+  properties
+  begin
+    ordering 
+      precedence * +
+  end
+end

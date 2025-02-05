@@ -1,0 +1,3 @@
+docu -- wurde fuer die Dokumentation gebraucht
+primes -- Primfaktorzerlegung mit dem neuen RRL 4.1
+primes-old -- ... mit der Franz-Lisp Version von RRL (uralt !)

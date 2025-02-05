@@ -1,0 +1,1267 @@
+; *********************************************************************
+; ** filename : log-parser.lisp                                      **
+; *********************************************************************  
+; ** Diese Datei erzeugt den Parser fuer die Log-Dateien des RRLs    **
+; *********************************************************************
+
+
+(IN-PACKAGE "SAVE-RRL")
+
+; *********************************************************************
+; ** Funktionen fuer die RRL-LOG-Parse-Tabelle                       **
+; *********************************************************************
+
+; Die RRL-LOG-Parse-Tabelle ist ein TRIE, in dem Befehlsfolgen von RRL-
+; Commandos und die auszufuehrende Funktion vermerkt sind, wenn diese
+; Befehlsfolge in einer Log-Datei gefunden wird.
+
+
+;**********************************************************************
+;** function name : get-log-parse-table                              **
+;** arguments     :                                                  **
+;** effect        :                                                  **
+;** return value  :  Parse-Tabelle                                   **
+;** edited        :  6.5.1991                                        **
+;**********************************************************************
+(defun get-log-parse-table ()
+  (car *rrl-log-parse-table*)
+) ;** get-log-parse-table **
+
+
+;**********************************************************************
+;** function name : insert-log-table-rek                             **
+;** arguments     : Liste der Argumente zu insert-log-table          **
+;** effect        : rekursive Version von insert-log-table           **
+;** return value  : nil                                              **
+;** edited        : 2.5.1991                                         **
+;**********************************************************************
+(defun insert-log-table-rek (liste baum)
+  (let ((entry nil)
+	)
+    ;; suche ersten Eintrag
+    (setq entry (do ((k (car baum) (cdr k))
+		     )
+		    ((or (null k)
+			 (equal (caar k) (car liste))) k)
+		    ))
+    (if entry
+	;; Eintrag gefunden, kontrolliere ob Eintrag mit Funktion assoziiert
+	(if (consp (cadar entry))
+	    ;; Eintrag hat Teilbaum, gehe weiter im Baum
+	    (insert-log-table-rek (cdr liste) (cdar entry))
+	  ;; Eintrag hat Funktion, ersetze 
+	  (rplaca (cdar entry) (cadr liste)))
+      ;; kein Eintrag, fuege restlichen Baum ein
+      (rplaca baum (cons (create-parse-tree liste) (car baum)))))
+  nil)
+
+
+;**********************************************************************
+;** function name : create-parse-tree                                **
+;** arguments     : Teiliste des Arguments zu insert-log-table       **
+;** return value  : initialer Parse-Baum                             **
+;** edited        : 2.5.1991                                         **
+;**********************************************************************
+(defun create-parse-tree (liste)
+  (if (> (length liste) 2)
+      (list (car liste) (list (create-parse-tree (cdr liste))))
+      (list (car liste) (cadr liste))
+  ) ;** if **
+) ;** create-parse-tree **
+
+
+;**********************************************************************
+;** function name : insert-log-table                                 **
+;** arguments     : Liste der Form Befehl-Symbol1 .. BSn #'function  **
+;** effect        : Befehlsfolge wird im Baum abgespeichert          **
+;** remark        : Es darf keine Befehlsfolge eingetragen werden,   **
+;**                 so dass eine Folge bekannt ist, die Praefix ist, **
+;**                 oder umgekehrt.                                  **
+;** return value  : nil                                              **
+;** edited        : 2.5.199                                          **
+;** owning        : insert-log-table-rek, create-parse-tree          **
+;**********************************************************************
+(defun insert-log-table (&rest liste)
+  (insert-log-table-rek liste *rrl-log-parse-table*)
+) ;** insert-log-table **
+
+
+;**********************************************************************
+;** function name : get-log-table-entry                              **
+;** arguments     : Symbol und ein Parse-Baum 			     **
+;** return value  : unter Symbol eingetragener Wert		     **
+;**                 NIL, falls Symbol nicht gefunden wurde 	     **
+;**		    Teilbaum oder Funktion                           **
+;** edited        : 2.5.1991					     **
+;**********************************************************************
+(defun get-log-table-entry (symbol baum)
+  (do ((k baum (cdr k))
+      )
+      ((or (null k)
+           (equal (caar k) symbol)) (car k))
+  ) ;** do **
+) ;** get-log-table-entry **
+
+
+; *********************************************************************
+; **-----------------------------------------------------------------**
+; *********************************************************************
+; ** Parser fuer Log-Dateien                                         **
+; *********************************************************************
+; **-----------------------------------------------------------------**
+; *********************************************************************
+
+; die folgenden Funktionen sollen von der Eingabe des 
+; log-parsers abstrahieren
+
+;**********************************************************************
+;** function name :  eot?                                            **
+;** arguments     :  --                                              **
+;** effect        :  prueft, ob das Textende erreicht ist            **
+;** return value  :  TRUE, falls der Text zu Ende ist                **
+;** edited        :  6.5.1991                                        **
+;**********************************************************************
+(defun eot? (line)
+  (equal line 'eot)
+) ;** eot? **
+
+
+;**********************************************************************
+;** function name :  get-line                                        **
+;** arguments     :  text                                            **
+;** effect        :  liest eine Zeile von dem Text                   **
+;** return value  :  Zeile                                           **
+;** edited        :  6.5.1991                                        **
+;**********************************************************************
+(defun get-line (text)
+  (cond ((null (car text))
+         'eot)
+        (T 
+         (let ((line (string-trim " " (caar text)))
+               )
+               (rplaca text (cdar text))
+               line
+         ))  ;** let **
+  ) ;** cond **  
+) ;** get-line ** 
+ 
+
+;**********************************************************************
+;** function name :  see-line                                        **
+;** arguments     :  text optional i (Default 0)                     **
+;** return value  :  aktuelle (oder i-te) Zeile                      **
+;** edited        :  15.5.1991                                       **
+;**********************************************************************
+(defun see-line (text &optional (i 0))
+  (do ((tt (car text) (cdr tt))
+       (j i (- j 1))
+      )
+      ((or (null tt)
+           (= j 0))
+       (if (null tt)
+           'eot
+           (string-trim " " (car tt)))
+      )
+  )
+) ;** see-line ** 
+
+
+;**********************************************************************
+;** function name :  load-log                                        **
+;** arguments     :  filename -- ein log-file                        **
+;** effect        :  liest das log-file und erzeugt eine Liste der   **
+;**                  eingelesenen strings, dabei wird nur der letzte **
+;**                  init-block beruecksichtigt                      **
+;** return value  :  die Liste                                       **
+;** edited        :  6.5.91                                          **
+;**********************************************************************
+(defun load-log (filename)
+  ;** oeffne file zum Lesen
+  (with-open-file (stream filename :direction :input)
+                  (do ((line (read-line stream nil 'eof)
+                             (read-line stream nil 'eof))
+                       (liste NIL)
+                      )
+		      ((eq line 'eof) (list liste))
+                      ;** falls init, dann neue Liste **
+                      (if (equal (string-downcase line) "init") 
+                          (setq liste (list (string-trim " " (string-downcase line))))
+                          ;** sonst dranconsen **
+                          (setq liste (append liste 
+                                              (list (string-trim " " (string-downcase line)))))
+                      ) ;** if **
+                   ) ;** do **
+  ) ;** with-open-file
+) ;** load-log **
+
+
+;**********************************************************************
+;** function name :  log-parser                                      **
+;** arguments     :  text einer Log-Datei                            **
+;** effect        :  parst mit Hilfe der Parse-Tabelle fuer Log-     **
+;**                  Dateien die Log-Datei                           **
+;** return value  :  nil                                             **
+;** edited        :  6.5.1991                                        **
+;**********************************************************************
+(defun log-parser (text)
+  (do ((line (get-line text) (get-line text))
+       (baum (get-log-parse-table))
+       (teilbaum nil nil))
+      ((eot? line) nil)
+      (when *test*
+            (print "Parsing : ")
+            (princ line))
+      (setq teilbaum (get-log-table-entry line baum))
+      (if (null teilbaum) 
+     	  (setq baum (get-log-parse-table))
+	  (if (consp (cadr teilbaum))
+	      ;** assoziierter Wert ist ein Teilbaum **
+              ;** also gehe weiter **
+	      (setq baum (cadr teilbaum))
+	      ;** es muss eine Funktion sein **
+              (progn
+	            (setq baum (get-log-parse-table))
+	            (apply (cadr teilbaum) (list text)))))))
+
+; *********************************************************************
+; ** Parse-Tabelle und -Funktionen                                   **
+;**********************************************************************
+
+
+;**********************************************************************
+;** function name :  min-nil                                         **
+;** arguments     :  Liste von Zahlen und nil                        **
+;** return value  :  Minimum der Zahlen oder NIL                     **
+;** edited        :  15.5.1991                                       **
+;**********************************************************************
+(defun min-nil (&rest wert)
+  (do ((l (cdr wert) (cdr l))
+       (min (car wert))
+      )
+      ((null l) min)
+      (cond ((null min)
+             (setq min (car l)))
+            ((null (car l))
+             )
+            ((> min (car l))
+             (setq min (car l)))
+      )
+  )
+) 
+
+;**********************************************************************
+;** function name :  read-spaces                                     **
+;** arguments     :  Index, String                                   **
+;** return value  :  erster Index, an dem in Zeile kein Space steht  **
+;** edited        :  10.6.1991                                       **
+;**********************************************************************
+(defun read-spaces (zeile index)
+  (do ((i index (+ i 1))
+      )
+      ((or (>= i (length zeile))
+           (char-not-equal #\  (char zeile i)))
+       i)
+  )
+)
+
+;**********************************************************************
+;** function name :  read-term                                       **
+;** arguments     :  Index, String                                   **
+;** return value  :  CONS-Paar aus RRL-Term und neuem Index          **
+;** remark        :  Diese Funktion liest nur Terme ein, wie RRL sie **
+;**                  ausgibt. Die Rueckgabe des Indexes nach dem Term**
+;**                  dient zum inkrementellen Lesen einer Zeile.     **
+;** edited        :  10.6.1991                                       **
+;**********************************************************************
+(defun read-term (index zeile)
+  (let ((i (read-spaces zeile index))
+       )
+       (cond ((char-equal (char zeile i) #\()
+              ; lese Operator (t1 op t2)
+              (let* ((temp (read-term (+ i 1) zeile))
+                     (t1 (progn 
+                           ; setze Index auf neue Position
+                           (setq i (read-spaces zeile (cdr temp)))
+                           (car temp)             ; weise Term t1 zu
+                         ))
+                    )
+                    (do* ((i2 ; Ende des Operator-Zeichens
+                              (+ (search " " (subseq zeile i)) i)
+                              (+ (search " " (subseq zeile i)) i))
+                          (operator (subseq zeile i i2) (subseq zeile i i2))
+                          (temp2 (read-term i2 zeile) (read-term i2 zeile))
+                          (t2 (progn
+                                 ; setze Index auf neue Position + 1
+                                 (setq i (read-spaces zeile (cdr temp2)))
+                                 (car temp2)
+                              )
+                              (progn
+                                 ; setze Index auf neue Position + 1
+                                 (setq i (read-spaces zeile (cdr temp2)))
+                                 (car temp2)
+                              ))                       ; weise Term t2 zu
+                         )
+                         ((char-equal (char zeile i) #\))
+                          (setq i (+ i 1))
+                          (cons (list (cons operator "infix") t1 t2) i)
+                         )
+                         (setq t1 (list (cons operator "infix") t1 t2))
+                    )
+               ) ;** let* **
+              )
+              ('TRUE
+               ; lese Funktionsanwendung 
+               ;   Konstante: "null"
+               ;   mehrstellig: "cons(t1,t2)"
+                 ; lese Symbol
+               (let* ((j (+ (min-nil
+                               (length (subseq zeile i))
+                               (search "," (subseq zeile i))
+                               (search ")" (subseq zeile i))
+                               (search "(" (subseq zeile i))
+                               (search " " (subseq zeile i)))
+                            i))
+                      (function (subseq zeile i j))
+                    )
+                    (cond ((>= j (length zeile))
+                           ; keine weiteren Zeichen
+                           (cons function j)
+                          )
+                          ((char-equal #\( (char zeile j))
+                           ; lese Argumente
+                           (setq j (+ j 1))
+                           (do* ((temp (read-term j zeile)
+                                       (read-term k zeile))
+                                 (k (if (char-equal #\, (char zeile (cdr temp)))
+                                        ; setze k auf naechstes Argument
+                                        (+ (cdr temp) 1)
+                                        ; vermutlich #\)
+                                        (cdr temp)
+                                    )
+                                    (if (char-equal #\, (char zeile (cdr temp)))
+                                        ; setze k auf naechstes Argument
+                                        (+ (cdr temp) 1)
+                                        ; vermutlich #\)
+                                        (cdr temp)
+                                    ))
+                                 (term (list (car temp) (cons function "functor"))
+                                       (cons (car temp) term))
+                                )
+                                ((or (>= k (length zeile))
+                                     (char-equal #\) (char zeile k)))
+                                  (cons (reverse term) 
+                                        ; Index nach #\)
+                                        (+ k 1)))
+                           )
+                          )
+                          ('TRUE
+                           (cons function j)
+                          )
+                    )
+                ) ;** let* ** 
+               )
+       ) ;** cond **
+  )
+)
+
+;**********************************************************************
+;** function name :  rename-predicates                               **
+;** arguments     :  Term                                            **
+;** effect        :  benennt alle RRL-Praedikate um                  **
+;** return value  :  umbenannter Term                                **
+;** remark        :                                                  **
+;** edited        :  4.7.1991                                        **
+;**********************************************************************
+(defun rename-predicates (term)
+  (cond ((stringp term)
+         term)
+        ((equal (caar term) "&")
+         (rplaca (car term) "and")
+         (rename-predicates (cadr term))
+         (rename-predicates (caddr term))
+         term)
+        ((equal (caar term) "+")
+         (rplaca (car term) "xor")
+         (rename-predicates (cadr term))
+         (rename-predicates (caddr term))
+         term)
+        ((equal (caar term) "<=>")
+         (rplaca (car term) "equ")
+         (rename-predicates (cadr term))
+         (rename-predicates (caddr term))
+         term)
+        ('TRUE
+         term)
+  )
+)
+
+;**********************************************************************
+;** function name :  read-predicates                                 **
+;** arguments     :  Index, String, Text                             **
+;** return value  :  Liste von Termen ("t1" == "t2")                 **
+;** remark        :                                                  **
+;** edited        :  4.7.1991                                        **
+;**********************************************************************
+(defun read-predicates (index zeile text)
+; Ein Beispiel: { ab(x, x) & ab(y, y) <=> ((y = x) + ab(x, x) + (y = x) & ab(y, y)) } 
+; oder : { (er(x, y) = x),
+;         ab(y, x) <=> (y = x) } 
+  (do* ((start (read-spaces zeile (+ (search "{" (subseq zeile index)) 
+                                     index 1))
+               (if (char-equal (char zeile start) #\,)
+                   (progn
+		     ;; falls Zeile mit ; beginnt
+		     ;; ansonsten haben wir noch spaces (das ist verdammte Hackerei !)
+		     ;; Eschbach Wed Sep  8 11:59:20 MET DST 1993
+                      (setq zeile (subseq (get-line text) 2))
+                      0
+                   )
+                   start
+               )
+        )
+        (conditionals nil
+                      (list* "true" (rename-predicates predicate) conditionals))
+        (predicate nil)
+       )
+       ((char-equal (char zeile start) #\})
+        (nreverse conditionals)
+       )
+       (do* ((temp (read-term start zeile)
+                   (read-term start zeile))
+             (i (read-spaces zeile (cdr temp))
+                (read-spaces zeile (cdr temp)))
+             (t1 (car temp) (list (cons operator "infix")
+                                  t1
+                                  (car temp)))
+             (operator nil)
+            )
+            ((or (char-equal (char zeile i) #\,)
+                 (char-equal (char zeile i) #\}))
+             (setq predicate t1)
+             (setq start i)
+            )
+            ; lese Operator
+            (setq temp (read-term i zeile))
+            (setq start (cdr temp))
+            (setq operator (car temp))
+            (unless (stringp operator)
+                    (error "~%~% Interner Fehler in read-predicate: ~A in Zeile ~A kein Operator!" operator zeile)
+            )
+       )
+  )
+)
+
+;**********************************************************************
+;** function name :  read-equation                                   **
+;** arguments     :  String und Text                                 **
+;** return value  :  Liste der Komponenten einer RRL-Gleichung       **
+;** edited        :  10.6.1991                                       **
+;**********************************************************************
+(defun read-equation (zeile text)
+  (let* ((temp (read-term 0 zeile))
+         (t1 (car temp))              ; erster Term
+         (index (cdr temp))           ; Index nach Term
+         (equ                         ; Gleichheitszeichen (falls vorhanden)
+                                      ; Index wird korrigiert auf Index nach 
+                                      ; Gleichheitszeichen
+              (let ((s (string-trim " " (subseq zeile index)))
+                   )
+                   (cond ((< (length s) 3)
+                          ; diese Abfrage ist korrekt, denn auf "==" oder ":="
+                          ; muss ja ein Term folgen! Dann ist die Mindestlaenge
+                          ; "== 0"
+                          nil
+                          )
+                         ((string= "==" (subseq s 0 2))
+                          (setq index (+ (search "==" zeile) 2))
+                          "==")
+                         ((string= ":=" (subseq s 0 2))
+                          (setq index (+ (search ":=" zeile) 2))
+                          ":=")
+                         ((string= "--->" (subseq s 0 4))
+                          (setq index (+ (search "--->" zeile) 4))
+                          "-->")
+                   )
+              )
+         )
+        )
+        (if (null equ)
+					; Ergebnis Gleichung "t1 == true"
+            (progn
+;;	      (trace-output 20 " equation : ~A ~%" t1)
+	      (list t1 "==" "true" nil)
+	      )  
+					; lese Zeichen und zweiten Term
+	  (let* ((temp (read-term index zeile))
+		 (t2 (progn 
+		       (setq index (cdr temp)) ; setze Index auf neue Pos.
+		       (car temp)	; weise neuen Term t2 zu
+                       ))
+		 (ifp			; Praedikat, ob "if" folgt
+		  (let ((s (string-trim " " (subseq zeile index)))
+			)
+		    (when (and (>= (length s) 2)
+			       (string= "if" (subseq s 0 2)))
+			  (setq index (+ (search "if" (subseq zeile index))
+					 index 2))
+			  (when (>= index (length zeile))
+					; in der naechsten Zeile muss es weitergehen
+				(setq zeile (get-line text)
+				      index 0)
+				)
+			  'TRUE
+			  )
+		    ))
+		 (conditionals 
+		  (if ifp
+		      (if (search "{" (subseq zeile index))
+			  (read-predicates index zeile text)
+					; falls kein "{" vorhanden ist, gibt es nur ein
+					; Praedikat, welches als Term gelesen werden kann
+			(list (car (read-term index zeile)) "true")
+			)
+		    nil
+		    )
+		  )
+		 )
+	    (when *test*
+		  (print " end: read-equation")
+                  )
+	    (list t1 equ t2 conditionals)
+            )
+	  )				;** if **
+  )
+)
+
+;**********************************************************************
+;** function name :  read-arity                                      **
+;** arguments     :  String                                          **
+;** return value  :  Liste der Komponenten einer RRL-Stelligkeit     **
+;** edited        :  31.5.1991                                       **
+;**********************************************************************
+(defun read-arity (zeile)
+  (let ((function nil)
+        (index1 (search ":" zeile))
+        (index2 (if (char-equal (char zeile 0) #\[)
+                    1
+                    0
+                ))
+       )
+       ; lese Funktion (index2 < index1)
+       (push (string-trim " " (subseq zeile index2 index1)) function)
+       ; erhoehe index1 bis zum ersten Zeichen, welches kein Blank ist
+       (setq index1 (search (string-trim " " (subseq zeile (+ index1 1)))
+                            zeile))
+       ; beginne Symbole zu lesen
+       (do* ((index index1 (if (char-equal (char zeile index2) #\,)  
+                              (+ index2 1)
+                               (progn
+                                 (push (subseq zeile index2 (+ index2 2))
+                                       function)
+                                 (+ index2 2)
+                               )
+              )) ; ** if and index **
+             (index2 (+ (min-nil
+                             (length (subseq zeile index1))
+                             (search "," (subseq zeile index1))
+                             (search "->" (subseq zeile index1)))
+                        index1)
+                     (+ (min-nil
+                             (length (subseq zeile index))
+                             (search "," (subseq zeile index))
+                             (search "->" (subseq zeile index)))
+                        index)
+              ) ;** index2 **
+             )
+             ((>= index2 (length zeile))
+              (push (string-trim " ]" (subseq zeile index index2)) function)
+              ; Format: ("f" ("S1" .. "Sn") ("T1" .. "Tm"))
+              (do ((f function (cdr f))
+                   (pfeil-found nil)
+                   (input nil)
+                   (output nil)
+                  )
+                  ((null (cdr f))
+                   (list (car f) input output))
+                  (cond ((equal "->" (car f))
+                         (setq pfeil-found 'TRUE))
+                        (pfeil-found
+                         (setq input (cons (car f) input)))
+                        ('TRUE
+                         (setq output (cons (car f) output)))
+                  )
+              )
+             )
+             (if (< index index2)
+                 (push (string-trim " " (subseq zeile index index2)) function)
+             )
+       )
+  )
+)
+
+
+;**********************************************************************
+;** function name :  logcmd-add                                      **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  15.5.1991                                       **
+;**********************************************************************
+(defun logcmd-add (text)
+; lese solange bis "]" erscheint
+  (do ((line (get-line text) (get-line text))
+       (arities nil)
+       (equs nil)
+      )
+      ((or (equal line "]") (eot? line))
+       (insert-spec *log-spec* 'function arities)
+       (insert-spec *log-spec* 'add-equation equs)
+      )
+      (cond ((string= "" line)
+            )
+            ((char-equal (char line 0) #\[)
+             ; lese Stelligkeit
+             (if *test*
+                 (push (print (read-arity line)) arities)
+                 (push (read-arity line) arities)    
+             )
+            )
+            ('TRUE
+             ; lese Gleichung
+             (if *test*
+                 (push (print (read-equation line text)) equs)
+                 (push (read-equation line text) equs)
+             )
+            )
+      )
+  )
+)
+
+
+;**********************************************************************
+;** function name :  logcmd-equiv                                    **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  15.5.1991                                       **
+;**********************************************************************
+(defun logcmd-equiv (text)
+; Diese Option soll nur eine Zeile ueberlesen, um 
+; Kollisionen zu vermeiden
+  (get-line text)
+)
+
+;**********************************************************************
+;** function name :  logcmd-load                                     **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  15.5.1991                                       **
+;**********************************************************************
+(defun logcmd-load (text)
+; zu lesender Text:
+; "load [y] filename"
+; oder
+; "load n"
+  (let ((zeile (get-line text))
+       )
+       (cond ((eot? zeile)
+              )
+             ((equal zeile "y")
+              ; lese filename
+              (get-line text))
+       )
+  )
+)
+
+;**********************************************************************
+;** function name :  logcmd-log                                      **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  16.5.1991                                       **
+;**********************************************************************
+(defun logcmd-log (text)
+; Der zu lesende Text:
+; "log filename"
+  ; ueberlese filename
+  (get-line text)
+)
+
+
+;**********************************************************************
+;** function name :  logcmd-oper-constr                              **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  10.6.1991                                       **
+;**********************************************************************
+(defun logcmd-oper-constr (text)
+  ;** lese Konstruktoren ein **
+  (let ((constr-list (make-string-list (get-line text)))
+       )
+       ;** fuer jeden Konstruktor **
+       (do ((line (see-line text) (see-line text))
+            (constr (car constr-list) (car constr-list))
+           )
+           ((null constr-list))
+           ;** es gibt folgende Moeglichkeiten :
+           ;** (1) constr ist schon als Konstruktor eingetragen
+           ;**     dann entferne constr aus der constr-list
+           ;** (2) constr ist eine nullstellige Funktion
+           ;**     dann fuege constr als freien Konstruktor in die
+           ;**     *log-spec* ein
+           ;** (3) line = "y" bzw line = "n"
+           ;**     dann fuege constr als freien bzw. nicht-freien
+           ;**     Konstruktor in die *log-spec* ein
+           ;** (4) ist (1) - (3) nicht der Fall, dann wurde constr als eine
+           ;**     neue Funktion durch operator constructor hinzugefuegt
+           ;**     Dies wird von uns nicht erlaubt ! 
+           (cond ((cadr (get-entry *log-spec* 'constructor constr))
+                  (setq constr-list (cdr constr-list)))
+                 ((and (get-entry *log-spec* 'function constr)
+                       (null (cadr (get-entry *log-spec* 'function constr))))
+                  (progn
+                    (setq constr-list (cdr constr-list)))
+                    (insert-spec *log-spec* 'constructor
+                                 (list (list constr 'TRUE)))
+                  ) ;** progn **
+                 ((or (equal line "y") 
+                      (equal line "yes"))
+                  (progn 
+                    (insert-spec *log-spec* 'constructor 
+                                 (list (list constr 'TRUE))))
+                    (get-line text)
+                    (setq constr-list (cdr constr-list))
+                  ) ;** progn **
+                 ((or (equal line "n")
+                      (equal line "no"))
+                  (progn 
+                    (insert-spec *log-spec* 'constructor
+                                 (list (list constr 'NIL))))
+                    (get-line text)
+                    (setq constr-list (cdr constr-list))
+                  ) ;** progn **
+                 (T (error 
+                      "logcmd-oper-constr : ~S unkown ! (use add)" constr)) 
+           ) ;** cond **
+       ) ;** do **
+  ) ;**let **
+) ;** logcmd-oper-constr **
+
+
+;**********************************************************************
+;** function name :  make-string-list                                **
+;** arguments     :  string                                          **
+;** effect        :  erzeugt eine Liste der Teilstrings, welche      **
+;**                  durch Spaces getrennt sind                      **  
+;** edited        :  05.06.1991                                      **
+;**********************************************************************
+(defun make-string-list (string)
+  ;** entferne ersten Space von str **
+  (let ((str (string-trim '(#\Space) string))
+        (str-list NIL)
+       )
+       ;** fuer jeden Buchstaben **
+       (do ((char_index 0 (+ char_index 1))
+           )
+           ((> char_index (length str)))
+           ;** falls Endbuchstabe oder Space **
+           (if (or (equal char_index (length str))
+                   (equal (char str char_index) '#\Space))
+               (progn
+                 ;** Teilstring in die Liste **
+                 (setq str-list (cons (subseq str 0 char_index) 
+                                      str-list))
+                 ;** verkleinere str und entferne die ersten Spaces **
+                 (setq str (string-trim " " (subseq str char_index)))
+                 ;** index zuruecksetzen **
+                 (setq char_index 0)
+               ) ;** progn **
+           ) ;** if **
+       ) ;** do* **
+    (reverse str-list)
+  ); /** let **/
+) ;** make-string-list **
+
+
+;**********************************************************************
+;** function name :  logcmd-oper-c                                   **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  10.06.1991                                      **
+;**********************************************************************
+(defun logcmd-oper-c (text)
+  ;** lese Operator(en) ein **
+  (let ((oper-list (make-string-list (get-line text)))
+       )
+       ;** fuege Operator(en) in die *log-spec* ein **
+       (do ((oper (car oper-list) (car oper-list))
+           )
+           ((null oper-list))
+           (insert-spec *log-spec* 'c-operator (list oper))
+           (setq oper-list (cdr oper-list))
+       ) ;** do **
+  ) ;** let **
+)
+
+
+;**********************************************************************
+;** function name :  logcmd-oper-ac                                  **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  10.06.1991                                      **
+;**********************************************************************
+(defun logcmd-oper-ac (text)
+  ;** lese Operator(en) ein **
+  (let ((oper-list (make-string-list (get-line text)))
+       )
+       ;** fuege Operator(en) in die *log-spec* ein **
+       (do ((oper (car oper-list) (car oper-list))
+           )
+           ((null oper-list))
+           (insert-spec *log-spec* 'ac-operator (list oper))
+           (setq oper-list (cdr oper-list))
+       ) ;** do **
+  ) ;** let **
+) ;** logcmd-oper-ac **
+
+
+
+;**********************************************************************
+;** function name :  logcmd-oper-p                                   **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  11.6.1991                                       **
+;**********************************************************************
+(defun logcmd-oper-p (text)
+  ;** lese Operator(en) ein **
+  (let ((oper-list (make-string-list (get-line text)))
+       )
+       (do ((oper (car oper-list) (car oper-list))
+	    (next-oper (cadr oper-list) (cadr oper-list))
+	   )
+	   ((equal (length oper-list) 1))
+	   (insert-spec *log-spec* 'precedence (list (list oper next-oper)))
+	   (setq oper-list (cdr oper-list))
+       ) ;** do **
+  ) ;** let **
+) ;** logcmd-oper-p **
+
+
+;**********************************************************************
+;** function name :  logcmd-oper-status                              **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  31.5.1991                                       **
+;**********************************************************************
+(defun logcmd-oper-status (text)
+;** spec-parser traegt die Operatoren ein **
+)
+
+
+;**********************************************************************
+;** function name :  logcmd-option                                   **
+;** arguments     :  der zu lesende Text                             **
+;** edited        :  16.5.1991                                       **
+;**********************************************************************
+(defun logcmd-option (text)
+; Der zu lesende Text:
+; "option (help)* {support (l)* string | prove string }
+  ; ueberlese "help"
+  (let ((zeile (do ((line (get-line text) (get-line text))
+                   )
+                   ((string/= line "help") line)
+               ))
+       )
+       (cond ((string= zeile "support")
+              ; ueberlese "l"
+              (do ((line (get-line text) (get-line text))
+                  )
+                  ((string/= (string-trim " " line) "l") )
+              )
+             )
+             ((string= zeile "prove")
+              (get-line text)
+             )
+       )
+  )
+) ;** logcmd-option **
+
+
+;**********************************************************************
+;** function name : logcmd-akb                                       **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 16.05.91                                         **
+;**********************************************************************
+(defun logcmd-akb (text)
+) ;** logcmd-akb **
+
+
+;**********************************************************************
+;** function name : logcmd-delete                                    **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 15.05.91                                         **
+;**********************************************************************
+(defun logcmd-delete (text) 
+  ;** lese solange den Text
+  (do ((line (get-line text) (get-line text))
+       )
+      ;** bis kein help mehr gefunden wird oder der Text zu Ende ist **
+      ((or (not (equal line "help")) (eot? line)) text)
+  ) ;** do **
+) ;** logcmd-delete **
+
+
+;**********************************************************************
+;** function name : logcmd-init                                      **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 15.05.91                                         **
+;**********************************************************************
+(defun logcmd-init (text) 
+) ;** logcmd-init **
+
+
+;**********************************************************************
+;** function name : logcmd-prove                                     **
+;** arguments     : der zu lesende Text                              **
+;** effect        : liest die eingebene Formel ein und ueberprueft,  **
+;**                 ob es sich um ein theorem oder ein inductive     **
+;**                 theorem handelt; in diesem Fall wird sie in die  **
+;**                 *log-spec* eingetragen.                          **
+;** globals       : *log-spec*                                       **
+;** edited        : 30.07.91                                         **
+;** changed       : 22.06.92 Eschbach                                **
+;**   Ausgabe von Lemmata in RRL                                     ** 
+;**********************************************************************
+(defun logcmd-prove (text)
+  (let* ((line (get-line text))
+					;** es gibt vier Moeglichkeiten fuer das theorem :
+					;** (1) line = "y" --> es wurde schon vorher 
+					;**     versucht eine 
+					;**     Gleichung zu beweisen, RRL fragt : 
+					;**     "Is it ok to continue ?" 
+					;**     In diesem Fall wird solange weitergelesen,
+					;**     bis ein Zeile
+					;**     mit ";" und "theorem" oder eine Zeile mit 
+					;**     "quit" erreicht 
+					;**     wird (bei "; ... theorem" wurde etwas 
+					;**     bewiesen, bei "quit"
+					;**     hat man bedingt durch die prove-Methode 
+					;**     "kb" verlassen) 
+					;**     , d.h.: dieser Fall wird nicht
+					;**      bearbeitet.
+					;** (2) line = "n" --> die obige Frage wird mit
+					;**     "n" beantwortet
+					;**     Es wird eine Zeile weitergelesen, in
+					;**     dieser Zeile steht 
+					;**     dann das Theorem.
+					;** (3) line = "]" --> prove wird direkt verlassen 
+					;** (4) Ansonsten steht in line das Theorem.
+         (theorem (cond ((equal line "y")
+                         (do ((line (get-line text) (get-line text))
+			      )
+                             ((or (and (search "theorem" line)
+                                       (equal (char line 0) #\;))
+                                  (search "quit" line)) nil)
+			     )		;** do **
+			 )
+
+                        ((equal line "n")
+                         (setq line (get-line text))
+                         (read-equation line text)
+			 )
+
+                        ((equal line "]")
+                         nil)
+
+                        (t (read-equation line text))
+			)		;** cond ** 
+		  )			;** theorem **
+	 )
+    
+					;** Jetzt muss ermittelt werden, ob es sich um 
+					;** equational,
+					;** inductive theorem oder um keines von beiden 
+					;** handelt. 
+					;** Es wird davon ausgegangen, dass "option prove"
+					;** entweder 
+					;** auf "e" bzw. auf "s" gesetzt ist. 
+					;** Folgendes wird nun getan :
+					;** (1) lese weiter bis zur ersten Zeile mit 
+					;** "theorem"
+					;** (2) falls "equational theorem" : trage theorem 
+					;** in *log-spec* 
+					;**     mit flag "o" "eq" ein
+					;** (3) falls "not equational theorem" : lese 
+					;** weiter bis
+					;**     zur ersten Zeile mit "inductive theorem" 
+					;* oder "quit".
+					;**     Bei "inductive theorem" wird in die 
+					;** *log-spec* mit flag 
+					;**     "o" "in" eingetragen, bei "quit" wird 
+					;* das theorem ohne flag 
+					;**     in die *log-spec* eingetragen 
+					;** (4) falls "inductive theorem" : entsprechend 
+					;** in *log-spec*
+					;**     eintragen
+					;** (5) falls "not inductive theorem" : 
+					;** entsprechend in *log-spec*
+					;**     eintragen
+
+					;** ist das theorem nil --> fertig **
+    (when theorem
+					; alle Lemmata werden eingelesen
+					; dies ist bei der Zeile "Following equation" geschehen !
+	  (unless (search "; yes, it is an equational theorem." (see-line text 0))
+		  (do ((line2 (get-line text) (get-line text))
+		       (lemma nil)
+		       )
+		      ;; Eschbach Tue Aug 24 12:40:24 MET DST 1993
+		      ;; Situation : 
+		      ;; prove / equation / ; yes, it is an ... 
+		      ((or (eot? line2) 
+			   (and (search "following equation" line2)
+				(equal (char line2 0) #\;))
+			   (search "; yes, it is an equational theorem." line2))
+		       (unless (search "; yes, it is an equational theorem." line2)
+			       (setq line line2)))
+		      (cond ((search "all subgoals are proved so" line2)
+			     (setq line2 (get-line text))
+			     (setq lemma (read-equation (subseq line2 2) text))
+			     (cond ((not (equ-equal (list nil nil theorem) (list nil nil lemma)))
+				    (setq lemma (reverse (cons '("o" "in") (reverse lemma))))
+				    (insert-spec *log-spec* 'prove (list lemma))
+				    ;;			    (trace-output 20 "lemma in log-file : ~A ~%" lemma)
+				    )))
+			    )
+		      ));; unless
+
+	  (do ((line2 (get-line text) (get-line text))
+	       )
+	      ((or (eot? line2) 
+		   (and (search "theorem" line2)
+			(equal (char line2 0) #\;)))
+	       (setq line line2))
+              )				;** do **
+	  (cond ((and (not (search "not" line))
+		      (search "equational" line))
+		 (setq theorem (reverse (cons '("o" "eq") (reverse theorem))))
+		 (insert-spec *log-spec* 'prove (list theorem))
+;;		 (trace-output 20 "equational theorem in log-file : ~A ~%" theorem)	 
+		 )
+		((search "equational" line)
+		 (cond ((not (equal "n" (see-line text 2)))
+			(do ((line2 (get-line text) (get-line text))
+			     )
+			    ((or (eot? line2) 
+				 (and (search "inductive theorem" line2)
+				      (equal (char line2 0) #\;))           
+				 (search "quit" line2)) (setq line line2))
+                            )		;** do ** 
+			(when (and (search "inductive theorem" line)
+				   (search "not" line))
+;;			      (trace-output 20 "theorem in log-file : ~A ~%" theorem)
+			      (insert-spec *log-spec* 'prove (list theorem))
+			      )		;** when **
+			(when (search "inductive theorem" line)
+			      (setq theorem (reverse (cons '("o" "in") 
+							   (reverse theorem))))
+;;			      (trace-output 20 "theorem in log-file : ~A ~%" theorem)
+			      (insert-spec *log-spec* 'prove (list theorem))
+			      )		;** when **
+			(when (search "quit" line)
+			      (insert-spec *log-spec* 'prove (list theorem))
+;;			      (trace-output 20 "theorem in log-file : ~A ~%" theorem)
+			      )		;** when **
+
+			)
+		       ((search "inductive theorem" line)
+			(setq theorem (reverse (cons '("o" "in") 
+						     (reverse theorem))))
+;;			(trace-output 20 "theorem in log-file : ~A ~%" theorem)
+			(insert-spec *log-spec* 'prove (list theorem))
+			)
+		       ('TRUE
+;;			(trace-output 20 "theorem in log-file : ~A ~%" theorem)
+			(insert-spec *log-spec* 'prove (list theorem))
+			)
+		       )
+		 )
+		((and (search "inductive theorem" line)
+		      (search "not" line))
+;;		 (trace-output 20 "theorem in log-file : ~A ~%" theorem)
+		 (insert-spec *log-spec* 'prove (list theorem))
+		 )
+		((search "inductive theorem" line)
+		 (setq theorem (reverse (cons '("o" "in") 
+					      (reverse theorem))))
+;;		 (trace-output 20 "theorem in log-file : ~A ~%" theorem)
+		 (insert-spec *log-spec* 'prove (list theorem))
+		 )
+		('TRUE
+		 (error "; ... theorem ... aber weder equational, noch inductive !") 
+		 )
+		)			;** cond **
+	  )
+    )					;** let* **
+  )					;** logcmd-prove **
+
+;**********************************************************************
+;** function name : logcmd-read                                      **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 16.5.1991                                        **
+;** author        : Stefan                                           **
+;**********************************************************************
+(defun logcmd-read (text)
+; Der zu lesende Test:
+; "read filename"
+  ; ueberlese filename
+  (get-line text)
+)
+
+;**********************************************************************
+;** function name : logcmd-save                                      **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 16.5.1991                                        **
+;** author        : Stefan                                           **
+;**********************************************************************
+(defun logcmd-save (text)
+; Der zu lesende Test:
+; "save filename [y/n]"
+  ; ueberlese filename
+  (get-line text)
+  ; ueberlese optionales [y/n]
+  (let ((line (see-line text))
+       )
+       (if (or (string= line "n") (string= line "y"))
+           (get-line text)
+       )
+  )
+)
+
+;**********************************************************************
+;** function name : logcmd-suffice                                   **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 16.5.1991                                        **
+;** author        : Stefan                                           **
+;**********************************************************************
+(defun logcmd-suffice (text)
+; Der zu lesende Text:
+; "suffice
+;  Liste von Konstruktoren
+;  ; No constructors for that type. Stop."
+;
+; "suffice
+;  ; Specification of 'nf' is completely defined.
+;
+;  ; Specification of 'nf2' is not known to be comnpletely defined.
+;  ; Following left hand sides of rules are proposed:
+;  ;     nf2(0, pred(x), pred(x1)) ---> something
+;  ;     nf2(0, pred(x), succ(x1)) ---> something
+;  ;     nf2(0, succ(x), succ(x1)) ---> something"
+  ; teste auf den Sonderfall "; No constructors for that type. Stop."
+  (if (string= (see-line text 1) "; No constructors for that type. Stop.")
+      (progn 
+             (get-line text)
+             (get-line text)
+      )
+      ; ueberlese "y", "n", "; ..." and spaces
+      (do ((line (see-line text) (see-line text))
+          )
+          ((cond ((= (length (string-trim " " line)) 0)
+                  (get-line text)
+                  nil)
+                 ((or (string= line "y") (string= line "n"))
+                  (get-line text)
+                  nil)
+                 ((char-equal (char line 0) #\;)
+                  ; teste auf "Specification of"
+                  (when (search "Specification of" line)
+                        (let* ((index1 (+ (position #\' line) 1))
+                               (index2 (position #\' line :start index1))
+                               (function (subseq line index1 index2))
+                               (complete-yes (and (not (search "not" line))
+                                                 (search "complete" line)))
+                               (complete-no (and (search "not" line)
+                                                 (search "complete" line)))
+                              )
+                              (when *test*
+                                    (print function)
+                              )
+                              (cond ((and complete-yes complete-no)
+                                     (error "INTERNER FEHLER: Funktion sowohl als complete als auch als nicht complete erkannt! Funktion 'logcmd-suffice'"))
+                                    (complete-yes
+                                     (when *test*
+                                           (princ " is completely defined")
+                                     )
+                                     (insert-spec *log-spec* 'suffice
+                                                  (list (list function 'sufficient))
+                                     ))
+                                    (complete-no
+                                     (when *test*
+                                            (princ " is not completely defined")
+                                     )
+                                     (insert-spec *log-spec* 'suffice
+                                                  (list (list function))
+                                     ))
+                                    ('TRUE
+                                     (error "INTERNER FEHLER: Funktion weder als complete noch als nicht complete erkannt! Funktion 'logcmd-suffice'"))
+                              )
+                        )
+                  )
+                  (get-line text)
+                  nil)
+                 ('TRUE 'TRUE)
+           ) ; ** cond **
+          )
+      ) ; ** do **
+  ) ; ** if **
+)
+
+;**********************************************************************
+;** function name : logcmd-write                                     **
+;** arguments     : der zu lesende Text                              **
+;** edited        : 16.5.1991                                        **
+;** author        : Stefan                                           **
+;**********************************************************************
+(defun logcmd-write (text)
+; Der zu lesende Text:
+; "write (help)* option filename [y/n]"
+  ; ueberlese "help"
+  (do ((line (get-line text) (get-line text))
+      )
+      ((string/= line "help") line)
+  )
+  ; ueberlese "filename" ("option" wurde von do-Schleife ueberlesen)
+  (get-line text)
+  (let ((line (see-line text))
+       )
+       (if (or (string= line "n") (string= line "y"))
+           (get-line text)
+       )
+  )
+)
+
+(setq *rrl-log-parse-table* (list nil))
+
+; ** Parse-Tabelle wird aufgebaut **
+(insert-log-table "add"		#'logcmd-add)
+(insert-log-table "akb" 	#'logcmd-akb)
+(insert-log-table "delete" 	#'logcmd-delete)
+(insert-log-table "init" 	#'logcmd-init)
+
+; Die Option "list" kann weggelassen werden, da sie keine weiteren
+; Zeilen in der log-Datei beansprucht. Diese Option kollidiert mit
+; "option list" und "option fopc list", was aber ungefaehrlich ist.
+; (insert-log-table "list" 	#'logcmd-list)
+
+(insert-log-table "load" 	#'logcmd-load)
+(insert-log-table "log" 	#'logcmd-log)
+
+; Die Optionen "makerule" und "kb" werden ueberlesen!
+;(insert-log-table "makerule" 	#'logcmd-makerule)
+;(insert-log-table "kb" 		#'logcmd-kb)
+
+(insert-log-table "equivalence"	#'logcmd-equiv)
+; Die Option "status" kann auch von "kb status", "option operator status"
+; und "option status" aufgerufen werden. Alle werden jedoch ueberlesen.
+(insert-log-table "status"	#'logcmd-oper-status)
+
+(insert-log-table "operator" "constructor"	#'logcmd-oper-constr)
+(insert-log-table "operator" "commutative" 	#'logcmd-oper-c)
+(insert-log-table "operator" "acoperator"	#'logcmd-oper-ac)
+(insert-log-table "operator" "precedence" 	#'logcmd-oper-p)
+(insert-log-table "operator" "status"		#'logcmd-oper-status)
+(insert-log-table "option"      #'logcmd-option)
+(insert-log-table "prove"	#'logcmd-prove)
+(insert-log-table "read" 	#'logcmd-read)
+(insert-log-table "save"	#'logcmd-save)
+(insert-log-table "suffice"	#'logcmd-suffice)
+(insert-log-table "write"       #'logcmd-write)

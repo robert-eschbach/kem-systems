@@ -1,0 +1,30 @@
+specification nat1
+begin
+
+  variables
+    z1 : -> NAT
+
+  properties
+  begin
+    ac-operators + 
+    theorems
+      (0 + x) == x [ o ] ;
+      (succ(y) + x) == succ((y + x)) [ o ] ;
+      (x + (z + z1)) == (z + (x + z1)) [ o ] ;
+      (x < succ(0)) == (0 = x) [ o ] ;
+      ((x + y) = 0) == false when not((0 = x)) == true [ o ] ;
+      ((x + y) = y) == (0 = x) [ o ] ;
+      ((y + z) = (x + z)) == (y = x) [ o ] ;
+      (0 * y) == 0 [ o ] ;
+      ((x * y) = 0) == (0 = y) when not((0 = x)) == true [ o ] ;
+      ((x * y) = x) == (succ(0) = y) when not((0 = x)) == true [ o ] ;
+      ((x + z) = succ(0)) == false when not((succ(0) = z)) == true , not((succ(0) = x)) == true [ o ] ;
+      ((x * y) = succ(0)) == false when not((succ(0) = x)) == true [ o ] ;
+      (0 >= u) == (0 = u) [ o ] ;
+      (0 < x) == true when not((0 = x)) == true [ o ] ;
+      not((u < u)) == true [ o ] ;
+      (succ(x) < z) == (x < z) when not((succ(x) = z)) == true [ o ] ;
+      ((u * y) < succ(y)) == false when not((0 = u)) == true , not((0 = y)) == true , not((succ(0) = u)) == true [ o ] ;
+
+  end
+end

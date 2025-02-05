@@ -1,0 +1,39 @@
+specification naturals
+begin
+  exports
+    begin
+      sorts NAT
+      functions
+        0         :           -> NAT
+        succ      : NAT       -> NAT
+        _ + _     : NAT # NAT -> NAT
+        _ * _     : NAT # NAT -> NAT
+    end 
+  variables
+    x,y,z : -> NAT
+  equations
+    [N1]  x + 0 == x ;
+    [N2]  x + succ(y) == succ(x + y) ;
+    [N3]  x * 0 == 0 ;
+    [N4]  x * succ(y) == x + (x * y) ;
+  properties
+    begin
+      constructors 
+        0    : f 
+        succ : f
+      ordering lrpo
+      theorems
+        [K]  x + y == y + x [e] ;
+        [A1] x + (y + z) == (x + y) + z [e] ;
+        [A2] x * (y * z) == (x * y) * z [e] ;
+        [D]  x * (y + z) == (x * y) + (x * z) [e] ;
+     end  
+end
+
+
+
+
+
+
+
+

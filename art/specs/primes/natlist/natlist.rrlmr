@@ -1,0 +1,161 @@
+
+option
+art
+on
+
+init
+
+log
+/usr/progress/art/specs/primes/natlist/natlist
+
+option
+history
+no-history
+
+
+
+ADD
+[0 : NAT]
+[suc : NAT -> NAT]
+[+ : NAT, NAT -> NAT]
+[* : NAT, NAT -> NAT]
+[- : NAT, NAT -> NAT]
+[< : NAT, NAT -> bool]
+[>= : NAT, NAT -> bool]
+[null : NATLIST]
+[cons : NAT, NATLIST -> NATLIST]
+[append : NATLIST, NATLIST -> NATLIST]
+[delete : NAT, NATLIST -> NATLIST]
+[member : NAT, NATLIST -> bool]
+[perm : NATLIST, NATLIST -> bool]
+(x + 0) := x
+(x + suc(y)) := suc((x + y))
+(0 - x) := 0
+(x - 0) := x
+(suc(x) - suc(y)) := (x - y)
+(x * 0) := 0
+(x * suc(y)) := (x + (x * y))
+(x < 0) := false
+(0 < suc(x)) := true
+(suc(x) < suc(y)) := (x < y)
+(x >= x) := true
+(0 >= suc(y)) := false
+(suc(x) >= y) := (x >= y) if not ((suc(x) = y))
+append(null, u) := u
+append(cons(x, u), v) := cons(x, append(u, v))
+delete(x, null) := null
+delete(x, cons(y, u)) := cond((x = y), u, cons(y, delete(x, u)))
+member(x, null) := false
+member(x, cons(y, u)) := cond((x = y), true, member(x, u))
+perm(null, null) := true
+perm(null, cons(x, u)) := false
+perm(cons(x, u), null) := false
+perm(cons(x, u), v) := cond(member(x, v), perm(u, delete(x, v)), false)
+]
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+suc
+yes
+
+operator
+constructor
+null
+ 
+
+operator
+constructor
+cons
+yes
+
+operator
+acoperator
++ 
+
+option
+order
+l
+
+operator
+precedence
+* + 
+
+operator
+precedence
+>= < 
+
+operator
+precedence
+perm delete 
+
+operator
+precedence
+perm member 
+
+operator
+status
+*
+rl
+
+operator
+status
+perm
+lr
+
+
+
+makerule
+
+suffice
+
+option
+prove
+e
+
+cover
+
+add
+(x + y) == (y + x)
+((x + y) + z) == (x + (y + z))
+(x * (y + z)) == ((x * y) + (x * z))
+(0 < x) == not((x = 0))
+(x < suc(0)) == (x = 0)
+((x + y) = 0) == cond((x = 0), (y = 0), false)
+((x + y) = y) == (x = 0)
+((x + z) = (y + z)) == (x = y)
+((x * y) = 0) == cond((x = 0), true, (y = 0))
+((x * y) = x) == (y = suc(0)) if not((x = 0))
+((x * y) = x) == cond((y = suc(0)), true, (x = 0))
+((x * y) = suc(0)) == cond((x = suc(0)), (y = suc(0)), false)
+(suc(0) < y) == true if (not((y = 0)) and not((y = suc(0))))
+(y < suc(y)) == true
+(0 >= u) == (u = 0)
+not((x < suc(y))) == true if (y < x)
+(suc(x) < y) == true if (x < y) & not((suc(x) = y))
+(suc(x) < y) == true if ((x < y) and not((suc(x) = y)))
+((u * y) < suc(y)) == false if (not((u = 0)) and (not((u = suc(0))) and not((y = 0))))
+]
+
+makerule
+
+prove
+delete(x, u) == u if not(member(x, u))
+
+
+
+write
+spec-write
+/usr/progress/art/specs/primes/natlist/natlist
+
+unlog
+
+option
+art
+off

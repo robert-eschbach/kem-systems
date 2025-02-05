@@ -1,0 +1,57 @@
+specification arithmetic
+begin
+  properties
+    begin
+
+      ordering 
+        precedence divides rem
+
+% Achtung : Es ist notwendig, dass * erst nach [T3], [T4] und [T5] AC wird, denn sonst
+% koennen diese Theoreme nicht bewiesen werden! (RRL aendert in der internen Repraesentation
+% der cover-sets ein Flag, wenn * AC geworden ist; dies bewirkt, dass ueber andere Funktionen 
+% und Variablen bevorzugt Induktion gefuehrt wird als vorher !)
+
+      theorems
+	[T1]  div(0, y) == 0 [ e ] ;
+	[T2]  rem(0, y) == 0 [ e ] ;
+	[T3]  y * div(y + x, y) == y * succ(div(x, y)) [ e ] ;
+	[T4]  (rem(x, y) + (y * div(x, y))) == x [ e ] ;
+	[T5]  (y * div(x, y)) == x when divides(y, x) == true [ e ] ;
+        [T6]  x * y == y * x [ e ] ;
+        [T7]  x * (y * z) == (x * y) * z [ e ] ;
+	[T8]  div((x * y), x) == y when not((x = 0)) == true [ e ] ;
+	[T9]  rem((y * x), x) == 0 [ e] ;
+	[T10]  rem((y * z), x) == 0 when and((rem(z, x) = 0), not(x = 0)) == true [ e ] ;
+	[T11]  rem(x + y, z) == rem(x, z) when (rem(y, z) = 0) == true [ e] ;
+	[T12] div(x, y) < x == true
+		when and(not(x = 0), and(not(y = 0), (not (y = succ(0))))) == true [ e ] ;
+	[T13] div(z + y, x) == div(z, x) + div(y, x) 
+		when and(divides(x, z), not(x = 0)) == true [ e ] ;
+	[T14] div(z * y, x) == y * div(z, x) 
+		when and(divides(x, z), not(x = 0)) == true [ e ] ;
+	[T15] rem(succ(0), x) == succ(0) 
+		when not(x = succ(0)) == true [ e] ; 
+	[T16] sub1(x) < y == x < succ(y) when not(x = 0) == true [ e ] ;
+	[T17] gcd(x, y) == gcd(y, x) [ e ] ;
+	[T18] gcd((x * z), (y * z)) == (z * gcd(x, y)) [ e ] ;
+	[T19] gcd(x*y, z) = y == false 
+		when and((rem(z, x) = 0), not(rem(y, x) = 0)) == true [ e ] ;
+	[T20] rem(y * z, x) = 0 == false 
+		when and((gcd(x*y, y*z) = y), and(not(y = 0), not(rem(y, x) = 0))) == true [ e ] ;
+	[T21] gcd(x, succ(0)) == succ(0) when not((x = 0)) == true [ e ] ;
+	[T22] rem(x, gcd(x, y)) == 0 [ e ] ;
+	[T23] gcd(x, y) = x == false 
+		when not(rem(y, x) = 0) == true [ e ] ;
+
+% [CP1] bis [CP3] sind Gleichungen aus der Gleichheits-Theorie. Sie enstehen durch Bildung Kritischer 
+% Paare zwischen den Gleichungen aus arithmetic.asf. Diese sind mit der cover-set induction nicht 
+% beweisbar, aber fuer obige Beweisaufgaben notwendig. (Beachte : In arithmetic.impl_1.rrlmr werden 
+% diese sichtbaren Hypothesen als zusaetzliche Eigenschaften angegeben.)
+
+	[CP1] rem(y, y) == 0 [ h , e ] ;
+	[CP2] rem(succ((y + x)), y) ==  rem(succ(x), y) [ h , e ] ;
+	[CP3] div(y, y) == succ(0) when not(0 = y) == true [ h , e ] ;
+  end  
+
+end
+

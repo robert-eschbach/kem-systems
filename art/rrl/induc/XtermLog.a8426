@@ -1,0 +1,240 @@
+:r
+Time for this command = 0.017 sec      Total time = 17.233 sec
+
+Type Add, Akb, Auto, Break, Clean, Delete, Disable, Enable, Grammar, History,
+     Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, Option, 
+     Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time, Undo, 
+     Unlog, Write or Help.
+RRL-> PROVE
+Type your equation in the format:  L == R [if C] 
+Enter a ']' to exit when no equation is given.
+REM(Y, (X1 * X2)) == 0 if (NOT((X1 = 0)) AND (NOT((X2 = 0)) AND (NOT((Y = 0)) AND (PRIME2(X1, X2) AND ((REM(Y, X1) = 0) AND (REM(Y, X2) = 0))))))
+
+
+By rules [47], [138], [131], 
+     [main] REM(Y, (X1 * X2)) == 0 if 
+          ((REM(Y, X1) = 0)) and 
+          ((REM(Y, X2) = 0)) and 
+          (PRIME2(X1, X2)) and 
+          (not((0 = X1))) and 
+          (not((0 = X2))) and 
+          (not((0 = Y)))
+     is reduced to true.
+Do you want to normalize innermost-firstly the equation ? Y
+
+In REM(Y, (X1 * X2)) == 0  if  
+        { (REM(Y, X1) = 0),
+          (REM(Y, X2) = 0),
+          PRIME2(X1, X2),
+          not((0 = X1)),
+          not((0 = X2)),
+          not((0 = Y)) }   [USER, 103]
+    the premise not((0 = X1)) is released,
+    the premise not((0 = X2)) is released,
+    the premise not((0 = Y)) is released,
+    because the equation is true under its negation.
+
+Adding Rule:  [139] REM(Y, (X1 * X2)) ---> 0  if  
+        { (REM(Y, X1) = 0),
+          (REM(Y, X2) = 0),
+          PRIME2(X1, X2) }   [USER, 103]
+Time for this command = 0.217 sec      Total time = 17.450 sec
+
+Type Add, Akb, Auto, Break, Clean, Delete, Disable, Enable, Grammar, History,
+     Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, Option, 
+     Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time, Undo, 
+     Unlog, Write or Help.
+RRL-> LIST
+
+The arities of the operators are:
+      [SUC : NUM -> NUM ]
+      [1 : -> NUM ]
+      [0 : -> NUM ]
+      [+ : NUM, NUM -> NUM ]
+      [* : NUM, NUM -> NUM ]
+      [< : NUM, NUM -> BOOL ]
+      [SUB1 : NUM -> NUM ]
+      [- : NUM, NUM -> NUM ]
+      [DIV : NUM, NUM -> NUM ]
+      [REM : NUM, NUM -> NUM ]
+      [DIVIDES : NUM, NUM -> BOOL ]
+      [NULL : -> LIST ]
+      [CONS : UNIV, LIST -> LIST ]
+      [APPEND : LIST, LIST -> LIST ]
+      [LENGTH : LIST -> NUM ]
+      [DELETE : UNIV, LIST -> LIST ]
+      [PRIME1 : NUM, NUM -> BOOL ]
+      [PRIME : NUM -> BOOL ]
+      [PRIMELIST : LIST -> BOOL ]
+      [PRODUCTS : LIST -> NUM ]
+      [PRIMEFACS : NUM -> LIST ]
+      [MEMBER : UNIV, LIST -> BOOL ]
+      [SUBLIST : LIST, LIST -> BOOL ]
+      [NOCOMMON : LIST, LIST -> BOOL ]
+      [PRIME2 : NUM, NUM -> BOOL ]
+
+
+Associative & commutative operator set = { *, + }
+No equations in current system.
+
+Rules:
+  [1] 1 ---> SUC(0)  [USER, 1]
+  [2] (X + 0) ---> X  [DEF, 2]
+  [3] (X + SUC(Y)) ---> SUC((X + Y))  [DEF, 3]
+  [4] (X * 0) ---> 0  [DEF, 4]
+  [5] (X * SUC(Y)) ---> (X + (X * Y))  [DEF, 5]
+  [6] (0 < SUC(X)) ---> TRUE  [DEF, 6]
+  [7] (X < 0) ---> FALSE  [DEF, 7]
+  [8] (SUC(X) < SUC(Y)) ---> (X < Y)  [DEF, 8]
+  [9] SUB1(0) ---> 0  [DEF, 9]
+ [10] SUB1(SUC(X)) ---> X  [DEF, 10]
+ [11] (0 - X) ---> 0  [DEF, 11]
+ [12] (X - 0) ---> X  [DEF, 12]
+ [13] (SUC(X) - SUC(Y)) ---> (X - Y)  [DEF, 13]
+ [14] DIV(X, 0) ---> 0  [DEF, 14]
+ [15] DIV(X, Y) ---> 0  if   { (X < Y) }   [DEF, 15]
+ [16] DIV((X + Y), Y) ---> SUC(DIV(X, Y))  if   { not((0 = Y)) }   [DEF, 16]
+ [17] REM(X, 0) ---> X  [DEF, 17]
+ [18] REM(X, Y) ---> X  if   { (X < Y) }   [DEF, 18]
+ [19] REM((X + Y), Y) ---> REM(X, Y)  [DEF, 19]
+ [20] DIVIDES(X, Y) ---> (REM(Y, X) = 0)  [DEF, 20]
+ [21] APPEND(NULL, Y) ---> Y  [DEF, 21]
+ [22] APPEND(CONS(X, Y), Z) ---> CONS(X, APPEND(Y, Z))  [DEF, 22]
+ [23] LENGTH(NULL) ---> 0  [DEF, 23]
+ [24] LENGTH(CONS(X, Y)) ---> SUC(LENGTH(Y))  [DEF, 24]
+ [25] DELETE(X, NULL) ---> NULL  [DEF, 25]
+ [26] DELETE(X, CONS(Y, Z)) ---> COND((Y = X), Z, CONS(Y, DELETE(X, Z)))  [DEF, 26]
+ [27] PRIME1(X, 0) ---> FALSE  [DEF, 27]
+ [28] PRIME1(X, SUC(0)) ---> TRUE  [DEF, 28]
+ [29] PRIME1(X, SUC(Y)) ---> COND((REM(X, SUC(Y)) = 0), FALSE, PRIME1(X, Y))  if   { not((0 = Y)) }   [DEF, 29]
+ [30] PRIME(0) ---> FALSE  [DEF, 30]
+ [31] PRIME(SUC(X)) ---> PRIME1(SUC(X), X)  [DEF, 31]
+ [32] PRIMELIST(NULL) ---> TRUE  [DEF, 32]
+ [33] PRIMELIST(CONS(X, Y)) ---> COND(PRIME(X), PRIMELIST(Y), FALSE)  [DEF, 33]
+ [34] PRODUCTS(NULL) ---> SUC(0)  [DEF, 34]
+ [35] PRODUCTS(CONS(X, Y)) ---> (X * PRODUCTS(Y))  [DEF, 35]
+ [36] PRIMEFACS(0) ---> NULL  [DEF, 36]
+ [37] PRIMEFACS(SUC(0)) ---> NULL  [DEF, 37]
+ [38] PRIMEFACS(SUC(SUC(X))) ---> CONS(SUC(SUC(X)), NULL)  if   { PRIME1(SUC(SUC(X)), SUC(X)) }   [DEF, 38]
+ [39] PRIMEFACS((X * Y)) ---> APPEND(PRIMEFACS(X), PRIMEFACS(Y))  if  
+        { not((0 = X)),
+          not((0 = Y)) }   [DEF, 39]
+ [40] MEMBER(X, NULL) ---> FALSE  [DEF, 40]
+ [41] MEMBER(X, CONS(Y, Z)) ---> COND((Y = X), TRUE, MEMBER(X, Z))  [DEF, 41]
+ [42] SUBLIST(NULL, X) ---> TRUE  [DEF, 42]
+ [43] SUBLIST(CONS(X, Y), NULL) ---> FALSE  [DEF, 43]
+ [44] SUBLIST(CONS(X, Y), Z) ---> COND(MEMBER(X, Z), SUBLIST(Y, DELETE(X, Z)), FALSE)  [DEF, 44]
+ [45] NOCOMMON(NULL, X) ---> TRUE  [DEF, 45]
+ [46] NOCOMMON(CONS(X, Y), Z) ---> COND(MEMBER(X, Z), FALSE, NOCOMMON(Y, Z))  [DEF, 46]
+ [47] PRIME2(X, Y) ---> NOCOMMON(PRIMEFACS(X), PRIMEFACS(Y))  [DEF, 47]
+ [48] DIV(0, Y) ---> 0  [USER, 48]
+ [49] REM(0, Y) ---> 0  [USER, 49]
+ [51] DIV(Y, Y) ---> SUC(0)  if   { not((0 = Y)) }   [2, 16]
+ [53] REM(Y, Y) ---> 0  [2, 19]
+ [62] ((X + Y) < Y) ---> FALSE  [DELETED, 58]
+ [63] DIV(SUC((Y + Y1)), Y1) ---> SUC(DIV(SUC(Y), Y1))  if   { not((0 = Y1)) }   [DELETED, 59]
+ [64] REM(SUC((Y + Y1)), Y1) ---> REM(SUC(Y), Y1)  [DELETED, 60]
+ [74] PRIMEFACS((X + (X * Y))) ---> APPEND(PRIMEFACS(X), PRIMEFACS(SUC(Y)))  if   { not((0 = X)) }   [DELETED, 65]
+ [75] (Y * DIV((X + Y), Y)) ---> (Y + (Y * DIV(X, Y)))  [DELETED, 67]
+ [76] ((Y * DIV(X, Y)) + REM(X, Y)) ---> X  [DELETED, 68]
+ [77] (Y * DIV(X, Y)) ---> X  if   { (REM(X, Y) = 0) }   [DELETED, 69]
+ [78] (X * (Y + Z)) ---> ((X * Y) + (X * Z))  [DELETED, 70]
+ [79] (0 < X) ---> NOT((0 = X))  [USER, 58]
+ [80] (X < SUC(0)) ---> (0 = X)  [USER, 59]
+ [81] (Y < SUC(Y)) ---> TRUE  [USER, 60]
+ [83] ((X + Y) = 0) ---> (0 = X) & (0 = Y)  [USER, 61]
+ [84] ((X + Y) = Y) ---> (0 = X)  [USER, 62]
+ [85] ((Y + Z) = (X + Z)) ---> (Y = X)  [USER, 63]
+ [87] ((X * Y) = 0) ---> ((0 = X) OR (0 = Y))  [USER, 64]
+ [90] REM((U * Y), X) ---> 0  if   { (REM(U, X) = 0) }   [USER, 67]
+ [91] REM((X + Y), Z) ---> REM(X, Z)  if   { (REM(Y, Z) = 0) }   [USER, 68]
+ [92] DELETE(X, Y) ---> Y  if   { not(MEMBER(X, Y)) }   [USER, 69]
+ [93] REM(PRODUCTS(Y), X) ---> 0  if   { MEMBER(X, Y) }   [USER, 70]
+ [94] PRIMELIST(DELETE(X, Y)) ---> TRUE  if   { PRIMELIST(Y) }   [USER, 71]
+ [95] DIV((Y + Z), X) ---> (DIV(Y, X) + DIV(Z, X))  if   { (REM(Z, X) = 0) }   [USER, 72]
+ [96] DIV((Y * Z), X) ---> (Y * DIV(Z, X))  if   { (REM(Z, X) = 0) }   [USER, 73]
+ [97] PRODUCTS(DELETE(X, Y)) ---> DIV(PRODUCTS(Y), X)  if  
+        { MEMBER(X, Y),
+          not((0 = X)) }   [USER, 74]
+ [98] (PRODUCTS(X) = 0) ---> FALSE  if   { PRIMELIST(X) }   [USER, 75]
+ [99] PRIMELIST(APPEND(Z, Z1)) ---> TRUE  if  
+        { PRIMELIST(Z),
+          PRIMELIST(Z1) }   [USER, 76]
+ [100] REM(SUC(0), X) ---> SUC(0)  if   { not((SUC(0) = X)) }   [USER, 77]
+ [101] (SUC(X) < Y) ---> TRUE  if  
+        { (X < Y),
+          not((SUC(X) = Y)) }   [USER, 78]
+ [103] PRODUCTS(PRIMEFACS(X)) ---> X  if   { not((0 = X)) }   [USER, 79]
+ [104] PRIMELIST(PRIMEFACS(X)) ---> TRUE  [USER, 80]
+ [105] APPEND(X, NULL) ---> X  [USER, 81]
+ [106] NOCOMMON(X, NULL) ---> TRUE  [USER, 82]
+ [111] NOCOMMON(X, CONS(Y, Z)) ---> COND(MEMBER(Y, X), FALSE, NOCOMMON(X, Z))  [USER, 85]
+ [112] MEMBER(X, APPEND(X1, X2)) ---> TRUE  if  
+        { not(MEMBER(X, X1)),
+          MEMBER(X, X2) }   [USER, 86]
+ [113] MEMBER(X, APPEND(X1, X2)) ---> FALSE  if  
+        { not(MEMBER(X, X1)),
+          not(MEMBER(X, X2)) }   [USER, 86]
+ [115] MEMBER(X, APPEND(X1, X2)) ---> TRUE  if   { MEMBER(X, X1) }   [USER, 86]
+ [117] NOCOMMON(Y, APPEND(X1, X2)) ---> COND(NOCOMMON(Y, X1), NOCOMMON(Y, X2), FALSE)  [USER, 86]
+ [120] NOCOMMON(APPEND(X1, X2), Y) ---> COND(NOCOMMON(X1, Y), NOCOMMON(X2, Y), FALSE)  [USER, 87]
+ [121] MEMBER(X, DELETE(X1, Z)) ---> FALSE  if   { not(MEMBER(X, Z)) }   [USER, 88]
+ [122] MEMBER(X, DELETE(X1, Z)) ---> MEMBER(X, Z)  if   { not((X1 = X)) }   [USER, 89]
+ [123] DELETE(X1, DELETE(X, Z)) ---> DELETE(X, DELETE(X1, Z))  [CRIT, USER]
+ [124] SUBLIST(Y, DELETE(X, Z)) ---> SUBLIST(Y, Z)  if   { not(MEMBER(X, Y)) }   [USER, 91]
+ [125] SUBLIST(Y, DELETE(X, Z)) ---> FALSE  if   { not(SUBLIST(Y, Z)) }   [USER, 92]
+ [126] SUBLIST(APPEND(X, Y), Z) ---> TRUE  if  
+        { NOCOMMON(X, Y),
+          SUBLIST(X, Z),
+          SUBLIST(Y, Z) }   [USER, 93]
+ [127] SUBLIST(X, APPEND(X, Y)) ---> TRUE  [USER, 94]
+ [128] SUBLIST(X, X) ---> TRUE  [USER, 95]
+ [129] SUBLIST(X, CONS(X1, Z)) ---> TRUE  if   { SUBLIST(X, Z) }   [GENE, 15]
+ [130] SUBLIST(X, APPEND(Y, X)) ---> TRUE  [USER, 95]
+ [131] SUBLIST(PRIMEFACS(X), PRIMEFACS(Y)) ---> TRUE  if  
+        { not((0 = Y)),
+          (REM(Y, X) = 0) }   [USER, 96]
+ [132] REM(X, (X1 * Y)) ---> 0  if  
+        { not((0 = Y)),
+          (REM(X, X1) = 0),
+          (REM(DIV(X, X1), Y) = 0) }   [USER, 97]
+ [133] REM(PRODUCTS(X), SUC(0)) ---> 0  [USER, 98]
+ [134] REM(PRODUCTS(X), PRODUCTS(Y)) ---> 0  if  
+        { SUBLIST(Y, X),
+          not((PRODUCTS(Y) = 0)) }   [USER, 98]
+ [135] SUBLIST(APPEND(PRIMEFACS(X1), PRIMEFACS(X2)), PRIMEFACS(Y)) ---> TRUE  if  
+        { (REM(Y, X1) = 0),
+          (REM(Y, X2) = 0),
+          NOCOMMON(PRIMEFACS(X1), PRIMEFACS(X2)),
+          not((0 = Y)) }   [USER, 99]
+ [136] REM(PRODUCTS(Y), PRODUCTS(APPEND(X1, X2))) ---> 0  if  
+        { NOCOMMON(X1, X2),
+          SUBLIST(X1, Y),
+          SUBLIST(X2, Y),
+          not((PRODUCTS(APPEND(X1, X2)) = 0)) }   [USER, 100]
+ [137] PRODUCTS(APPEND(X1, X2)) ---> (PRODUCTS(X1) * PRODUCTS(X2))  [USER, 101]
+ [138] REM(Y, (X1 * X2)) ---> 0  if  
+        { PRIME2(X1, X2),
+          SUBLIST(PRIMEFACS(X1), PRIMEFACS(Y)),
+          SUBLIST(PRIMEFACS(X2), PRIMEFACS(Y)),
+          not((0 = X1)),
+          not((0 = X2)) }   [USER, 102]
+ [139] REM(Y, (X1 * X2)) ---> 0  if  
+        { (REM(Y, X1) = 0),
+          (REM(Y, X2) = 0),
+          PRIME2(X1, X2) }   [USER, 103]
+Time for this command = 0.200 sec      Total time = 17.650 sec
+
+Type Add, Akb, Auto, Break, Clean, Delete, Disable, Enable, Grammar, History,
+     Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, Option, 
+     Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time, Undo, 
+     Unlog, Write or Help.
+RRL-> quit
+No log file.
+
+Goodbye eschbach.
+Finish at: 11:20:21 Feb 1 1994
+
+
+Bye.
+eschbach@sayers (/amd/users/eschbach/rrl/induc) [52] ^Dexit

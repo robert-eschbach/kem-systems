@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/bin/sbcl -load /media/sf_Shared-Folder/kem-systems/art/source/lisp-init.lisp -eval '(load-art)

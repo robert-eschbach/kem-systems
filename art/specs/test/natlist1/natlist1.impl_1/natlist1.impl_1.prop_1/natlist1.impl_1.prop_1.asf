@@ -1,0 +1,10 @@
+specification natlist1
+begin
+
+  properties
+  begin
+    theorems
+      delete(x, nl1) == nl1 when not(member(x, nl1)) == true [ o ] ;
+
+  end
+end

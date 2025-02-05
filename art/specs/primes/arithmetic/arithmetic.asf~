@@ -1,0 +1,39 @@
+specification arithmetic
+begin
+  exports
+    begin
+      functions 
+        div     : NAT # NAT -> NAT
+        rem     : NAT # NAT -> NAT
+        divides : NAT # NAT -> bool
+	gcd     : NAT # NAT -> NAT
+	sub1   : NAT -> NAT
+    end 
+  imports 
+    nat^1^1
+
+  variables
+    x,y,z : -> NAT
+
+  equations
+    div(x, 0) == 0 ;
+    div(x, y) == 0 when (x < y) == true ;
+    div((y + x),y) == suc(div(x,y)) when (0 = y) == false ;
+
+    rem(x, 0) == x ;
+    rem(x, y) == x when (x < y) == true ;
+    rem(y + x, y) == rem(x, y) ;
+
+    divides(x, y) == rem(y,x) = 0 ;
+
+    gcd(x, 0) == x ;
+    gcd(0, y) == y ;
+    gcd(x + y, y) == gcd(x, y) ;
+    gcd(x, x + y) == gcd(x, y) ;
+
+    sub1(0) == 0 ;
+    sub1(suc(x)) == x ;
+
+end
+
+

@@ -1,0 +1,50 @@
+specification arithmetic
+begin
+
+  properties
+  begin
+    ac-operators * 
+    c-operators gcd 
+    ordering 
+      precedence gcd *, sub1 <, div *
+      status < : l   
+    theorems
+      div(0, y) == 0 [ o, e ] ;
+      rem(0, y) == 0 [ o, e ] ;
+      (y * div((y + x), y)) == (y * succ(div(x, y))) [ o, e ] ;
+      (rem(x, y) + (y * div(x, y))) == x [ o, e ] ;
+      (y * div(x, y)) == x when divides(y, x) == true [ o, e ] ;
+      (x * y) == (y * x) [ o, e ] ;
+      (x * (y * z)) == ((x * y) * z) [ o, e ] ;
+      div((x * y), x) == y when not((x = 0)) == true [ o, e ] ;
+      rem((y * x), x) == 0 [ o, e ] ;
+      rem((y * z), x) == 0 when and((rem(z, x) = 0), not((x = 0))) == true [ o, e ] ;
+      rem((x + y), z) == rem(x, z) when (rem(y, z) = 0) == true [ o, e ] ;
+      (div(x, y) < x) == true when and(not((x = 0)), and(not((y = 0)), not((y = succ(0))))) == true [ o, e ] ;
+      div((z + y), x) == (div(z, x) + div(y, x)) when and(divides(x, z), not((x = 0))) == true [ o, e ] ;
+      div((z * y), x) == (y * div(z, x)) when and(divides(x, z), not((x = 0))) == true [ o, e ] ;
+      rem(succ(0), x) == succ(0) when not((x = succ(0))) == true [ o, e ] ;
+      (sub1(x) < y) == (x < succ(y)) when not((x = 0)) == true [ o, e ] ;
+      gcd(x, y) == gcd(y, x) [ o, e ] ;
+      gcd((x * z), (y * z)) == (z * gcd(x, y)) [ o, e ] ;
+      (gcd((x * y), z) = y) == false when and((rem(z, x) = 0), not((rem(y, x) = 0))) == true [ o, e ] ;
+      (rem((y * z), x) = 0) == false when and((gcd((x * y), (y * z)) = y), and(not((y = 0)), not((rem(y, x) = 0)))) == true [ o, e ] ;
+      gcd(x, succ(0)) == succ(0) when not((x = 0)) == true [ o, e ] ;
+      rem(x, gcd(x, y)) == 0 [ o, e ] ;
+      (gcd(x, y) = x) == false when not((rem(y, x) = 0)) == true [ o, e ] ;
+      (y * div((x + y), y)) == (y + (y * div(x, y))) [ o ] ;
+      ((y * div(x, y)) + rem(x, y)) == x [ o ] ;
+      (0 * x) == 0 [ o ] ;
+      (succ(y) * x) == (x + (y * x)) [ o ] ;
+      (x * (y * z)) == (z * (x * y)) [ o ] ;
+      div((x * y), x) == y when not((0 = x)) == true [ o ] ;
+      rem((x * y), x) == 0 [ o ] ;
+      (succ(z) < (x + y)) == true when (z < x) == true , not((0 = y)) == true , not((succ(0) = y)) == true [ o ] ;
+      (div(x, y) < x) == true when not((0 = x)) == true , not((0 = y)) == true , not((succ(0) = y)) == true [ o ] ;
+      div((y + z), x) == (div(y, x) + div(z, x)) when not((0 = x)) == true , (rem(z, x) = 0) == true [ o ] ;
+      rem(succ(0), x) == succ(0) when not((succ(0) = x)) == true [ o ] ;
+      (sub1(x) < y) == (x < succ(y)) when not((0 = x)) == true [ o ] ;
+      gcd(x, succ(0)) == succ(0) when not((0 = x)) == true [ o ] ;
+
+  end
+end

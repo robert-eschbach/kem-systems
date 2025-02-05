@@ -1,0 +1,133 @@
+% This is a modified version of the context-free-grammar for the Praktikum "SPEZIFIKATION und VERIFIKATION"
+
+specification-def 
+              ::= specification ident
+                  begin
+                    [ exports-def ]
+                    [ imports-def ]
+                    [ sorts-def   ]
+                    [ functions-def ]
+                    [ variables-def ]
+                    [ equations-def ]
+                    [ properties-def ]
+                  end <64>;  
+
+%spec-ident    ::= ident <1>;
+
+exports-def   ::= exports
+                  begin
+                    [ sorts-def ]
+                    [ functions-def ] 
+                  end <2>;
+
+imports-def   ::= imports { spec-expression "," } <3>; 
+
+spec-expression ::= spec-ident <4>;
+
+sorts-def     ::= sorts sort-list <5> ; 
+
+sort-list     ::= { sort "," } <6>;
+
+sort          ::= ident <7>;
+
+functions-def ::= functions function+ <8>;
+
+function      ::= fun-ident-list ":" input-type &-> output-type <9>|
+                  operator "_" ":" sort &-> output-type <10>|
+                  "_" operator "_" ":" sort "#" sort &-> output-type <11>;   
+
+fun-ident-list ::= { fun-ident "," } <12>;
+
+fun-ident     ::= ident <13>;
+
+fun-op-list   ::= fun-ident [ fun-op-list ] <14>| operator [ fun-op-list ] <15>;
+% changed 8.4.1991
+input-type    ::= [ product ] <16>;
+
+output-type   ::= product <17>;  
+
+product       ::= { sort "#" } <18>;
+
+variables-def ::= variables variable-list <19> ;
+
+variable-list ::= variable-list-elem+  <20>;
+
+variable-list-elem ::= var-ident-list ":" &-> sort <21>;
+
+var-ident-list ::= { var-ident "," } <22>;
+
+var-ident ::= ident <23>;
+
+equations-def ::= equations cond-equation1+ <24>;
+
+cond-equation1 ::= [ tagg ] equation1 [ when-condition ] ";"  <25>; 
+                                                        % inserted 8.4.1991
+cond-equation2 ::= [ tagg ] equation2 [ when-condition ]   <26>;  
+                                                        % inserted 8.4.1991
+tagg ::= "[" ident "]" <66> |tag <67>;%67 faellt weg auch sollte tag gestrichen werden
+when-condition ::= when condition <27>; 
+
+equation1 ::= term &:= term <28>| term &== term <29>| term &--> term <30>;
+
+equation2 ::= term &== term <31>| term &--> term <32>;   
+
+condition ::= { condition-equation "," } <33>;   
+
+condition-equation ::= term &== term <34>;
+
+term      ::= [ term_and_operator ] primary <35>;  
+
+term_and_operator ::= term operator <36>;
+
+primary   ::= ident "(" [ term-list ] ")" <37>| tuple <38>| "(" term ")" <39>| operator primary <40>| var-ident <41>;  
+% changed 8.4.1991 
+%kl-term-list ::= "(" term-list ")" ;
+                
+term-list ::= { term "," } <42>;
+%termi ::= term <43>;
+
+tuple     ::= "<" term "," term-list ">" <44>;
+
+properties-def ::= properties
+               begin
+                 [ constructors-def ]
+                 [ ac-operators-def ]
+                 [ c-operators-def ]
+                 [ ordering-def ]
+                 [ theorems-def ]
+               end <45>; 
+
+constructors-def ::= constructors const-list <46>;
+
+const-list ::= const-list-elem* <47>;
+           
+%const-list-elem ::= (fun-ident | operator) [ dp-f ] ;
+                    % fun-op instead of fun-op-list  
+const-list-elem ::= fun-ident [ dp-f ] <48> | operator [dp-f ] <49> ;
+
+ac-operators-def ::= ac-operators fun-op-list <63>;
+
+c-operators-def  ::= c-operators fun-op-list <50>;
+
+ordering-def ::= ordering [ ord-ident-def ] [ precedence-def ] [ status-def ] <51>;
+
+ord-ident-def ::= lrpo <52>;
+
+precedence-def ::= precedence [ { fun-op-list "," } ] <53>;
+%fun-op-listi ::= fun-op-list <54>;
+
+status-def ::= status single-status-def* <55>;
+
+single-status-def ::= fun-op-list ":" stat-ident <56>;
+
+stat-ident ::= "l" <57>| r  <57>| "m" <57>;
+
+theorems-def ::= theorems theorem* <58>;
+
+theorem ::= cond-equation2 [ ekl-flag-list ] ";"<59> ;
+
+ekl-flag-list ::= "[" flag-list "]" <60>;
+
+flag-list ::= { flag "," } <61>;
+
+flag ::= "e" <62>| "o" <62> | "h" <62>; 

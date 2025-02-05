@@ -1,0 +1,122 @@
+
+init
+
+log
+/usr/users/eschbach/specs/nat1/nat1.impl_1/nat1.impl_1.prop_1/nat1.impl_1.prop_1
+
+
+ADD
+[0: NAT]
+[succ: NAT -> NAT]
+[+: NAT, NAT -> NAT]
+[*: NAT, NAT -> NAT]
+[-: NAT, NAT -> NAT]
+[<: NAT, NAT -> bool]
+[>=: NAT, NAT -> bool]
+(x + 0) := x
+(x + succ(y)) := succ((x + y))
+(0 - x) := 0
+(x - 0) := x
+(succ(x) - succ(y)) := (x - y)
+(x * 0) := 0
+(x * succ(y)) := (x + (x * y))
+(x < 0) := false
+(0 < succ(x)) := true
+(succ(x) < succ(y)) := (x < y)
+(x >= x) := true
+(0 >= succ(y)) := false
+(succ(x) >= y) := (x >= y) if not ((succ(x) = y))
+]
+
+
+
+operator
+constructor
+0
+ 
+
+operator
+constructor
+succ
+yes
+
+operator
+acoperator
++ 
+
+operator
+order
+l
+
+operator
+precedence
+* + 
+
+operator
+precedence
+>= < 
+
+operator
+status
+*
+rl
+
+
+
+makerule
+
+option
+prove
+e
+
+cover
+
+add
+((un * yn) < succ(yn)) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((0 = yn) equ false)
+((un + zn) < succ(succ(yn))) == false if ((0 = un) equ false) & ((succ(0) = un) equ false) & ((zn < succ(yn)) equ false)
+((un + xn) < succ(yn)) == false if (((un + xn) < succ(succ(yn))) equ false) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+((un + xn) < succ(yn)) == false if (xn < succ(yn)) & ((xn < yn) equ false) & ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un < succ(succ(0))) == false if ((succ(0) = un) equ false) & ((0 = un) equ false)
+(un >= zn) == (true xor (un < zn))
+(succ(xn) < zn) == (xn < zn) if ((succ(xn) = zn) equ false)
+(true xor (un < un)) == true
+(0 >= un) == (0 = un)
+((xn * yn) = succ(0)) == false if ((succ(0) = xn) equ false)
+((xn + zn) = succ(0)) == false if ((succ(0) = xn) equ false) & ((succ(0) = zn) equ false)
+((xn * yn) = xn) == (((0 = xn) xor (succ(0) = yn)) xor ((0 = xn) and (succ(0) = yn)))
+((xn * yn) = xn) == (succ(0) = yn) if ((0 = xn) equ false)
+((xn * yn) = 0) == (((0 = xn) xor (0 = yn)) xor ((0 = xn) and (0 = yn)))
+((yn + zn) = (xn + zn)) == (yn = xn)
+((xn + yn) = yn) == (0 = xn)
+((xn + yn) = 0) == false if ((0 = xn) equ false)
+(xn < succ(0)) == (0 = xn)
+(0 < xn) == (true xor (0 = xn))
+(xn + (zn + z1)) == (zn + (xn + z1))
+(succ(yn) + xn) == succ((yn + xn))
+(0 + xn) == xn
+((un * yn) < succ(yn)) == false if (not((un = 0)) and (not((un = succ(0))) and not((yn = 0))))
+(un >= zn) == not((un < zn))
+(succ(xn) < yn) == true if ((xn < yn) and not((succ(xn) = yn)))
+(succ(xn) < yn) == true if ((succ(xn) = yn) equ false) & (xn < yn)
+(0 >= un) == (un = 0)
+(yn < succ(yn)) == true
+((xn * yn) = succ(0)) == ((xn = succ(0)) and (yn = succ(0)))
+((xn * yn) = xn) == ((yn = succ(0)) or (xn = 0))
+((xn * yn) = xn) == (yn = succ(0)) if not((xn = 0))
+((xn * yn) = 0) == ((xn = 0) or (yn = 0))
+((xn + zn) = (yn + zn)) == (xn = yn)
+((xn + yn) = yn) == (xn = 0)
+((xn + yn) = 0) == ((xn = 0) and (yn = 0))
+(xn < succ(0)) == (xn = 0)
+(0 < xn) == not((xn = 0))
+(xn * (yn + zn)) == ((xn * yn) + (xn * zn))
+(xn + yn) == (yn + xn)
+]
+
+makerule
+
+
+
+write
+spec-write
+/usr/users/eschbach/specs/nat1/nat1.impl_1/nat1.impl_1.prop_1/nat1.impl_1.prop_1.spec

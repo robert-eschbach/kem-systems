@@ -1,0 +1,13 @@
+specification natlist1
+begin
+
+  equations
+    The == true ;
+
+  properties
+  begin
+    ordering 
+      precedence perm member, perm delete
+      status perm : l   
+  end
+end

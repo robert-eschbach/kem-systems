@@ -1,0 +1,21 @@
+specification naturals
+begin
+
+  properties
+  begin
+    ac-operators + 
+    ordering 
+      precedence * +
+      status * : l   
+    theorems
+      (x + y) == (y + x) [ o, e ] ;
+      (x + (y + z)) == ((x + y) + z) [ o, e ] ;
+      (x * (y + z)) == ((x * y) + (x * z)) [ o, e ] ;
+      (x * (y * z)) == ((x * y) * z) [ o, e ] ;
+      (x * (y + z)) == ((x * y) + (x * z)) [ o, e ] ;
+      (0 + x) == x [ o ] ;
+      (succ(y) + x) == succ((y + x)) [ o ] ;
+      (x + (y + z)) == (z + (x + y)) [ o ] ;
+
+  end
+end

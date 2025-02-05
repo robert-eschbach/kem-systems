@@ -1,0 +1,16 @@
+;; example 3.11 from
+;; CP prover
+
+init
+
+add
+[ f : NAT -> NAT ]
+
+;; can't be oriented into a rule
+;; but you can make a equation (x = y) --> true if .....
+;; (x = y) if (f(x) = f(y))
+
+not(f(x) = f(y)) if not(x = y)
+] 
+
+

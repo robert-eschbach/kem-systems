@@ -1,0 +1,76 @@
+specification arithmetic
+begin
+  exports
+    begin
+      functions 
+        div     : NAT # NAT -> NAT
+        rem     : NAT # NAT -> NAT
+        divides : NAT # NAT -> bool
+	gcd     : NAT # NAT -> NAT
+	sub1   : NAT -> NAT
+    end 
+  imports 
+    nat^1
+
+  variables
+    x,y,z : -> NAT
+
+  equations
+    div(x, 0) == 0 ;
+    div(x, y) == 0 when (x < y) == true ;
+    div((y + x),y) == suc(div(x,y)) when (0 = y) == false ;
+
+    rem(x, 0) == x ;
+    rem(x, y) == x when (x < y) == true ;
+    rem(y + x, y) == rem(x, y) ;
+
+    divides(x, y) == rem(y,x) = 0 ;
+
+    gcd(x, 0) == x ;
+    gcd(0, y) == y ;
+    gcd(x + y, y) == gcd(x, y) ;
+    gcd(x, x + y) == gcd(x, y) ;
+
+    sub1(0) == 0 ;
+    sub1(suc(x)) == x ;
+
+  properties begin
+    ordering 
+      precedence divides rem
+
+    theorems
+      div(0, y) == 0 [ e ] ;
+      rem(0, y) == 0 [ e ] ;
+      y * div(y + x, y) == y * suc(div(x, y)) [ e ] ;
+      (rem(x, y) + (y * div(x, y))) == x [ e ] ;
+      (y * div(x, y)) == x when divides(y, x) == true [ e ] ;
+      div((x * y), x) == y when not((x = 0)) == true [ e ] ;
+      rem((y * x), x) == 0 [ e] ;
+      rem((y * z), x) == 0 when and(divides(x, z), not(x = 0)) == true [ e ] ;
+      rem(x + y, z) == rem(x, z) when divides(z, y) == true [ e] ;
+      div(x, y) < x == true
+        when and(not(x = 0), and(not(y = 0), (not (y = suc(0))))) == true [ e ] ;
+      div(z + y, x) == div(z, x) + div(y, x) 
+        when and(divides(x, z), not(x = 0)) == true [ e ] ;
+      div(z * y, x) == y * div(z, x) 
+        when and(divides(x, z), not(x = 0)) == true [ e ] ;
+      rem(suc(0), x) == suc(0) 
+        when not(x = suc(0)) == true [ e] ; 
+      sub1(x) < y == x < suc(y) when not(x = 0) == true [ e ] ;
+      gcd(x, y) == gcd(y, x) [ e ] ;
+      gcd((x * z), (y * z)) == (z * gcd(x, y)) [ e ] ;
+      gcd(x*y, z) = y == false 
+        when and((rem(z, x) = 0), not(rem(y, x) = 0)) == true [ e ] ;
+      rem(y * z, x) = 0 == false 
+        when and((gcd(x*y, y*z) = y), and(not(y = 0), not(rem(y, x) = 0))) == true [ e ] ;
+      gcd(x, suc(0)) == suc(0) when not((x = 0)) == true [ e ] ;
+      rem(x, gcd(x, y)) == 0 [ e ] ;
+      gcd(x, y) = x == false 
+        when not(rem(y, x) = 0) == true [ e ] ;
+
+      [CP1] rem(y, y) == 0 [ h , e ] ;
+      [CP2] rem(suc((y + x)), y) ==  rem(suc(x), y) [ h , e ] ;
+      [CP3] div(y, y) == suc(0) when not(0 = y) == true [ h , e ] ;
+  end  
+end
+

@@ -1,0 +1,20 @@
+specification nat
+begin
+  exports
+    begin
+      sorts NAT
+      functions
+        0         :           -> NAT
+        succ      : NAT       -> NAT
+    end 
+
+  imports boolean
+
+  properties
+    begin
+      constructors 
+        0 : f 
+        succ : f
+      ordering lrpo
+     end
+end

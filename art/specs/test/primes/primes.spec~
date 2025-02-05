@@ -1,0 +1,169 @@
+
+The arities of the operators are:
+      [null : -> NATLIST ]
+      [cons : NAT, NATLIST -> NATLIST ]
+      [append : NATLIST, NATLIST -> NATLIST ]
+      [delete : NAT, NATLIST -> NATLIST ]
+      [member : NAT, NATLIST -> bool ]
+      [perm : NATLIST, NATLIST -> bool ]
+      [succ : NAT -> NAT ]
+      [+ : NAT, NAT -> NAT ]
+      [* : NAT, NAT -> NAT ]
+      [- : NAT, NAT -> NAT ]
+      [< : NAT, NAT -> bool ]
+      [>= : NAT, NAT -> bool ]
+      [div : NAT, NAT -> NAT ]
+      [rem : NAT, NAT -> NAT ]
+      [divides : NAT, NAT -> bool ]
+      [gcd : NAT, NAT -> NAT ]
+      [sub1 : NAT -> NAT ]
+      [prime : NAT -> bool ]
+      [primelist : NATLIST -> bool ]
+      [primefac : NAT -> NATLIST ]
+      [prime1 : NAT, NAT -> bool ]
+      [timelist : NATLIST -> NAT ]
+      [0 : -> NAT ]
+
+
+The system has the following constructors:
+     Type 'NATLIST': { null, cons }
+     Type 'NAT': { 0, succ }
+
+There are no equivalent operators.
+
+Precedence relation now is: 
+   * > + 
+   >= > < 
+   divides > rem 
+   div > * + 
+   gcd > * + 
+   perm > member delete 
+   prime > prime1 rem 
+   primelist > prime prime1 rem 
+   timelist > * + 
+   primefac > append 
+   prime1 > rem 
+
+Operators with status are:
+   perm with left-to-right status.
+   < with left-to-right status.
+
+Associative & commutative operator set = { *, + }
+
+Commutative operator set = { gcd }
+
+
+append(null, xnl1) ---> xnl1
+append(cons(x, xnl1), xnl2) ---> cons(x, append(xnl1, xnl2))
+delete(x, null) ---> null
+delete(x, cons(x, xnl1)) ---> xnl1
+delete(x, cons(y, xnl1)) ---> cons(y, delete(x, xnl1)) if  { (y = x) <=> false } 
+member(x, null) ---> false
+member(x, cons(x, xnl1)) ---> true
+member(x, cons(y, xnl1)) ---> member(x, xnl1) if  { (y = x) <=> false } 
+perm(null, null) ---> true
+perm(null, cons(x, xnl1)) ---> false
+perm(cons(x, xnl1), null) ---> false
+perm(cons(x, xnl1), xnl2) ---> (member(x, xnl1) and perm(xnl1, delete(x, xnl2)))
+(x + 0) ---> x
+(x + succ(y)) ---> succ((x + y))
+(0 - x) ---> 0
+(x - 0) ---> x
+(succ(x) - succ(y)) ---> (x - y)
+(x * 0) ---> 0
+(x * succ(y)) ---> (x + (x * y))
+(x < 0) ---> false
+(0 < succ(x)) ---> true
+(succ(x) < succ(y)) ---> (x < y)
+(x >= x) ---> true
+(0 >= succ(y)) ---> false
+(succ(x) >= y) ---> (x >= y) if  { (succ(x) = y) <=> false } 
+div(x, 0) ---> 0
+div(x, y) ---> 0 if  { (x < y) } 
+div((x + y), y) ---> succ(div(x, y)) if  { (0 = y) <=> false } 
+rem(x, 0) ---> x
+rem(x, y) ---> x if  { (x < y) } 
+rem((x + y), y) ---> rem(x, y)
+divides(x, y) ---> (rem(y, x) = 0)
+gcd(x, 0) ---> x
+gcd(y, (x + y)) ---> gcd(x, y)
+sub1(0) ---> 0
+sub1(succ(x)) ---> x
+rem(yna, yna) ---> 0
+rem(succ((xna + yna)), yna) ---> rem(succ(xna), yna)
+div(yna, yna) ---> succ(0) if  { (0 = yna) <=> false } 
+prime(0) ---> false
+prime(succ(x)) ---> prime1(succ(x), x)
+primelist(null) ---> true
+primelist(cons(x, xnl)) ---> (prime(x) and primelist(xnl))
+timelist(null) ---> succ(0)
+timelist(cons(x, xnl)) ---> (x * timelist(xnl))
+primefac(0) ---> null
+primefac(succ(0)) ---> null
+primefac((x * y)) ---> append(primefac(x), primefac(y)) if 
+        { (0 = x) <=> false,
+          (0 = y) <=> false } 
+prime1(x, 0) ---> false
+prime1(x, succ(0)) ---> true
+prime1(x, succ(y)) ---> (prime1(x, y) xor ((rem(x, succ(y)) = 0) and prime1(x, y))) if  { (0 = y) <=> false } 
+((un * yn) < succ(yn)) ---> false if 
+        { (0 = un) <=> false,
+          (succ(0) = un) <=> false,
+          (0 = yn) <=> false } 
+((un + zn) < succ(succ(yn))) ---> false if 
+        { (0 = un) <=> false,
+          (zn < succ(yn)) <=> false } 
+((un + xn) < succ(yn)) ---> false if 
+        { ((un + xn) < succ(succ(yn))) <=> false,
+          (xn < yn) <=> false,
+          (0 = un) <=> false } 
+((un + xn) < succ(yn)) ---> false if 
+        { (xn < succ(yn)),
+          (xn < yn) <=> false,
+          (0 = un) <=> false } 
+(un < succ(succ(0))) ---> false if 
+        { (succ(0) = un) <=> false,
+          (0 = un) <=> false } 
+(un >= zn) ---> (true xor (un < zn))
+(succ(xn) < zn) ---> (xn < zn) if  { (succ(xn) = zn) <=> false } 
+(un < un) ---> false
+(0 < un) ---> (true xor (0 = un))
+((xn + zn) = succ(0)) ---> false if 
+        { (succ(0) = xn) <=> false,
+          (succ(0) = zn) <=> false } 
+((xn * yn) = xn) ---> ((0 = xn) xor (succ(0) = yn) xor ((0 = xn) and (succ(0) = yn)))
+((xn * yn) = 0) ---> ((0 = xn) xor (0 = yn) xor ((0 = xn) and (0 = yn)))
+((yn + zn) = (xn + zn)) ---> (yn = xn)
+((xn + yn) = yn) ---> (0 = xn)
+(xn < succ(0)) ---> (0 = xn)
+(yn < succ(yn)) ---> true
+((xn * yn) = succ(0)) ---> ((succ(0) = xn) and (succ(0) = yn))
+((xn + yn) = 0) ---> ((0 = xn) and (0 = yn))
+(xn * (yn + zn)) ---> ((xn * yn) + (xn * zn))
+gcd(xna, succ(0)) ---> succ(0)
+(sub1(xna) < yna) ---> (xna < succ(yna)) if  { (0 = xna) <=> false } 
+rem(succ(0), xna) ---> succ(0) if  { (succ(0) = xna) <=> false } 
+(div(xna, yna) < xna) ---> true if 
+        { (0 = xna) <=> false,
+          (succ(0) = yna) <=> false } 
+(succ(zna) < (xna + yna)) ---> true if 
+        { (0 = yna) <=> false,
+          (zna < xna) } 
+((yna * div(xna, yna)) + rem(xna, yna)) ---> xna
+(succ(succ((xna + yna))) < yna) ---> false if 
+        { ((xna + yna) < yna),
+          (xna < yna) } 
+(succ(xna) < xna) ---> false
+(gcd(xna, yna) = xna) ---> false if  { (rem(yna, xna) = 0) <=> false } 
+rem(xna, gcd(xna, yna)) ---> 0
+(gcd(zna, (xna * yna)) = yna) ---> false if 
+        { (rem(zna, xna) = 0),
+          (rem(yna, xna) = 0) <=> false } 
+gcd((xna * zna), (yna * zna)) ---> (zna * gcd(xna, yna))
+div((yna * zna), xna) ---> (yna * div(zna, xna)) if  { (rem(zna, xna) = 0) } 
+div((yna + zna), xna) ---> (div(yna, xna) + div(zna, xna)) if  { (rem(zna, xna) = 0) } 
+rem((xna + yna), zna) ---> rem(xna, zna) if  { (rem(yna, zna) = 0) } 
+rem((yna * zna), xna) ---> 0 if  { (rem(zna, xna) = 0) } 
+(yna * div(xna, yna)) ---> xna if  { (rem(xna, yna) = 0) } 
+rem(0, yna) ---> 0
+div(0, yna) ---> 0

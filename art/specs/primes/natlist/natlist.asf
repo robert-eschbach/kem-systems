@@ -1,0 +1,50 @@
+specification natlist
+begin
+  exports
+    begin 
+      sorts NATLIST
+      functions
+        null    :                   -> NATLIST
+        cons    : NAT # NATLIST     -> NATLIST
+        append  : NATLIST # NATLIST -> NATLIST
+	delete  : NAT     # NATLIST -> NATLIST
+	member  : NAT     # NATLIST -> bool 
+	perm    : NATLIST # NATLIST -> bool   
+    end
+
+  imports
+    nat^1
+
+  variables
+    x,y : -> NAT
+    u,v : -> NATLIST
+
+  equations
+    append(null,u) == u ;
+    append(cons(x,u),v) == cons(x,append(u,v)) ;
+
+    delete(x, null) == null ;
+    delete(x, cons(y, u)) ==  cond((x = y), u, cons(y, delete(x, u))) ; 
+
+    member(x, null) == false ;
+    member(x, cons(y, u)) == cond((x = y), true, member(x, u)) ; 
+
+    perm(null, null) == true ;
+    perm(null, cons(x, u)) == false ;
+    perm(cons(x, u), null) == false ;
+    perm(cons(x, u), v) == 
+	   cond(member(x, v), perm(u , delete(x, v)), false) ;
+
+  properties begin
+    constructors 
+      null : f 
+      cons : f
+
+    ordering 
+      precedence perm delete, perm member
+      status perm : l  
+
+    theorems
+      delete(x, u) == u when not(member(x, u)) == true [ e ] ;
+  end
+end

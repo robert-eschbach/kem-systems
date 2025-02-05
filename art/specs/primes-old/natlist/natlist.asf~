@@ -1,0 +1,21 @@
+specification natlist
+begin
+  exports
+    begin 
+      sorts NATLIST
+      functions
+        null    :                           -> NATLIST
+        cons    : NAT # NATLIST             -> NATLIST
+    end
+
+  imports
+    nat^^
+% Muss wegen der Sorte NAT importiert werden.
+
+  properties
+    begin
+      constructors 
+	null : f 
+	cons : f
+    end
+end

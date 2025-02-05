@@ -1,0 +1,20 @@
+(in-package "ART")
+
+(defparameter *save-rrl-path* (merge-pathnames "save-rrl/" *source-path*))
+
+(defparameter *save-rrl-files*
+  `(("save-rrl"           ,*save-rrl-path*)
+    ("spec-macros"        ,*save-rrl-path*)
+    ("spec"               ,*save-rrl-path*)
+    ("globals"            ,*save-rrl-path*)
+    ("log-parser"         ,*save-rrl-path*)
+    ("spec-parser"        ,*save-rrl-path*)
+    ("asf-parser"         ,*save-rrl-path*)
+    ("compute-difference" ,*save-rrl-path*)
+    ("print-asf-file"     ,*save-rrl-path*)))
+
+(defun save-rrl-loader ()
+  (loop for file in *save-rrl-files* do      
+	(load-and-remember-to-compile (merge-pathnames (first file) (second file)))))
+
+(save-rrl-loader)

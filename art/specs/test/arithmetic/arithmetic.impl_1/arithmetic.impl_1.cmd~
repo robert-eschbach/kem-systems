@@ -1,0 +1,373 @@
+OPTION
+HISTORY
+NO-HISTORY
+ADD
+      [0 : -> NAT ]
+      [SUB1 : NAT -> NAT ]
+      [GCD : NAT, NAT -> NAT ]
+      [DIVIDES : NAT, NAT -> BOOL ]
+      [REM : NAT, NAT -> NAT ]
+      [DIV : NAT, NAT -> NAT ]
+      [>= : NAT, NAT -> BOOL ]
+      [< : NAT, NAT -> BOOL ]
+      [- : NAT, NAT -> NAT ]
+      [* : NAT, NAT -> NAT ]
+      [+ : NAT, NAT -> NAT ]
+      [SUCC : NAT -> NAT ]
+(X + 0) := X
+(X + SUCC(Y)) := SUCC((X + Y))
+(0 - X) := 0
+(X - 0) := X
+(SUCC(X) - SUCC(Y)) := (X - Y)
+(X * 0) := 0
+(X * SUCC(Y)) := (X + (X * Y))
+(X < 0) := FALSE
+(0 < SUCC(X)) := true 
+(SUCC(X) < SUCC(Y)) := (X < Y)
+(X >= X) := true 
+(0 >= SUCC(Y)) := FALSE
+(SUCC(X) >= Y) := (X >= Y) if NOT((SUCC(X) = Y))
+DIV(X, 0) := 0
+DIV(X, Y) := 0 if (X < Y)
+DIV((Y + X), Y) := SUCC(DIV(X, Y)) if NOT((0 = Y))
+REM(X, 0) := X
+REM(X, Y) := X if (X < Y)
+REM((Y + X), Y) := REM(X, Y)
+DIVIDES(X, Y) := (REM(Y, X) = 0)
+GCD(X, 0) := X
+GCD(0, Y) := Y
+GCD((X + Y), Y) := GCD(X, Y)
+GCD(X, (X + Y)) := GCD(X, Y)
+SUB1(0) := 0
+SUB1(SUCC(X)) := X
+]
+OPERATOR
+CONSTRUCTOR
+0 
+OPERATOR
+CONSTRUCTOR
+SUCC 
+YES
+OPERATOR
+ACOPERATOR
++ 
+OPTION
+ORDER
+L
+OPERATOR
+PRECEDENCE
+* + 
+OPERATOR
+PRECEDENCE
+>= < 
+OPERATOR
+PRECEDENCE
+DIVIDES REM 
+OPERATOR
+STATUS
+*
+RL
+MAKERULE
+SUFFICE
+
+; Note: the system may be not canonical.
+
+; Specification of '+' is completely defined.
+
+; Specification of '*' is completely defined.
+
+; Specification of '-' is completely defined.
+
+; Specification of '<' is completely defined.
+
+; Specification of '>=' is completely defined.
+
+; Specification of 'DIV' is completely defined.
+
+; Specification of 'REM' is completely defined.
+
+; Specification of 'DIVIDES' is completely defined.
+
+; Specification of 'GCD' is completely defined.
+
+; Specification of 'SUB1' is completely defined.
+OPTION
+PROVE
+E
+COVER
+
+; Specification of '+' is completely defined.
+
+; Specification of '*' is completely defined.
+
+; Specification of '-' is completely defined.
+
+; Specification of '<' is completely defined.
+
+; Specification of '>=' is completely defined.
+
+; Specification of 'DIV' is completely defined.
+
+; Specification of 'REM' is completely defined.
+
+; Specification of 'DIVIDES' is completely defined.
+
+; Specification of 'GCD' is completely defined.
+
+; Specification of 'SUB1' is completely defined.
+ADD
+(X + Y) == (Y + X)
+(X * (Y + Z)) == ((X * Y) + (X * Z))
+(X < SUCC(0)) == (X = 0)
+((X + Y) = 0) == ((X = 0) AND (Y = 0))
+((X + Y) = Y) == (X = 0)
+((X + Z) = (Y + Z)) == (X = Y)
+((X * Y) = 0) == ((X = 0) OR (Y = 0))
+((X * Y) = X) == (Y = SUCC(0)) if NOT((X = 0))
+((X * Y) = X) == ((Y = SUCC(0)) OR (X = 0))
+((X * Y) = SUCC(0)) == ((X = SUCC(0)) AND (Y = SUCC(0)))
+(Y < SUCC(Y))
+(0 >= U) == (U = 0)
+(SUCC(X) < Y) == TRUE if ((X < Y) AND NOT((SUCC(X) = Y)))
+(U >= Z) == NOT((U < Z))
+((U * Y) < SUCC(Y)) == FALSE if (NOT((U = 0)) AND (NOT((U = SUCC(0))) AND NOT((Y = 0))))
+REM(Y, Y) == 0
+REM(SUCC((Y + X)), Y) == REM(SUCC(X), Y)
+DIV(Y, Y) == SUCC(0) if NOT((0 = Y))
+]
+MAKERULE
+PROVE
+DIV(0, Y) == 0
+
+; All subgoals are proved so 
+; DIV(0, Y) == 0
+;  is an inductive theorem.
+; Following equation
+;    DIV(0, Y) == 0
+;    is an inductive theorem in the current system.
+PROVE
+REM(0, Y) == 0
+
+; All subgoals are proved so 
+; REM(0, Y) == 0
+;  is an inductive theorem.
+; Following equation
+;    REM(0, Y) == 0
+;    is an inductive theorem in the current system.
+PROVE
+(Y * DIV((Y + X), Y)) == (Y * SUCC(DIV(X, Y)))
+
+; All subgoals are proved so 
+; (Y * DIV((X + Y), Y)) == (Y + (Y * DIV(X, Y)))
+;  is an inductive theorem.
+; Following equation
+;    (Y * DIV((X + Y), Y)) == (Y * SUCC(DIV(X, Y)))
+;    is an inductive theorem in the current system.
+PROVE
+(REM(X, Y) + (Y * DIV(X, Y))) == X
+
+; All subgoals are proved so 
+; ((Y * DIV(X, Y)) + REM(X, Y)) == X
+;  is an inductive theorem.
+; Following equation
+;    ((Y * DIV(X, Y)) + REM(X, Y)) == X
+;    is an inductive theorem in the current system.
+PROVE
+(Y * DIV(X, Y)) == X if DIVIDES(Y, X)
+; Following equation
+;    (Y * DIV(X, Y)) == X  if   { DIVIDES(Y, X) } 
+;    is an inductive theorem in the current system.
+PROVE
+(X * Y) == (Y * X)
+
+; All subgoals are proved so 
+; (0 * X) == 0
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+; (SUCC(Y) * X) == (X + (Y * X))
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+; (X * Y) == (Y * X)
+;  is an inductive theorem.
+; Following equation
+;    (X * Y) == (Y * X)
+;    is an inductive theorem in the current system.
+PROVE
+(X * (Y * Z)) == ((X * Y) * Z)
+
+; All subgoals are proved so 
+; (X * (Y * Z)) == (Z * (X * Y))
+;  is an inductive theorem.
+; Following equation
+;    (X * (Y * Z)) == (Z * (X * Y))
+;    is an inductive theorem in the current system.
+PROVE
+DIV((X * Y), X) == Y if NOT((X = 0))
+
+; All subgoals are proved so 
+; DIV((X * Y), X) == Y  if   { not((0 = X)) } 
+;  is an inductive theorem.
+; Following equation
+;    DIV((X * Y), X) == Y  if   { not((0 = X)) } 
+;    is an inductive theorem in the current system.
+PROVE
+REM((Y * X), X) == 0
+
+; All subgoals are proved so 
+; REM((X * Y), X) == 0
+;  is an inductive theorem.
+; Following equation
+;    REM((X * Y), X) == 0
+;    is an inductive theorem in the current system.
+PROVE
+REM((Y * Z), X) == 0 if ((REM(Z, X) = 0) AND NOT((X = 0)))
+; Following equation
+;    REM((Y * Z), X) == 0  if  
+;        { (REM(Z, X) = 0),
+;          not((0 = X)) } 
+;    is an inductive theorem in the current system.
+PROVE
+REM((X + Y), Z) == REM(X, Z) if (REM(Y, Z) = 0)
+EXIT
+
+; All subgoals are proved so 
+; REM((X + Y), Z) == REM(X, Z)  if   { (REM(Y, Z) = 0) } 
+;  is an inductive theorem.
+; Following equation
+;    REM((X + Y), Z) == REM(X, Z)  if   { (REM(Y, Z) = 0) } 
+;    is an inductive theorem in the current system.
+PROVE
+(DIV(X, Y) < X) == TRUE if (NOT((X = 0)) AND (NOT((Y = 0)) AND NOT((Y = SUCC(0)))))
+N
+
+; All subgoals are proved so 
+; (SUCC(Z) < (X + Y)) == TRUE  if  
+;        { (Z < X),
+;          not((0 = Y)),
+;          not((SUCC(0) = Y)) } 
+;  is an inductive theorem.
+
+; All subgoals are proved so 
+; (DIV(X, Y) < X) == TRUE  if  
+;        { not((0 = X)),
+;          not((0 = Y)),
+;          not((SUCC(0) = Y)) } 
+;  is an inductive theorem.
+; Following equation
+;    (DIV(X, Y) < X) == TRUE  if  
+;        { not((0 = X)),
+;          not((0 = Y)),
+;          not((SUCC(0) = Y)) } 
+;    is an inductive theorem in the current system.
+PROVE
+DIV((Z + Y), X) == (DIV(Z, X) + DIV(Y, X)) if (DIVIDES(X, Z) AND NOT((X = 0)))
+EXIT
+
+; All subgoals are proved so 
+; DIV((Y + Z), X) == (DIV(Y, X) + DIV(Z, X))  if  
+;        { not((0 = X)),
+;          (REM(Z, X) = 0) } 
+;  is an inductive theorem.
+; Following equation
+;    DIV((Y + Z), X) == (DIV(Y, X) + DIV(Z, X))  if  
+;        { DIVIDES(X, Z),
+;          not((0 = X)) } 
+;    is an inductive theorem in the current system.
+STATUS
+<
+LR
+1 
+PROVE
+DIV((Z * Y), X) == (Y * DIV(Z, X)) if (DIVIDES(X, Z) AND NOT((X = 0)))
+; Following equation
+;    DIV((Y * Z), X) == (Y * DIV(Z, X))  if  
+;        { DIVIDES(X, Z),
+;          not((0 = X)) } 
+;    is an inductive theorem in the current system.
+1 
+PROVE
+REM(SUCC(0), X) == SUCC(0) if NOT((X = SUCC(0)))
+
+; All subgoals are proved so 
+; REM(SUCC(0), X) == SUCC(0)  if   { not((SUCC(0) = X)) } 
+;  is an inductive theorem.
+; Following equation
+;    REM(SUCC(0), X) == SUCC(0)  if   { not((SUCC(0) = X)) } 
+;    is an inductive theorem in the current system.
+PROVE
+(SUB1(X) < Y) == (X < SUCC(Y)) if NOT((X = 0))
+
+; All subgoals are proved so 
+; (SUB1(X) < Y) == (X < SUCC(Y))  if   { not((0 = X)) } 
+;  is an inductive theorem.
+; Following equation
+;    (SUB1(X) < Y) == (X < SUCC(Y))  if   { not((0 = X)) } 
+;    is an inductive theorem in the current system.
+PROVE
+GCD(X, Y) == GCD(Y, X)
+
+; All subgoals are proved so 
+; GCD(X, Y) == GCD(Y, X)
+;  is an inductive theorem.
+; Following equation
+;    GCD(X, Y) == GCD(Y, X)
+;    is an inductive theorem in the current system.
+PROVE
+GCD((X * Z), (Y * Z)) == (Z * GCD(X, Y))
+
+; All subgoals are proved so 
+; GCD((X * Z), (Y * Z)) == (Z * GCD(X, Y))
+;  is an inductive theorem.
+; Following equation
+;    GCD((X * Z), (Y * Z)) == (Z * GCD(X, Y))
+;    is an inductive theorem in the current system.
+1 
+PROVE
+(GCD((X * Y), Z) = Y) == FALSE if ((REM(Z, X) = 0) AND NOT((REM(Y, X) = 0)))
+; Following equation
+;    (GCD(Z, (X * Y)) = Y) == FALSE  if  
+;        { (REM(Z, X) = 0),
+;          not((REM(Y, X) = 0)) } 
+;    is an inductive theorem in the current system.
+PROVE
+(REM((Y * Z), X) = 0) == FALSE if ((GCD((X * Y), (Y * Z)) = Y) AND (NOT((Y = 0)) AND NOT((REM(Y, X) = 0))))
+N
+Y
+
+; Following equation 
+;    (REM((Y1 * Z2), X3) = 0) == FALSE  if  
+;        { (GCD((X3 * Y1), (Y1 * Z2)) = Y1),
+;          not((REM(Y1, X3) = 0)) } 
+; is an equational theorem in the system.
+PROVE
+GCD(X, SUCC(0)) == SUCC(0) if NOT((X = 0))
+
+; All subgoals are proved so 
+; GCD(X, SUCC(0)) == SUCC(0)  if   { not((0 = X)) } 
+;  is an inductive theorem.
+; Following equation
+;    GCD(X, SUCC(0)) == SUCC(0)  if   { not((0 = X)) } 
+;    is an inductive theorem in the current system.
+PROVE
+REM(X, GCD(X, Y)) == 0
+
+; All subgoals are proved so 
+; REM(X, GCD(X, Y)) == 0
+;  is an inductive theorem.
+; Following equation
+;    REM(X, GCD(X, Y)) == 0
+;    is an inductive theorem in the current system.
+PROVE
+(GCD(X, Y) = X) == FALSE if NOT((REM(Y, X) = 0))
+N
+Y
+
+; Following equation 
+;    (GCD(X1, Y2) = X1) == FALSE  if   { not((REM(Y2, X1) = 0)) } 
+; is an equational theorem in the system.
+WRITE
+SPEC-WRITE
+/USR/USERS/ESCHBACH/ART/SPECS/TEST/ARITHMETIC/ARITHMETIC.IMPL_1/ARITHMETIC.IMPL_1
+Y

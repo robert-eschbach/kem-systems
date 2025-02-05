@@ -1,0 +1,28 @@
+!! NOCH FEHLERHAFT !!
+ 
+Eschbach Tue Feb  4 18:32:03 MET 1997
+(make-rrl-image "~/rrl/arrl")
+
+Eschbach Sun Feb  2 19:28:51 MET 1997
+unix:unix-makdir in print-asf-file.lisp, missing argument
+probably 111101101 ?
+
+> (describe 'unix:unix-mkdir)
+
+UNIX-MKDIR is an external symbol in the UNIX package.
+Function: #<Function UNIX:UNIX-MKDIR {128EC49}>
+Function arguments:
+  (name mode)
+Function documentation:
+  Unix-mkdir creates a new directory with the specified name and mode.
+   (Same as those for unix-fchmod.)  It returns T upon success, otherwise
+   NIL and an error number.
+Its defined argument types are:
+  (SIMPLE-BASE-STRING (UNSIGNED-BYTE 32))
+Its result type is:
+  (VALUES (MEMBER T NIL) (SIGNED-BYTE 32))
+On Wednesday, 11/2/94 06:23:33 am [-1] it was compiled from:
+target:code/unix.lisp
+  Created: Tuesday, 11/1/94 07:35:20 pm [-1]
+  Comment: $Header: unix.lisp,v 1.38 94/10/31 04:11:27 ram Exp $
+

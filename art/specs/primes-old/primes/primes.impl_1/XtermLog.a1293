@@ -1,0 +1,200 @@
+(rrl)
+
+Type Add, Akb, Auto, Break, Clean, Delete, Disable, Enable, Grammar, History,
+     Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, Option, 
+     Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time, Undo, 
+     Unlog, Write or Help.
+RRL-> PROVE
+PRIME1((W * Z), U) == FALSE if (NOT((Z = SUC(0))) AND (NOT((Z = 0)) AND ((U >= Z) AND NOT((U = SUC(0))))))
+
+
+Let P(U, Z) be [main] PRIME1((W * Z), U) == FALSE if 
+          ((U >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = U))) and 
+          (not((SUC(0) = Z)))
+
+The induction will be done on U, Z in (U >= Z), and will follow the scheme: 
+    [#1] P(U, U)
+    [#2] P(0, SUC(Y))
+    [#3] P(SUC(X), Z) if 
+        { not((SUC(X) = Z)),
+          P(X, Z) } 
+
+By rule [44], 
+     [#1] PRIME1((U * W), U) == FALSE if 
+          ((U >= U)) and 
+          (not((0 = U))) and 
+          (not((SUC(0) = U))) and 
+          (not((SUC(0) = U)))
+     is reduced to
+     [#1] PRIME1((U * W), U) == FALSE if 
+          (not((0 = U))) and 
+          (not((SUC(0) = U)))
+
+Subgoal [#1] PRIME1((U * W), U) == FALSE if 
+          (not((0 = U))) and 
+          (not((SUC(0) = U)))
+    is subsumed by its ancestor:
+    PRIME1((W * Z), U) == FALSE  if  
+        { (U >= Z),
+          not((0 = Z)),
+          not((SUC(0) = U)),
+          not((SUC(0) = Z)) }   [USER, 89]
+    so it is true by induciton hypothesis.
+
+By rule [45], 
+     [#2] PRIME1((W * SUC(Y)), 0) == FALSE if 
+          ((0 >= SUC(Y))) and 
+          (not((SUC(Y) = 0))) and 
+          (not((SUC(0) = 0))) and 
+          (not((SUC(0) = SUC(Y))))
+     is reduced to true.
+
+Subgoal [#3] is split into:
+ [#3.1] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not((SUC(0) = Z))) and 
+          (not((X >= Z)))
+ [#3.2] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not((SUC(0) = Z))) and 
+          (Z = 0)
+ [#3.3] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not((SUC(0) = Z))) and 
+          (X = SUC(0))
+ [#3.4] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not((SUC(0) = Z))) and 
+          (Z = SUC(0))
+ [#3.5] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not((SUC(0) = Z))) and 
+          (not(PRIME1((W * Z), X)))
+
+By rule [46], 
+     [#3.1] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((0 = Z))) and 
+          (not((X >= Z))) and 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((SUC(0) = Z))) and 
+          (not((SUC(0) = SUC(X))))
+     is reduced to true.
+
+By reformulation, 
+     [#3.2] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (Z = 0) and 
+          (not((0 = Z))) and 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((SUC(0) = Z))) and 
+          (not((SUC(0) = SUC(X))))
+     is reduced to true.
+
+By rules [46], [120], 
+     [#3.3] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (X = SUC(0)) and 
+          (not((0 = Z))) and 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((SUC(0) = Z))) and 
+          (not((SUC(0) = SUC(X))))
+     is reduced to true.
+
+By rule [46], 
+     [#3.4] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (Z = SUC(0)) and 
+          (not((0 = Z))) and 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((SUC(0) = Z))) and 
+          (not((SUC(0) = SUC(X))))
+     is reduced to true.
+
+By rules [46], [28], 
+     [#3.5] PRIME1((W * Z), SUC(X)) == FALSE if 
+          (not((0 = Z))) and 
+          (not((SUC(X) = Z))) and 
+          ((SUC(X) >= Z)) and 
+          (not((SUC(0) = Z))) and 
+          (not((SUC(0) = SUC(X)))) and 
+          (not(PRIME1((W * Z), X)))
+     is reduced to true.
+
+All subgoals of [main] are proven, hence
+    [main] PRIME1((W * Z), U) == FALSE if 
+          ((U >= Z)) and 
+          (not((0 = Z))) and 
+          (not((SUC(0) = U))) and 
+          (not((SUC(0) = Z)))
+    is an inductive theorem.
+
+Following equation
+    PRIME1((W * Z), U) == FALSE  if  
+        { (U >= Z),
+          not((0 = Z)),
+          not((SUC(0) = U)),
+          not((SUC(0) = Z)) }   [USER, 89]
+    is an inductive theorem in the current system.
+
+In PRIME1((W * Z), U) == FALSE  if  
+        { (U >= Z),
+          not((0 = Z)),
+          not((SUC(0) = U)),
+          not((SUC(0) = Z)) }   [USER, 89]
+    the premise not((SUC(0) = U)) is released,
+    because the equation is true under its negation.
+
+Adding Rule:  [122] PRIME1((W * Z), U) ---> FALSE  if  
+        { (U >= Z),
+          not((0 = Z)),
+          not((SUC(0) = Z)) }   [USER, 89]
+
+
+Time for this command = 0.700 sec      Total time = 9.967 sec
+
+Type Add, Akb, Auto, Break, Clean, Delete, Disable, Enable, Grammar, History,
+     Init, Kb, List, Load, Log, Makerule, Manager, Namerule, Norm, Option, 
+     Operator, Prove, Quit, Read, Refute, Save, Stats, Suffice, Time, Undo, 
+     Unlog, Write or Help.
+RRL-> BREAK
+
+Break: to LISP. Type (rrl) or :r to resume; (init) to initialize.
+Broken at RRL.
+>>>
+art@doyle (/usr/progress/art) [62] 
+art@doyle (/usr/progress/art) [62] 
+art@doyle (/usr/progress/art) [62] 
+art@doyle (/usr/progress/art) [62] 
+art@doyle (/usr/progress/art) [62] 
+art@doyle (/usr/progress/art) [62] ls
+backup/		emacs/		old-rrl/	source/
+documentation/	lisp-init.lisp	rrl/		specs/
+art@doyle (/usr/progress/art) [64] ls
+backup/		emacs/		old-rrl/	source/
+documentation/	lisp-init.lisp	rrl/		specs/
+art@doyle (/usr/progress/art) [65] ls
+backup/		emacs/		old-rrl/	source/
+documentation/	lisp-init.lisp	rrl/		specs/
+art@doyle (/usr/progress/art) [66] schiesse
+schiesse: Command not found.
+art@doyle (/usr/progress/art) [68] scheisse
+scheisse: Command not found.
+art@doyle (/usr/progress/art) [69] 

@@ -1,0 +1,74 @@
+specification nat
+begin
+  exports
+    begin
+      sorts NAT
+      functions
+        0      :           -> NAT
+        suc    : NAT       -> NAT
+        _ + _  : NAT # NAT -> NAT
+        _ * _  : NAT # NAT -> NAT
+	_ - _  : NAT # NAT -> NAT
+        _ < _  : NAT # NAT -> bool
+	_ >= _ : NAT # NAT -> bool
+	
+    end 
+
+  imports boolean
+
+  variables
+    x,y,u,z : -> NAT
+
+  equations
+    [N1a] x + 0 == x ;
+    [N1b] x + suc(y) == suc(x + y) ;
+    
+    [N2a] 0 - x == 0 ;
+    [N2b] x - 0 == x ;
+    [N2c] suc(x) - suc(y) == x - y ;
+
+    [N3a] x * 0 == 0 ;
+    [N3b] x * suc(y) == x + (x * y) ;
+
+    [N4a] x < 0 == false ;
+    [N4b] 0 < suc(x) == true ;
+    [N4c] suc(x) < suc(y) == x < y ;
+
+    [N5a] x >= x == true ;
+    [N5b] 0 >= suc(y) == false ;
+    [N5c] suc(x) >= y == x >= y when (suc(x) = y) == false ;
+
+  properties begin      
+    constructors 
+      0 : f 
+      suc : f      
+    ordering lrpo
+      precedence * +, >= <
+      status * : r 
+
+    theorems
+      x + y == y + x [ e ] ;
+      (x + y) + z == x + (y + z) [ e ] ;
+      (x * (y + z)) == ((x * y) + (x * z)) [e] ; 
+      0 < x == not(x = 0) [ e ] ; 
+      x < suc(0) == x = 0 [ e ] ; 
+      (x + y) = 0 == cond((x = 0) ,(y = 0), false) [ e ] ;
+      (x + y) = y == (x = 0) [ e ] ;
+      (x + z) = (y + z) == (x = y) [ e ] ;
+      (x * y) = 0 == cond((x = 0) , true, (y = 0)) [ e ] ;
+      (x * y) = x == (y = suc(0)) when not(x = 0) == true [ e ]  ; 
+      (x * y) = x == cond((y = suc(0)), true, (x = 0)) [ e ] ;
+      (x * y) = suc(0) == cond((x = suc(0)), (y = suc(0)), false) [ e ] ;
+      (suc(0) < y) == true when and(not(y = 0), not(y = suc(0))) == true [ e ] ;
+      y < suc(y) == true [ e ] ;
+      0 >= u == u = 0 [ e ] ;
+      not(x < suc(y)) == true when (y < x) == true [ e ] ;	 
+      suc(x) < y  == true when and((x < y), not(suc(x) = y)) == true [ e ] ;
+      (u * y) < suc(y) == false 
+	    when and(not(u = 0), and(not(u = suc(0)), not(y = 0))) == true [ e ] ;
+  end
+end
+
+
+
+

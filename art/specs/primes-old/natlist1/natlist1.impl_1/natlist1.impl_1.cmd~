@@ -1,0 +1,77 @@
+add
+
+The arities of the operators are:
+      [append : NATLIST, NATLIST -> NATLIST ]
+      [null : -> NATLIST ]
+      [cons : NAT, NATLIST -> NATLIST ]
+      [delete : NAT, NATLIST -> NATLIST ]
+      [member : NAT, NATLIST -> bool ]
+      [perm : NATLIST, NATLIST -> bool ]
+
+
+append(null, xnl1) == xnl1
+append(cons(x, xnl1), xnl2) == cons(x, append(xnl1, xnl2))
+delete(x, null) == null
+delete(x, cons(x, xnl1)) == xnl1
+delete(x, cons(y, xnl1)) == cons(y, delete(x, xnl1)) if not((y = x))
+member(x, null) == false
+member(x, cons(x, xnl1))
+member(x, cons(y, xnl1)) == member(x, xnl1) if not((x = y))
+perm(null, null)
+perm(null, cons(x, xnl1)) == false
+perm(cons(x, xnl1), null) == false
+perm(cons(x, xnl1), xnl2) == (member(x, xnl1) and perm(xnl1, delete(x, xnl2)))
+]
+operator
+constructor
+0 
+0
+operator
+constructor
+succ 
+1
+yes
+operator
+constructor
+null 
+operator
+constructor
+cons 
+yes
+operator
+order
+l
+operator
+precedence
+perm member 
+operator
+precedence
+perm delete 
+operator
+status
+perm
+lr
+makerule
+option
+prove
+e
+prove
+delete(x, xnl1) == xnl1 if not(member(x, xnl1))
+
+; All subgoals are proved so 
+ ; delete(x, xnl1) == xnl1 if  { member(x, xnl1) <=> false } 
+
+;  is an inductive theorem.
+; Following equation
+;    delete(x, xnl1) == xnl1  if  not(member(x, xnl1))  [user, 13]
+;    is an inductive theorem in the current system.
+write
+spec-write
+/usr/users/eschbach/specs/natlist1/natlist1.impl_1/natlist1.impl_1.spec
+~
+save
+natlist1^1
+init
+~/specs/natlist1/natlist1.impl_1/natlist1.impl_1.rrlmr
+init
+/usr/users/eschbach/specs/natlist1/natlist1.impl_1/natlist1.impl_1

@@ -1,0 +1,17 @@
+
+((("NAT" ("nat" NIL NIL #p"/home/systeme/art/specs/test/nat/nat.asf") "export"
+   "sort"))
+ (((("0" . "functor") NIL ("NAT"))
+   ("nat" NIL NIL #p"/home/systeme/art/specs/test/nat/nat.asf") "export"
+   "function")
+  ((("succ" . "functor") ("NAT") ("NAT"))
+   ("nat" NIL NIL #p"/home/systeme/art/specs/test/nat/nat.asf") "export"
+   "function"))
+ NIL NIL
+ ((((("0" "frei") ("succ" "frei"))
+    ("nat" NIL NIL #p"/home/systeme/art/specs/test/nat/nat.asf")))
+  NIL NIL
+  ((("lrpo" NIL NIL)
+    ("nat" NIL NIL #p"/home/systeme/art/specs/test/nat/nat.asf")))
+  NIL)
+ (("boolean" NIL NIL #p"/home/systeme/art/specs/test/boolean"))) 

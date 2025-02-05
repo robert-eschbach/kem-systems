@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# Set up CMUCLLIB environment variable to point to run-time files.
+CMUCLLIB=/home/lisp/implementations/cmucl/17f/lib
+export CMUCLLIB
+
+XKEYSYMDB=/home/lisp/implementations/cmucl/17f/lib/XKeysymDB
+export XKEYSYMDB
+
+LD_PRELOAD=/home/lisp/repository/cmucl-workaround/cmucl-workaround.so
+export LD_PRELOAD
+
+# If /tmp is a "tmpfs" filesystem (mounted on "swap") then uncomment the
+# following two lines, and fill in an alternate path:
+#CMUCL_EMPTYFILE=/tmp
+#export CMUCL_EMPTYFILE
+
+# Run Lisp with these environment variables set.
+# exec /home/lisp/implementations/cmucl/17f/bin/lisp "$@"
+exec /home/lisp/implementations/cmucl/17f/bin/lisp -core /home/systeme/art/rrl/rrl.core "$@"
+
+

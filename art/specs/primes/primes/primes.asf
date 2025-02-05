@@ -1,0 +1,99 @@
+specification primes
+begin
+  exports
+    begin
+      functions
+        prime     : NAT     -> bool
+        primelist : NATLIST -> bool
+        primefac  : NAT      -> NATLIST
+    end
+
+  imports
+    arithmetic^1,
+    natlist^1
+
+  functions
+    prime1   : NAT # NAT -> bool
+    timelist : NATLIST   -> NAT
+
+  variables
+    x,y,z,w  : -> NAT
+    u,v : -> NATLIST
+
+  equations
+    [P1a] prime(0) := false ;
+    [P1b] prime(suc(x)) := prime1(suc(x), x)  ;
+
+    [P2a] primelist(null) := true ;
+    [P2b] primelist(cons(x,v)) := and(prime(x),primelist(v)) ;
+
+    [P3a] timelist(null) := suc(0) ;
+    [P3b] timelist(cons(x,v)) := x * timelist(v) ;
+
+    [P4a] primefac(0) := null ;
+    [P4b] primefac(suc(0)) := null ;
+    [P4c] primefac(x * y) := append(primefac(x), primefac(y)) 
+            when (x = 0) == false, (y = 0) == false ;
+
+    [P5a] prime1(x, 0) := false ;
+    [P5b] prime1(x, suc(0)) := true ;
+    [P5c] prime1(x, suc(y)) := and(not(divides(suc(y), x)), prime1(x, y)) 
+            when not(y = 0) == true ;
+
+  properties begin
+    ordering 
+      precedence primelist prime, timelist *, primefac append, 
+                 prime prime1, prime1 rem
+
+    theorems
+      divides(x, timelist(u)) == true 
+        when member(x, u) == true [ e ] ;
+      primelist(delete(x, u)) == true 
+        when primelist(u) == true [ e ] ;
+      (x = suc(0)) == false 
+        when prime(x) == true [ e ] ;
+      (x = 0) == false 
+        when prime(x) == true [ e ] ;
+      timelist(delete(x, u)) == div(timelist(u), x) 
+        when and(not(x = 0), member(x, u)) == true [ e ] ;
+      timelist(u) = 0 == false 
+        when  primelist(u) == true [ e ] ;
+      primelist(append(u,v)) == true when and(primelist(u), primelist(v)) == true [ e ] ;
+      prime1(w*z, y) == false 
+        when and(not(z = suc(0)), and(not(z = 0), and((y >= z), not(y = suc(0))))) == true [ e ] ;
+      x >= y == not(x < y) [ e ] ;
+      not(divides(z, x)) == true when and(prime1(x, sub1(x)),  and(not(z = suc(0)), 
+	and(not(z = x), and(not(x = 0), not(x = suc(0)))))) == true [ e ] ;
+      (rem(x, y) = 0) == false 
+        when and(prime(x), and(not(y = suc(0)), not(x = y))) == true [ e ] ;
+     (rem(x, y) = 0) == false  
+       when and(prime(y), and(prime(x), (not(x = y)))) == true [ e ] ;
+     gcd(x, y) == suc(0) 
+       when and((rem(x, gcd(x, y)) = 0), and(not(x = 0), and(not(x = suc(0)), 
+            and(prime1(x, sub1(x)), not(gcd(x, y) = x))))) == true [ e ] ;
+     (gcd(x, y) = x) == false 
+       when not(rem(y, x) = 0) == true [ e ] ;
+     gcd(x,y) == suc(0) 
+       when and(prime1(x, sub1(x)), not(rem(y, x) = 0)) == true [ e ] ;
+     (rem(y * z, x) = 0) == false 
+       when and( prime(x), and(not(divides(x, y)), not(divides(x, z)))) == true [ e ] ;
+     member(x, u) == true 
+       when and(prime(x), and(primelist(u), divides(x, timelist(u)))) == true [ e ] ;
+     timelist(delete(x, u)) == div(timelist(u), x) 
+       when and(divides(x, timelist(u)), and(prime(x), primelist(u))) == true [ e ] ;
+     timelist(primefac(x)) == x 
+       when not(x = 0) == true [ e ] ;
+     primelist(primefac(x)) == true 
+       when not(x = 0) == true [ e ] ;
+     [T] perm(u, v) == true 
+           when and(primelist(u), and(primelist(v), (timelist(u) = timelist(v)))) == true [ e ] ;
+  end
+end
+
+
+
+
+
+
+
+
